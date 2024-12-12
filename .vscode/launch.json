@@ -17,7 +17,8 @@
 			"outFiles": [
 				"${workspaceFolder}/dist/web/**/*.js"
 			],
-			"preLaunchTask": "${defaultBuildTask}"
+			"preLaunchTask": "${defaultBuildTask}",
+			"smartStep": true
 		},
 		{
 			"name": "Extension Tests",
