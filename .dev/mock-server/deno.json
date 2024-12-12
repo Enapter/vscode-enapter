@@ -1,0 +1,14 @@
+{
+  "imports": {
+    "@faker-js/faker": "npm:@faker-js/faker@9.3.0",
+    "hono": "jsr:@hono/hono@^4.6.13",
+    "jszip": "npm:jszip@3.10.1"
+  },
+  "tasks": {
+    "start": "deno run --watch --allow-all main.ts"
+  },
+  "compilerOptions": {
+    "jsx": "precompile",
+    "jsxImportSource": "hono/jsx"
+  }
+}
