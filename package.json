@@ -54,6 +54,7 @@
     "@types/assert": "^1.5.10",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.9",
+    "@types/node": "^22.10.1",
     "@types/vscode": "^1.95.0",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
     "@typescript-eslint/parser": "^8.7.0",
@@ -68,6 +69,11 @@
   },
   "dependencies": {
     "js-yaml": "^4.1.0",
-    "jszip": "^3.10.1"
-  }
+    "jszip": "^3.10.1",
+    "reflect-metadata": "^0.2.2",
+    "wretch": "^2.11.0"
+  },
+  "bundleDependencies": [
+    "reflect-metadata"
+  ]
 }
