@@ -1,11 +1,6 @@
 import { faker } from "npm:@faker-js/faker@9.3.0";
 
-const deviceTypes = [
-  "standalone",
-  "gateway",
-  "hardware_ucm",
-  "lua",
-] as const;
+const deviceTypes = ["standalone", "gateway", "hardware_ucm", "lua"] as const;
 
 function generateDevice() {
   return {

@@ -1,7 +1,7 @@
 import vscode from "vscode";
-import {Manifest} from "./manifest";
+import { Manifest } from "./manifest";
 import JSZip from "jszip";
-import {loggable, Logger} from "./logger";
+import { loggable, Logger } from "./logger";
 
 export class BlueprintZipper {
   private manifest: Manifest;
@@ -9,7 +9,7 @@ export class BlueprintZipper {
 
   constructor(
     manifest: Manifest,
-    private readonly logger = Logger.getInstance()
+    private readonly logger = Logger.getInstance(),
   ) {
     this.manifest = manifest;
     this.zipper = new JSZip();
@@ -30,7 +30,7 @@ export class BlueprintZipper {
       await this.zipLuaFile();
     }
 
-    return this.zipper.generateAsync({type: "uint8array"});
+    return this.zipper.generateAsync({ type: "uint8array" });
   }
 
   @loggable()

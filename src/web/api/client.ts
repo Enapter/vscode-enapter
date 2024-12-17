@@ -1,6 +1,6 @@
 import wretch, { Middleware } from "wretch";
-import {loggable, Logger} from "../logger";
-import {ExtSettings} from "../ext-settings";
+import { loggable, Logger } from "../logger";
+import { ExtSettings } from "../ext-settings";
 
 const logMiddleware: Middleware = () => (next) => (url, opts) => {
   const logger = Logger.getInstance();
@@ -20,7 +20,7 @@ type AllLuaDevicesResponse = {
   devices: Array<Device>;
 };
 
-type UploadBlueprintResponse = { blueprint: { id: string } }
+type UploadBlueprintResponse = { blueprint: { id: string } };
 
 export class ApiClient {
   private host: string;
@@ -37,9 +37,7 @@ export class ApiClient {
   }
 
   @loggable()
-  async uploadBlueprint(
-    body: Uint8Array,
-  ): Promise<{ blueprint: { id: string } }> {
+  async uploadBlueprint(body: Uint8Array): Promise<{ blueprint: { id: string } }> {
     return this.client
       .url("/v3/blueprints/upload")
       .body(body)
@@ -52,11 +50,7 @@ export class ApiClient {
 
   @loggable()
   async assignBlueprintToDevice(blueprintId: string, deviceId: string) {
-    return this.client
-      .url(`/v3/devices/${deviceId}/assign_blueprint`)
-      .body({ blueprintId: blueprintId })
-      .post()
-      .json();
+    return this.client.url(`/v3/devices/${deviceId}/assign_blueprint`).body({ blueprintId: blueprintId }).post().json();
   }
 
   private get client() {

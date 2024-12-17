@@ -5,10 +5,10 @@ type Content = string | undefined;
 type LuaPath = string | undefined;
 
 type LuaPathLike = {
-  communication_module?: { 
-    lua_file?: string 
+  communication_module?: {
+    lua_file?: string;
   };
-}
+};
 
 class LuaFilePathNotFoundError extends Error {
   constructor() {

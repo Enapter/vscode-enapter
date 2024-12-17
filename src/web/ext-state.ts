@@ -1,25 +1,24 @@
-import vscode, {ExtensionContext} from 'vscode';
+import vscode, { ExtensionContext } from "vscode";
 
 export class ExtState {
   private _onDidChangeDevices = new vscode.EventEmitter<void>();
   readonly onDidChangeDevices = this._onDidChangeDevices.event;
 
-  constructor(private readonly context: ExtensionContext) {
-  }
+  constructor(private readonly context: ExtensionContext) {}
 
   async addRecentDeviceID(deviceID: string) {
-    let recentDeviceIDs = this.get<string[]>('recentDeviceIDs') || [];
+    let recentDeviceIDs = this.get<string[]>("recentDeviceIDs") || [];
 
     if (recentDeviceIDs.includes(deviceID)) {
       recentDeviceIDs = recentDeviceIDs.filter((id) => id !== deviceID);
     }
 
-    await this.update('recentDeviceIDs', [deviceID, ...recentDeviceIDs]);
+    await this.update("recentDeviceIDs", [deviceID, ...recentDeviceIDs]);
     this._onDidChangeDevices.fire();
   }
 
   getRecentDevices() {
-    return this.get<string[]>('recentDeviceIDs') || [];
+    return this.get<string[]>("recentDeviceIDs") || [];
   }
 
   get<T>(key: string): T | undefined {

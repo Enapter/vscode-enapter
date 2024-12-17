@@ -10,7 +10,7 @@ app.use("/*", cors());
 
 app.get("/v3/devices", (c) => {
   const devices = getRandomDevices(10);
-  
+
   return c.json({ devices });
 });
 
