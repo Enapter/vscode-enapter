@@ -12,28 +12,58 @@
   "activationEvents": [],
   "browser": "./dist/web/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "enapter-blueprints-ide.uploadBlueprint",
-        "title": "Upload Blueprint"
-      }
-    ],
-    "views": {
-      "enapter-blueprints-ide": [
-        {
-          "id": "enapter-blueprints-ide",
-          "name": "Enapter Blueprints IDE"
-        }
-      ]
-    },
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "enapter-blueprints-ide",
-          "title": "Enapter Blueprints IDE",
+          "id": "enapter-blueprints",
+          "title": "Enapter Blueprints",
           "icon": "resources/icon.svg"
         }
       ]
+    },
+    "views": {
+      "enapter-blueprints": [
+        {
+          "id": "enapter-blueprints.views.upload",
+          "name": "Upload Blueprint"
+        },
+        {
+          "id": "enapter-blueprints.views.devices.recent",
+          "name": "Previously Used Devices"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "enapter-blueprints.views.upload",
+        "contents": "Upload a Blueprint\n[Upload](command:enapter-blueprints.commands.uploadBlueprint)"
+      }
+    ],
+    "commands": [
+      {
+        "command": "enapter-blueprints.commands.uploadBlueprint",
+        "title": "Upload Blueprint"
+      },
+      {
+        "command": "enapter-blueprints.commands.devicesRecentRefresh",
+        "title": "Refresh Recent Device IDs"
+      }
+    ],
+    "configuration": {
+      "title": "Enapter",
+      "type": "object",
+      "properties": {
+        "enapter.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Enapter API Key"
+        },
+        "enapter.apiHost": {
+          "type": "string",
+          "default": "https://api.enapter.com",
+          "description": "Enapter API Host"
+        }
+      }
     }
   },
   "scripts": {

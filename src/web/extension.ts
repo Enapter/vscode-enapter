@@ -1,13 +1,25 @@
 import * as vscode from 'vscode';
-import { uploadBlueprint } from './commands/upload-blueprint';
+import {uploadBlueprint} from './commands/upload-blueprint';
+import {RecentDevicesProvider} from './recent-devices-provider';
+import {commandIDs} from './constants/commands';
+import {viewIDs} from './constants/views';
+import {Logger} from './logger';
+import {ExtContext} from "./ext-context";
 
 export function activate(context: vscode.ExtensionContext) {
+  const extContext = new ExtContext(context);
 
-	console.log('Congratulations, your extension "enapter-blueprints-ide" is now active in the web extension host!');
+  const logger = Logger.getInstance();
+  logger.addLogger(console);
 
-	const disposable = vscode.commands.registerCommand('enapter-blueprints-ide.uploadBlueprint', uploadBlueprint);
+  vscode.commands.registerCommand(commandIDs.uploadBlueprint, uploadBlueprint);
 
-	context.subscriptions.push(disposable);
+  context.subscriptions.push(
+    vscode.window.createTreeView(viewIDs.devicesRecent, {
+      treeDataProvider: new RecentDevicesProvider(context),
+    })
+  );
 }
 
-export function deactivate() {}
+export function deactivate() {
+}
