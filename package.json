@@ -30,6 +30,11 @@
         {
           "id": "enapter-blueprints.views.devices.recent",
           "name": "Previously Used Devices"
+        },
+        {
+          "id": "enapter-blueprints.views.devices.active",
+          "type": "webview",
+          "name": "Active Device"
         }
       ]
     },
@@ -73,6 +78,7 @@
     "compile-web": "npm run check-types && npm run lint && node esbuild.js",
     "watch-web": "npm-run-all -p watch-web:*",
     "watch-web:esbuild": "node esbuild.js --watch",
+    "watch-web:webview:esbuild": "node esbuild.webview.js --watch",
     "watch-web:tsc": "tsc --noEmit --watch --project tsconfig.json",
     "package-web": "npm run check-types && npm run lint && node esbuild.js --production",
     "check-types": "tsc --noEmit",

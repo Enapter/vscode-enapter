@@ -5,7 +5,11 @@
   "tasks": [
     {
       "label": "watch-web",
-      "dependsOn": ["npm: watch-web:tsc", "npm: watch-web:esbuild"],
+      "dependsOn": [
+        "npm: watch-web:tsc",
+        "npm: watch-web:esbuild",
+        "npm: watch-web:webview:esbuild"
+      ],
       "presentation": {
         "reveal": "never"
       },
@@ -21,6 +25,18 @@
       "problemMatcher": "$esbuild-watch",
       "isBackground": true,
       "label": "npm: watch-web:esbuild",
+      "presentation": {
+        "group": "watch",
+        "reveal": "never"
+      }
+    },
+    {
+      "type": "npm",
+      "script": "watch-web:webview:esbuild",
+      "group": "build",
+      "problemMatcher": "$esbuild-watch",
+      "isBackground": true,
+      "label": "npm: watch-web:webview:esbuild",
       "presentation": {
         "group": "watch",
         "reveal": "never"
