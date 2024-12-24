@@ -73,6 +73,12 @@
         "category": "Enapter"
       },
       {
+        "command": "enapter-blueprints.commands.Devices.ReloadActive",
+        "title": "Reload Active Device",
+        "category": "Enapter",
+        "icon": "$(refresh)"
+      },
+      {
         "command": "enapter-blueprints.commands.Devices.ResetActive",
         "title": "Reset Active Device",
         "category": "Enapter",
@@ -94,12 +100,17 @@
         {
           "command": "enapter-blueprints.commands.Blueprints.UploadToActiveDevice",
           "when": "view == enapter-blueprints.views.devices.active",
-          "group": "navigation"
+          "group": "navigation@3"
+        },
+        {
+          "command": "enapter-blueprints.commands.Devices.ReloadActive",
+          "when": "view == enapter-blueprints.views.devices.active",
+          "group": "navigation@2"
         },
         {
           "command": "enapter-blueprints.commands.Devices.ResetActive",
           "when": "view == enapter-blueprints.views.devices.active",
-          "group": "navigation"
+          "group": "navigation@1"
         }
       ],
       "view/item/context": [

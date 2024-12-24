@@ -10,6 +10,7 @@ import { removeRecentDeviceNode } from "./commands/remove-recent-device-node";
 import { resetActiveDevice } from "./commands/reset-active-device";
 import { ActiveDeviceWebview } from "./active-device-webview";
 import { selectRecentAsActiveByTreeNode } from "./commands/select-recent-as-active-by-tree-node";
+import { reloadActiveDevice } from "./commands/reload-active-device";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -40,6 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, uploadBlueprintToActiveDevice);
   registerCommand(CommandIDs.Devices.SelectActive, selectDevice);
+  registerCommand(CommandIDs.Devices.ReloadActive, reloadActiveDevice);
   registerCommand(CommandIDs.Devices.ResetActive, resetActiveDevice);
   registerCommand(CommandIDs.Devices.RemoveRecentByTreeNode, removeRecentDeviceNode);
   registerCommand(CommandIDs.Devices.SelectRecentAsActiveByTreeNode, selectRecentAsActiveByTreeNode);

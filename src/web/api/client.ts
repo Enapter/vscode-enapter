@@ -32,6 +32,11 @@ export class ApiClient {
   }
 
   @loggable()
+  async getDeviceById(id: string) {
+    return this.client.url(`/v3/devices/${id}`).get().json<{ device: Device }>();
+  }
+
+  @loggable()
   async uploadBlueprint(body: Uint8Array): Promise<{ blueprint: { id: string } }> {
     return this.client
       .url("/v3/blueprints/upload")
