@@ -5,11 +5,7 @@
   "tasks": [
     {
       "label": "watch-web",
-      "dependsOn": [
-        "npm: watch-web:tsc",
-        "npm: watch-web:esbuild",
-        "npm: watch-web:webview:esbuild"
-      ],
+      "dependsOn": ["npm: watch-web:tsc", "npm: watch-web:webview:esbuild", "npm: watch-web:esbuild"],
       "presentation": {
         "reveal": "never"
       },

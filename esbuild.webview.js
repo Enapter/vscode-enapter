@@ -58,7 +58,7 @@ async function main() {
   const ctx = await esbuild.context({
     entryPoints: ["src/webview/active-device/app.tsx"],
     bundle: true,
-    format: "cjs",
+    format: "iife",
     minify: production,
     sourcemap: !production,
     sourcesContent: false,

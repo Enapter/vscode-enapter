@@ -1,6 +1,7 @@
 import wretch, { Middleware } from "wretch";
 import { loggable, Logger } from "../logger";
 import { ExtSettings } from "../ext-settings";
+import { Device } from "../../models/device";
 
 const logMiddleware: Middleware = () => (next) => (url, opts) => {
   const logger = Logger.getInstance();
@@ -8,12 +9,6 @@ const logMiddleware: Middleware = () => (next) => (url, opts) => {
   logger.log("Headers:", opts.headers);
   logger.log("Body:", opts.body);
   return next(url, opts);
-};
-
-type Device = {
-  id: string;
-  name: string;
-  site_id: string;
 };
 
 type AllLuaDevicesResponse = {

@@ -16,7 +16,7 @@
       "activitybar": [
         {
           "id": "enapter-blueprints",
-          "title": "Enapter Blueprints",
+          "title": "Enapter",
           "icon": "resources/icon.svg"
         }
       ]
@@ -24,36 +24,82 @@
     "views": {
       "enapter-blueprints": [
         {
-          "id": "enapter-blueprints.views.upload",
-          "name": "Upload Blueprint"
+          "id": "enapter-blueprints.views.devices.active",
+          "type": "webview",
+          "name": "Active Device",
+          "visibility": "visible",
+          "initialSize": 2
         },
         {
           "id": "enapter-blueprints.views.devices.recent",
-          "name": "Previously Used Devices"
-        },
-        {
-          "id": "enapter-blueprints.views.devices.active",
-          "type": "webview",
-          "name": "Active Device"
+          "name": "Previously Used Devices",
+          "visibility": "visible"
         }
       ]
     },
-    "viewsWelcome": [
-      {
-        "view": "enapter-blueprints.views.upload",
-        "contents": "Upload a Blueprint\n[Upload](command:enapter-blueprints.commands.uploadBlueprint)"
-      }
-    ],
     "commands": [
       {
-        "command": "enapter-blueprints.commands.uploadBlueprint",
-        "title": "Upload Blueprint"
+        "command": "enapter-blueprints.commands.Blueprints.SelectDeviceAndUploadBlueprint",
+        "title": "Select Device and Upload Blueprint",
+        "category": "Enapter",
+        "icon": "$(cloud-upload)"
       },
       {
-        "command": "enapter-blueprints.commands.devicesRecentRefresh",
-        "title": "Refresh Recent Device IDs"
+        "command": "enapter-blueprints.commands.Blueprints.UploadToActiveDevice",
+        "title": "Upload Blueprint to Active Device",
+        "category": "Enapter",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "enapter-blueprints.commands.Devices.RefreshRecent",
+        "title": "Refresh Recent Devices",
+        "category": "Enapter"
+      },
+      {
+        "command": "enapter-blueprints.commands.Devices.RemoveRecentByTreeNode",
+        "title": "Remove",
+        "category": "Enapter",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "enapter-blueprints.commands.Devices.SelectActive",
+        "title": "Select Device",
+        "category": "Enapter"
+      },
+      {
+        "command": "enapter-blueprints.commands.Devices.ResetActive",
+        "title": "Reset Active Device",
+        "category": "Enapter",
+        "icon": "$(close)"
       }
     ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "enapter-blueprints.commands.Devices.RemoveRecentByTreeNode",
+          "when": "false"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "enapter-blueprints.commands.Blueprints.UploadToActiveDevice",
+          "when": "view == enapter-blueprints.views.devices.active",
+          "group": "navigation"
+        },
+        {
+          "command": "enapter-blueprints.commands.Devices.ResetActive",
+          "when": "view == enapter-blueprints.views.devices.active",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "enapter-blueprints.commands.Devices.RemoveRecentByTreeNode",
+          "when": "view == enapter-blueprints.views.devices.recent",
+          "group": "inline"
+        }
+      ]
+    },
     "configuration": {
       "title": "Enapter",
       "type": "object",
@@ -92,6 +138,7 @@
     "@types/mocha": "^10.0.9",
     "@types/node": "^22.10.1",
     "@types/vscode": "^1.95.0",
+    "@types/vscode-webview": "^1.57.5",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
     "@typescript-eslint/parser": "^8.7.0",
     "@vscode/test-web": "^0.0.63",
@@ -102,11 +149,14 @@
     "mocha": "^10.7.3",
     "npm-run-all": "^4.1.5",
     "prettier": "3.4.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "typescript-plugin-css-modules": "^5.1.0"
   },
   "dependencies": {
+    "@microsoft/fast-react-wrapper": "^0.3.25",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.2",
+    "@vscode/webview-ui-toolkit": "^1.4.0",
     "js-yaml": "^4.1.0",
     "jszip": "^3.10.1",
     "react": "^19.0.0",

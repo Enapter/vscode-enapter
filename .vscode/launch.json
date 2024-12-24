@@ -11,7 +11,7 @@
       "debugWebWorkerHost": true,
       "request": "launch",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--extensionDevelopmentKind=web"],
-      "outFiles": ["${workspaceFolder}/dist/web/**/*.js"],
+      "outFiles": ["${workspaceFolder}/dist/web/**/*.js", "${workspaceFolder}/dist/webview/**/*.js"],
       "preLaunchTask": "${defaultBuildTask}",
       "smartStep": true
     },

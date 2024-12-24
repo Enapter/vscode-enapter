@@ -7,15 +7,6 @@ import { Logger } from "../logger";
 import { ExtState } from "../ext-state";
 import { ExtContext } from "../ext-context";
 
-function getDevicesPicks(devicesList: Array<{ id: string; name: string }>) {
-  return devicesList.map((d) => {
-    return {
-      label: d.name,
-      detail: `ID: ${d.id}`,
-    };
-  });
-}
-
 function getManifestsPicks(manifests: Manifest[]) {
   return manifests.map((m) => {
     return {
@@ -25,7 +16,7 @@ function getManifestsPicks(manifests: Manifest[]) {
   });
 }
 
-export async function uploadBlueprint() {
+export async function uploadBlueprintToActiveDevice() {
   const logger = Logger.getInstance();
   logger.group("Upload Blueprint");
 
@@ -61,20 +52,11 @@ export async function uploadBlueprint() {
     await manifest.loadContent();
     const zipper = new BlueprintZipper(manifest);
     const client = new ApiClient();
-    const { devices: devicesList } = await client.getAllLuaDevices();
+    const state = new ExtState(ExtContext.context);
+    const device = state.getActiveDevice();
 
-    const chosenDevice = await vscode.window.showQuickPick(getDevicesPicks(devicesList), {
-      placeHolder: "Choose a device to upload the blueprint to",
-    });
-
-    if (!chosenDevice) {
-      return;
-    }
-
-    const chosenDeviceID = devicesList.find((d) => d.name === chosenDevice?.label)?.id;
-
-    if (!chosenDeviceID) {
-      vscode.window.showErrorMessage("Device not found");
+    if (!device) {
+      vscode.window.showErrorMessage("No active device found");
       return;
     }
 
@@ -89,10 +71,13 @@ export async function uploadBlueprint() {
     const {
       blueprint: { id: blueprintId },
     } = await client.uploadBlueprint(zip);
+
     vscode.window.showInformationMessage(`Blueprint uploaded successfully. Blueprint ID: ${blueprintId}`);
-    await client.assignBlueprintToDevice(blueprintId, chosenDeviceID);
-    vscode.window.showInformationMessage(`Blueprint assigned to device ${chosenDevice.label}`);
-    void new ExtState(ExtContext.context).addRecentDeviceID(chosenDeviceID);
+    await client.assignBlueprintToDevice(blueprintId, device.id);
+    vscode.window.showInformationMessage(`Blueprint assigned to device ${device.name}`);
+    void state.addRecentDevice(device);
+
+    return device;
   } catch (e) {
     logger.log(e);
     vscode.window.showErrorMessage("Failed to upload blueprint");

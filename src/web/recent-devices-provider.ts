@@ -1,13 +1,14 @@
 import vscode from "vscode";
 import { ExtState } from "./ext-state";
+import { Device } from "../models/device";
 
-class RecentDevicesTreeItem extends vscode.TreeItem {
+export class RecentDevicesTreeItem extends vscode.TreeItem {
   constructor(
-    public readonly label: string,
+    public readonly device: Device,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
     public readonly children?: RecentDevicesTreeItem[],
   ) {
-    super(label, collapsibleState);
+    super(device.name, collapsibleState);
   }
 }
 
