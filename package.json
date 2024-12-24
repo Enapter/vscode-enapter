@@ -62,6 +62,12 @@
         "icon": "$(trash)"
       },
       {
+        "command": "enapter-blueprints.commands.Devices.SelectRecentAsActiveByTreeNode",
+        "title": "Select as Active",
+        "category": "Enapter",
+        "icon": "$(play)"
+      },
+      {
         "command": "enapter-blueprints.commands.Devices.SelectActive",
         "title": "Select Device",
         "category": "Enapter"
@@ -77,6 +83,10 @@
       "commandPalette": [
         {
           "command": "enapter-blueprints.commands.Devices.RemoveRecentByTreeNode",
+          "when": "false"
+        },
+        {
+          "command": "enapter-blueprints.commands.Devices.SelectRecentAsActiveByTreeNode",
           "when": "false"
         }
       ],
@@ -95,6 +105,11 @@
       "view/item/context": [
         {
           "command": "enapter-blueprints.commands.Devices.RemoveRecentByTreeNode",
+          "when": "view == enapter-blueprints.views.devices.recent",
+          "group": "inline"
+        },
+        {
+          "command": "enapter-blueprints.commands.Devices.SelectRecentAsActiveByTreeNode",
           "when": "view == enapter-blueprints.views.devices.recent",
           "group": "inline"
         }
