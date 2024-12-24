@@ -133,12 +133,12 @@
         "enapter.apiKey": {
           "type": "string",
           "default": "",
-          "description": "Enapter API Key"
+          "markdownDescription": "Enapter API Key\n\nRefer to https://go.enapter.com/how-to-get-api-key for more information."
         },
         "enapter.apiHost": {
           "type": "string",
           "default": "https://api.enapter.com",
-          "description": "Enapter API Host"
+          "markdownDescription": "Enapter API Host\n\n**Default host `https://api.enapter.com` is used if the field is empty.**"
         }
       }
     }

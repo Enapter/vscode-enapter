@@ -4,17 +4,32 @@ import { Device } from "../models/device";
 import { Logger } from "./logger";
 import { CommandIDs } from "./constants/commands";
 import { getNonce } from "../utils/get-nonce";
+import { ExtSettings } from "./ext-settings";
 
 export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
   private view?: vscode.WebviewView;
   private readonly extensionUri: vscode.Uri;
   private readonly state: ExtState;
   private readonly nonce = getNonce();
+  private readonly extSettings = ExtSettings.instance;
+  private disposables: vscode.Disposable[] = [];
 
   constructor(private readonly context: vscode.ExtensionContext) {
     this.extensionUri = context.extensionUri;
     this.state = ExtState.instance;
     this.state.onDidChangeActiveDevice((d) => this.postDeviceChanged(d));
+
+    this.disposables.push(
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration("enapter.apiKey") || e.affectsConfiguration("enapter.apiHost")) {
+          this.postSettingsChanged();
+        }
+      }),
+    );
+  }
+
+  dispose() {
+    this.disposables.forEach((d) => d.dispose());
   }
 
   postDeviceChanged(device: Device | undefined) {
@@ -28,6 +43,18 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
     });
   }
 
+  postSettingsChanged() {
+    if (!this.view) {
+      return;
+    }
+
+    this.view.webview.postMessage({
+      type: "ext-settings-updated",
+      apiKey: this.extSettings.apiKey,
+      apiHost: this.extSettings.apiHost,
+    });
+  }
+
   onDidReceiveMessage(message: any) {
     Logger.getInstance().log(message);
 
@@ -37,6 +64,12 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
         break;
       case "reset-persisted-device":
         this.onResetPersistedDevice();
+        break;
+      case "request-ext-settings":
+        this.postSettingsChanged();
+        break;
+      case "open-ext-settings":
+        this.onOpenExtSettings();
         break;
       case "command":
         this.handleCommand(message);
@@ -55,6 +88,10 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
     this.state.clearActiveDevice().then(() => {
       this.postDeviceChanged(undefined);
     });
+  }
+
+  private onOpenExtSettings() {
+    vscode.commands.executeCommand("workbench.action.openSettings", "Enapter");
   }
 
   private handleCommand(message: any) {
@@ -92,6 +129,7 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [this.extensionUri],
+      enableCommandUris: true,
     };
 
     webviewView.webview.onDidReceiveMessage((message: any) => {

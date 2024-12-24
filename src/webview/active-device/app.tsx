@@ -5,15 +5,18 @@ import { DeviceProvider } from "./device-provider";
 import { CommandsProvider } from "./commands-provider";
 import { VSCodeApiProvider } from "./vscode-api-context";
 import { DeviceView } from "./device-view";
+import { ExtSettingsProvider } from "./ext-settings-provider";
 
 const App = () => {
   return (
     <VSCodeApiProvider>
-      <CommandsProvider>
-        <DeviceProvider>
-          <DeviceView />
-        </DeviceProvider>
-      </CommandsProvider>
+      <ExtSettingsProvider>
+        <CommandsProvider>
+          <DeviceProvider>
+            <DeviceView />
+          </DeviceProvider>
+        </CommandsProvider>
+      </ExtSettingsProvider>
     </VSCodeApiProvider>
   );
 };
