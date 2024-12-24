@@ -11,6 +11,7 @@ import { resetActiveDevice } from "./commands/reset-active-device";
 import { ActiveDeviceWebview } from "./active-device-webview";
 import { selectRecentAsActiveByTreeNode } from "./commands/select-recent-as-active-by-tree-node";
 import { reloadActiveDevice } from "./commands/reload-active-device";
+import { ExtSettings } from "./ext-settings";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -35,6 +36,7 @@ class Activator {
 export function activate(context: vscode.ExtensionContext) {
   const activator = new Activator(context);
   const extContext = new ExtContext(context);
+  const extSettings = new ExtSettings();
 
   const logger = Logger.getInstance();
   logger.addLogger(console);

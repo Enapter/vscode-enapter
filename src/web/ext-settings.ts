@@ -1,7 +1,15 @@
 import vscode from "vscode";
 
 export class ExtSettings {
-  constructor() {}
+  static instance: ExtSettings;
+
+  constructor() {
+    if (ExtSettings.instance) {
+      return ExtSettings.instance;
+    }
+
+    ExtSettings.instance = this;
+  }
 
   get apiKey(): string {
     return vscode.workspace.getConfiguration("enapter").get("apiKey") || "";
