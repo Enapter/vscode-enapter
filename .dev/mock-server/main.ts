@@ -1,5 +1,5 @@
 import { Hono } from "https://deno.land/x/hono@v3.12.0/mod.ts";
-import { cors } from "https://deno.land/x/hono@v3.12.0/middleware.ts";
+import { cors, logger } from "https://deno.land/x/hono@v3.12.0/middleware.ts";
 import JSZip from "jszip";
 import { getRandomDevices } from "./devices.ts";
 import { faker } from "@faker-js/faker";
@@ -7,11 +7,25 @@ import { faker } from "@faker-js/faker";
 const app = new Hono();
 
 app.use("/*", cors());
+app.use(logger());
+
+const devices = getRandomDevices(10);
 
 app.get("/v3/devices", (c) => {
-  const devices = getRandomDevices(10);
-
   return c.json({ devices });
+});
+
+app.get("/v3/devices/:id", (c) => {
+  const device = devices.find((d) => d.id === c.req.param("id"));
+  if (!device) {
+    return c.text("Device not found", 404);
+  }
+  return c.json({
+    device: {
+      ...device,
+      site_id: faker.string.uuid(),
+    },
+  });
 });
 
 app.post("/v3/blueprints/upload", async (c) => {
