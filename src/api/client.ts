@@ -58,7 +58,7 @@ export class ApiClient {
   async assignBlueprintToDevice(blueprintId: string, deviceId: string) {
     return this.client
       .url(`/v3/devices/${deviceId}/assign_blueprint`)
-      .body({ blueprintId: blueprintId })
+      .json({ blueprint_id: blueprintId })
       .headers({
         "Content-Type": "application/json",
       })
