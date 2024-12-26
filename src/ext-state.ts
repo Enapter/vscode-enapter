@@ -1,5 +1,6 @@
 import vscode, { ExtensionContext } from "vscode";
 import { Device } from "./models/device";
+import { ContextKeys } from "./constants/context-keys";
 
 export class ExtState {
   static instance: ExtState;
@@ -51,17 +52,25 @@ export class ExtState {
   }
 
   getActiveDevice() {
-    return this.get<Device | undefined>("activeDevice");
+    const device = this.get<Device | undefined>("activeDevice");
+    this.setIsActiveDevicePresentContext(!!device);
+    return device;
   }
 
   async setActiveDevice(device: Device) {
     await this.state.update("activeDevice", device);
+    this.setIsActiveDevicePresentContext(true);
     return this._onDidChangeActiveDevice.fire(device);
   }
 
   async clearActiveDevice() {
     await this.state.update("activeDevice", undefined);
+    this.setIsActiveDevicePresentContext(false);
     return this._onDidChangeActiveDevice.fire(undefined);
+  }
+
+  private setIsActiveDevicePresentContext(isActive: boolean) {
+    vscode.commands.executeCommand("setContext", ContextKeys.Devices.IsActivePresent, isActive);
   }
 
   get<T>(key: string): T | undefined {

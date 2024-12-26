@@ -99,17 +99,17 @@
       "view/title": [
         {
           "command": "enapter.commands.Blueprints.UploadToActiveDevice",
-          "when": "view == enapter.views.devices.active",
+          "when": "view == enapter.views.devices.active  && enapter.context.Devices.IsActivePresent",
           "group": "navigation@3"
         },
         {
           "command": "enapter.commands.Devices.ReloadActive",
-          "when": "view == enapter.views.devices.active",
+          "when": "view == enapter.views.devices.active && enapter.context.Devices.IsActivePresent",
           "group": "navigation@2"
         },
         {
           "command": "enapter.commands.Devices.ResetActive",
-          "when": "view == enapter.views.devices.active",
+          "when": "view == enapter.views.devices.active && enapter.context.Devices.IsActivePresent",
           "group": "navigation@1"
         }
       ],
