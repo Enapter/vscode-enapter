@@ -1,5 +1,5 @@
 import vscode, { ExtensionContext } from "vscode";
-import { Device } from "../models/device";
+import { Device } from "./models/device";
 
 export class ExtState {
   static instance: ExtState;

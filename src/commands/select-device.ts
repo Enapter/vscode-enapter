@@ -1,7 +1,7 @@
 import vscode from "vscode";
 import { ApiClient } from "../api/client";
 import { Logger } from "../logger";
-import { Device } from "../../models/device";
+import { Device } from "../models/device";
 
 function getDevicesPicks(devicesList: Array<{ id: string; name: string }>) {
   return devicesList.map((d) => {

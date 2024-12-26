@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "../components/button";
 import { useCommands } from "./commands-provider";
-import { CommandIDs } from "../../web/constants/commands";
+import { CommandIDs } from "../../constants/commands";
 
 export const SelectDevice = () => {
   const send = useCommands();

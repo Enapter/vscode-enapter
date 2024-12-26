@@ -2,7 +2,7 @@ import { Button } from "../components/button";
 import React, { useMemo } from "react";
 import { useDevice } from "./device-provider";
 import { useCommands } from "./commands-provider";
-import { CommandIDs } from "../../web/constants/commands";
+import { CommandIDs } from "../../constants/commands";
 
 const DeviceInfoItem = ({ title, value }: { title: string; value: any }) => {
   const formattedValue = useMemo(() => {

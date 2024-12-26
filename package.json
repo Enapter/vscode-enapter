@@ -1,37 +1,37 @@
 {
-  "name": "enapter-blueprints-ide",
-  "displayName": "enapter-blueprints-ide",
-  "description": "Enapter Blueprints IDE",
+  "name": "enapter",
+  "displayName": "Enapter",
+  "description": "Enapter",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.95.0"
+    "vscode": "^1.96.0"
   },
   "categories": [
     "Other"
   ],
   "activationEvents": [],
-  "browser": "./dist/web/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "enapter-blueprints",
+          "id": "enapter",
           "title": "Enapter",
           "icon": "resources/icon.svg"
         }
       ]
     },
     "views": {
-      "enapter-blueprints": [
+      "enapter": [
         {
-          "id": "enapter-blueprints.views.devices.active",
+          "id": "enapter.views.devices.active",
           "type": "webview",
           "name": "Active Device",
           "visibility": "visible",
           "initialSize": 2
         },
         {
-          "id": "enapter-blueprints.views.devices.recent",
+          "id": "enapter.views.devices.recent",
           "name": "Previously Used Devices",
           "visibility": "visible"
         }
@@ -39,47 +39,47 @@
     },
     "commands": [
       {
-        "command": "enapter-blueprints.commands.Blueprints.SelectDeviceAndUploadBlueprint",
+        "command": "enapter.commands.Blueprints.SelectDeviceAndUploadBlueprint",
         "title": "Select Device and Upload Blueprint",
         "category": "Enapter",
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "enapter-blueprints.commands.Blueprints.UploadToActiveDevice",
+        "command": "enapter.commands.Blueprints.UploadToActiveDevice",
         "title": "Upload Blueprint to Active Device",
         "category": "Enapter",
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "enapter-blueprints.commands.Devices.RefreshRecent",
+        "command": "enapter.commands.Devices.RefreshRecent",
         "title": "Refresh Recent Devices",
         "category": "Enapter"
       },
       {
-        "command": "enapter-blueprints.commands.Devices.RemoveRecentByTreeNode",
+        "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
         "title": "Remove",
         "category": "Enapter",
         "icon": "$(trash)"
       },
       {
-        "command": "enapter-blueprints.commands.Devices.SelectRecentAsActiveByTreeNode",
+        "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
         "title": "Select as Active",
         "category": "Enapter",
         "icon": "$(play)"
       },
       {
-        "command": "enapter-blueprints.commands.Devices.SelectActive",
+        "command": "enapter.commands.Devices.SelectActive",
         "title": "Select Device",
         "category": "Enapter"
       },
       {
-        "command": "enapter-blueprints.commands.Devices.ReloadActive",
+        "command": "enapter.commands.Devices.ReloadActive",
         "title": "Reload Active Device",
         "category": "Enapter",
         "icon": "$(refresh)"
       },
       {
-        "command": "enapter-blueprints.commands.Devices.ResetActive",
+        "command": "enapter.commands.Devices.ResetActive",
         "title": "Reset Active Device",
         "category": "Enapter",
         "icon": "$(close)"
@@ -88,40 +88,40 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "enapter-blueprints.commands.Devices.RemoveRecentByTreeNode",
+          "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
           "when": "false"
         },
         {
-          "command": "enapter-blueprints.commands.Devices.SelectRecentAsActiveByTreeNode",
+          "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
           "when": "false"
         }
       ],
       "view/title": [
         {
-          "command": "enapter-blueprints.commands.Blueprints.UploadToActiveDevice",
-          "when": "view == enapter-blueprints.views.devices.active",
+          "command": "enapter.commands.Blueprints.UploadToActiveDevice",
+          "when": "view == enapter.views.devices.active",
           "group": "navigation@3"
         },
         {
-          "command": "enapter-blueprints.commands.Devices.ReloadActive",
-          "when": "view == enapter-blueprints.views.devices.active",
+          "command": "enapter.commands.Devices.ReloadActive",
+          "when": "view == enapter.views.devices.active",
           "group": "navigation@2"
         },
         {
-          "command": "enapter-blueprints.commands.Devices.ResetActive",
-          "when": "view == enapter-blueprints.views.devices.active",
+          "command": "enapter.commands.Devices.ResetActive",
+          "when": "view == enapter.views.devices.active",
           "group": "navigation@1"
         }
       ],
       "view/item/context": [
         {
-          "command": "enapter-blueprints.commands.Devices.RemoveRecentByTreeNode",
-          "when": "view == enapter-blueprints.views.devices.recent",
+          "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
+          "when": "view == enapter.views.devices.recent",
           "group": "inline"
         },
         {
-          "command": "enapter-blueprints.commands.Devices.SelectRecentAsActiveByTreeNode",
-          "when": "view == enapter-blueprints.views.devices.recent",
+          "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
+          "when": "view == enapter.views.devices.recent",
           "group": "inline"
         }
       ]
@@ -144,18 +144,22 @@
     }
   },
   "scripts": {
-    "test": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=dist/web/test/suite/extensionTests.js",
-    "pretest": "npm run compile-web",
-    "vscode:prepublish": "npm run package-web",
-    "compile-web": "npm run check-types && npm run lint && node esbuild.js",
-    "watch-web": "npm-run-all -p watch-web:*",
-    "watch-web:esbuild": "node esbuild.js --watch",
-    "watch-web:webview:esbuild": "node esbuild.webview.js --watch",
-    "watch-web:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "package-web": "npm run check-types && npm run lint && node esbuild.js --production",
-    "check-types": "tsc --noEmit",
-    "lint": "eslint src",
-    "run-in-browser": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. ."
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && npm-run-all -p compile:*",
+    "compile:base": "node esbuild.js",
+    "compile:webview": "node esbuild.webview.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:base:esbuild": "node esbuild.js --watch",
+    "watch:webview:esbuild": "node esbuild.webview.js --watch",
+    "watch:base:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "watch:webview:tsc": "tsc --noEmit --watch --project tsconfig.webview.json",
+    "package": "npm run check-types && npm run lint && npm-run-all -p package:*",
+    "package:base": "node esbuild.js --production",
+    "package:webview": "node esbuild.webview.js --production",
+    "check-types": "npm-run-all -p check-types:*",
+    "check-types:base": "tsc --noEmit --project tsconfig.json",
+    "check-types:webview": "tsc --noEmit --project tsconfig.webview.json",
+    "lint": "eslint src"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",

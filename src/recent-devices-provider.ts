@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import { ExtState } from "./ext-state";
-import { Device } from "../models/device";
+import { Device } from "./models/device";
 
 export class RecentDevicesTreeItem extends vscode.TreeItem {
   constructor(

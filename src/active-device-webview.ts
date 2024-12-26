@@ -1,9 +1,9 @@
 import vscode, { CancellationToken, WebviewView, WebviewViewResolveContext } from "vscode";
 import { ExtState } from "./ext-state";
-import { Device } from "../models/device";
+import { Device } from "./models/device";
 import { Logger } from "./logger";
 import { CommandIDs } from "./constants/commands";
-import { getNonce } from "../utils/get-nonce";
+import { getNonce } from "./utils/get-nonce";
 import { ExtSettings } from "./ext-settings";
 
 export class ActiveDeviceWebview implements vscode.WebviewViewProvider {

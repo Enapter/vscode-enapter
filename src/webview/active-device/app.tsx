@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./app.module.css";
 import { createRoot } from "react-dom/client";
 import { DeviceProvider } from "./device-provider";
