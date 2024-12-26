@@ -18,7 +18,7 @@ export async function selectDevice(): Promise<Device | undefined> {
 
   try {
     const client = new ApiClient();
-    const devices = await client.getAllLuaDevices();
+    const devices = await client.getDevicesSupportBlueprints();
 
     const chosen = await vscode.window.showQuickPick(getDevicesPicks(devices), {
       placeHolder: "Choose a device to upload the blueprint to",

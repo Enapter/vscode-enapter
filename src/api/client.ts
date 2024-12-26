@@ -1,7 +1,7 @@
 import wretch, { Middleware } from "wretch";
 import { loggable, Logger } from "../logger";
 import { ExtSettings } from "../ext-settings";
-import { Device } from "../models/device";
+import { Device, isSupportBlueprints } from "../models/device";
 
 const logMiddleware: Middleware = () => (next) => (url, opts) => {
   const logger = Logger.getInstance();
@@ -27,13 +27,13 @@ export class ApiClient {
   }
 
   @loggable()
-  async getAllLuaDevices() {
+  async getDevicesSupportBlueprints() {
     return this.client
       .url("/v3/devices")
       .get()
       .json<AllLuaDevicesResponse>()
       .then((res) => {
-        return res.devices.filter((d) => d.type === "lua");
+        return res.devices.filter(isSupportBlueprints);
       });
   }
 

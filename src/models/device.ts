@@ -1,6 +1,6 @@
 import type { UUID } from "./shared";
 
-type DeviceType = "standalone" | "gateway" | "hardware_ucm" | "lua";
+type DeviceType = "standalone" | "lua" | string;
 
 export type Device = {
   id: UUID;
@@ -10,4 +10,8 @@ export type Device = {
   updated_at: Date;
   authorized_role: string;
   type: DeviceType;
+};
+
+export const isSupportBlueprints = (device: Device) => {
+  return device.type === "lua" || device.type === "standalone";
 };
