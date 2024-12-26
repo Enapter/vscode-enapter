@@ -28,7 +28,13 @@ export class ApiClient {
 
   @loggable()
   async getAllLuaDevices() {
-    return this.client.url("/v3/devices").get().json<AllLuaDevicesResponse>();
+    return this.client
+      .url("/v3/devices")
+      .get()
+      .json<AllLuaDevicesResponse>()
+      .then((res) => {
+        return res.devices.filter((d) => d.type === "lua");
+      });
   }
 
   @loggable()
@@ -50,7 +56,14 @@ export class ApiClient {
 
   @loggable()
   async assignBlueprintToDevice(blueprintId: string, deviceId: string) {
-    return this.client.url(`/v3/devices/${deviceId}/assign_blueprint`).body({ blueprintId: blueprintId }).post().json();
+    return this.client
+      .url(`/v3/devices/${deviceId}/assign_blueprint`)
+      .body({ blueprintId: blueprintId })
+      .headers({
+        "Content-Type": "application/json",
+      })
+      .post()
+      .json();
   }
 
   private get client() {

@@ -18,9 +18,9 @@ export async function selectDevice(): Promise<Device | undefined> {
 
   try {
     const client = new ApiClient();
-    const { devices: devicesList } = await client.getAllLuaDevices();
+    const devices = await client.getAllLuaDevices();
 
-    const chosen = await vscode.window.showQuickPick(getDevicesPicks(devicesList), {
+    const chosen = await vscode.window.showQuickPick(getDevicesPicks(devices), {
       placeHolder: "Choose a device to upload the blueprint to",
     });
 
@@ -28,7 +28,7 @@ export async function selectDevice(): Promise<Device | undefined> {
       return;
     }
 
-    return devicesList.find((d) => d.name === chosen?.label);
+    return devices.find((d) => d.name === chosen?.label);
   } catch (e) {
     logger.log(e);
     vscode.window.showErrorMessage("Failed to select a device");
