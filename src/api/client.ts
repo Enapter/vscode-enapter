@@ -29,7 +29,7 @@ export class ApiClient {
   @loggable()
   async getDevicesSupportBlueprints() {
     return this.client
-      .url("/v3/devices")
+      .url("/v3/devices?expand=properties")
       .get()
       .json<AllLuaDevicesResponse>()
       .then((res) => {

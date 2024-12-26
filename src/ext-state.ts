@@ -36,6 +36,7 @@ export class ExtState {
             updated_at: d.updated_at,
             authorized_role: d.authorized_role,
             type: d.type,
+            properties: d.properties,
           };
         } catch (_) {
           return null;
