@@ -10,19 +10,40 @@ type LuaPathLike = {
   };
 };
 
+type DisplayNameLike = {
+  display_name?: string;
+};
+
+type DescriptionLike = {
+  description?: string;
+};
+
 class LuaFilePathNotFoundError extends Error {
   constructor() {
     super("Lua file path not found in the manifest.");
   }
 }
 
+export type SerializedManifest = {
+  path: string;
+};
+
 export class Manifest {
   path: vscode.Uri;
-  private _displayName: string | undefined;
   private _content: Content;
 
   constructor(path: vscode.Uri) {
     this.path = path;
+  }
+
+  static deserialize(serialized: SerializedManifest) {
+    return new Manifest(vscode.Uri.parse(serialized.path));
+  }
+
+  serialize(): SerializedManifest {
+    return {
+      path: this.path.toString(),
+    };
   }
 
   get name() {
@@ -66,6 +87,24 @@ export class Manifest {
 
   get content() {
     return this._content;
+  }
+
+  get displayName(): string | undefined {
+    if (!this.content) {
+      return undefined;
+    }
+
+    const parsed = yaml.load(this.content) as DisplayNameLike;
+    return parsed.display_name;
+  }
+
+  get description(): string | undefined {
+    if (!this.content) {
+      return undefined;
+    }
+
+    const parsed = yaml.load(this.content) as DescriptionLike;
+    return parsed.description;
   }
 
   async loadContent() {

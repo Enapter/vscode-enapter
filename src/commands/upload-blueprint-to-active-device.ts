@@ -1,4 +1,4 @@
-import vscode from "vscode";
+import vscode, { QuickPickItem, QuickPickItemKind } from "vscode";
 import { ProjectExplorer } from "../project-explorer";
 import { Manifest } from "../manifest";
 import { BlueprintZipper } from "../blueprint-zipper";
@@ -7,18 +7,84 @@ import { Logger } from "../logger";
 import { ExtState } from "../ext-state";
 import { ExtContext } from "../ext-context";
 
-function getManifestsPicks(manifests: Manifest[]) {
-  return manifests.map((m) => {
-    return {
-      label: m.name,
-      detail: m.relativePath,
-    };
+function getDetail(manifest: Manifest): string | undefined {
+  return manifest.relativePath;
+}
+
+function getManifestsPicks(manifests: Manifest[], recentManifest: Manifest | undefined): Thenable<QuickPickItem[]> {
+  const list: Promise<QuickPickItem>[] = [];
+
+  const recentManifestInList = manifests.find((m) => m.fsPath === recentManifest?.fsPath);
+
+  if (recentManifestInList) {
+    list.push(
+      new Promise((resolve) => {
+        resolve({
+          label: "Last used",
+          kind: QuickPickItemKind.Separator,
+        });
+      }),
+    );
+
+    list.push(
+      new Promise((resolve) => {
+        resolve(
+          recentManifestInList.loadContent().then((m) => {
+            return {
+              label: m.displayName || m.name,
+              detail: getDetail(recentManifestInList),
+            };
+          }),
+        );
+      }),
+    );
+  }
+
+  const filtered = manifests.filter((m) => {
+    if (!recentManifestInList) {
+      return true;
+    }
+
+    return m.fsPath !== recentManifestInList.fsPath;
   });
+
+  if (filtered.length === 0) {
+    return Promise.all(list);
+  }
+
+  if (recentManifestInList) {
+    list.push(
+      new Promise((resolve) => {
+        resolve({
+          label: "",
+          kind: QuickPickItemKind.Separator,
+        });
+      }),
+    );
+  }
+
+  filtered.forEach((m) => {
+    list.push(
+      new Promise((resolve) => {
+        resolve(
+          m.loadContent().then((manifest) => {
+            return {
+              label: manifest.displayName || manifest.name,
+              detail: getDetail(m),
+            };
+          }),
+        );
+      }),
+    );
+  });
+
+  return Promise.all(list);
 }
 
 export async function uploadBlueprintToActiveDevice() {
   const logger = Logger.getInstance();
   logger.group("Upload Blueprint");
+  const state = new ExtState(ExtContext.context);
 
   try {
     const pe = new ProjectExplorer();
@@ -38,8 +104,10 @@ export async function uploadBlueprintToActiveDevice() {
     let manifest = manifests[0];
 
     if (manifests.length > 1) {
-      const selectedManifest = await vscode.window.showQuickPick(getManifestsPicks(manifests), {
+      const recentManifest = state.getRecentManifest();
+      const selectedManifest = await vscode.window.showQuickPick(getManifestsPicks(manifests, recentManifest), {
         placeHolder: "Choose a manifest.yml file",
+        matchOnDetail: true,
       });
 
       if (!selectedManifest) {
@@ -49,10 +117,10 @@ export async function uploadBlueprintToActiveDevice() {
       manifest = manifests.find((m) => m.relativePath === selectedManifest.detail) || manifest;
     }
 
+    void state.setRecentManifest(manifest);
     await manifest.loadContent();
     const zipper = new BlueprintZipper(manifest);
     const client = new ApiClient();
-    const state = new ExtState(ExtContext.context);
     const device = state.getActiveDevice();
 
     if (!device) {

@@ -1,6 +1,7 @@
 import vscode, { ExtensionContext } from "vscode";
 import { Device } from "./models/device";
 import { ContextKeys } from "./constants/context-keys";
+import { Manifest, SerializedManifest } from "./manifest";
 
 export class ExtState {
   static instance: ExtState;
@@ -72,6 +73,15 @@ export class ExtState {
 
   private setIsActiveDevicePresentContext(isActive: boolean) {
     vscode.commands.executeCommand("setContext", ContextKeys.Devices.IsActivePresent, isActive);
+  }
+
+  async setRecentManifest(manifest: Manifest) {
+    await this.state.update("recentManifest", manifest.serialize());
+  }
+
+  getRecentManifest() {
+    const serialized = this.get<SerializedManifest>("recentManifest");
+    return serialized ? Manifest.deserialize(serialized) : undefined;
   }
 
   get<T>(key: string): T | undefined {
