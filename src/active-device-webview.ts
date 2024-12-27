@@ -5,6 +5,7 @@ import { Logger } from "./logger";
 import { CommandIDs } from "./constants/commands";
 import { getNonce } from "./utils/get-nonce";
 import { ExtSettings } from "./ext-settings";
+import { ApiClient } from "./api/client";
 
 export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
   private view?: vscode.WebviewView;
@@ -55,6 +56,17 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
     });
   }
 
+  postDeviceConnectivityStatus(status: string) {
+    if (!this.view) {
+      return;
+    }
+
+    this.view.webview.postMessage({
+      type: "device-connectivity-status",
+      status,
+    });
+  }
+
   onDidReceiveMessage(message: any) {
     Logger.getInstance().log(message);
 
@@ -67,6 +79,9 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
         break;
       case "request-ext-settings":
         this.postSettingsChanged();
+        break;
+      case "request-device-connectivity-status":
+        this.onRequestDeviceConnectivityStatus(message.deviceId);
         break;
       case "open-ext-settings":
         this.onOpenExtSettings();
@@ -88,6 +103,15 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
     this.state.clearActiveDevice().then(() => {
       this.postDeviceChanged(undefined);
     });
+  }
+
+  private onRequestDeviceConnectivityStatus(deviceId: string) {
+    new ApiClient()
+      .getDeviceConnectivityStatus(deviceId)
+      .then((res) => {
+        return res.status || "unknown";
+      })
+      .then((status) => this.postDeviceConnectivityStatus(status));
   }
 
   private onOpenExtSettings() {

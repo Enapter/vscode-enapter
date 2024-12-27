@@ -1,8 +1,9 @@
 import { Button } from "../components/button";
-import React, { useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDevice } from "./device-provider";
 import { useCommands } from "./commands-provider";
 import { CommandIDs } from "../../constants/commands";
+import { useVSCodeApi } from "./vscode-api-context";
 
 const DeviceInfoItem = ({ title, value }: { title: string; value: any }) => {
   const formattedValue = useMemo(() => {
@@ -21,6 +22,57 @@ const DeviceInfoItem = ({ title, value }: { title: string; value: any }) => {
   );
 };
 
+const useDeviceConnectivityStatus = (deviceId: string) => {
+  const [status, setStatus] = useState<string>("unknown");
+  const vscode = useVSCodeApi();
+  const interval = useRef<number | null>(null);
+
+  const postRequest = useCallback(() => {
+    vscode.postMessage({
+      type: "request-device-connectivity-status",
+      deviceId,
+    });
+  }, [vscode, deviceId]);
+
+  const handleStatusChanged = useCallback(
+    (e: any) => {
+      const message = e.data;
+
+      if (message.type !== "device-connectivity-status") {
+        return;
+      }
+
+      setStatus(message.status);
+    },
+    [setStatus],
+  );
+
+  useEffect(() => {
+    postRequest();
+    interval.current = window.setInterval(postRequest, 5000);
+    window.addEventListener("message", handleStatusChanged);
+
+    return () => {
+      if (interval.current) {
+        window.clearInterval(interval.current);
+        interval.current = null;
+      }
+
+      window.removeEventListener("message", handleStatusChanged);
+    };
+  }, [handleStatusChanged]);
+
+  return status;
+};
+
+type DeviceConnectivityStatus = { deviceId: string };
+
+const DeviceConnectivityStatus = ({ deviceId }: DeviceConnectivityStatus) => {
+  const status = useDeviceConnectivityStatus(deviceId);
+
+  return <DeviceInfoItem title={"Status"} value={status} />;
+};
+
 export const DeviceView = () => {
   const device = useDevice();
   const send = useCommands();
@@ -32,6 +84,7 @@ export const DeviceView = () => {
   return (
     <div>
       <ul style={{ listStyle: "none", padding: 0 }}>
+        <DeviceConnectivityStatus deviceId={device.id} />
         <DeviceInfoItem title={"Name"} value={device.name} />
         <DeviceInfoItem title={"Device ID"} value={device.id} />
         <DeviceInfoItem title={"Site ID"} value={device.site_id} />

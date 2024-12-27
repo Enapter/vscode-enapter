@@ -66,6 +66,11 @@ export class ApiClient {
       .json();
   }
 
+  @loggable()
+  async getDeviceConnectivityStatus(deviceId: string) {
+    return this.client.url(`/v3/devices/${deviceId}/connectivity_status`).get().json<{ status: string }>();
+  }
+
   private get client() {
     return wretch(this.host)
       .headers({
