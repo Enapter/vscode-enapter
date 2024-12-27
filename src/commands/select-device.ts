@@ -29,11 +29,11 @@ function getDevicesPicks(devicesList: Device[]) {
   const state = ExtState.instance;
   const list = [];
 
-  list.push({ label: "Recent", kind: QuickPickItemKind.Separator });
   const recentDevice = state.getRecentDevices()[0];
   const recentDeviceInList = devicesList.find((d) => d.id === recentDevice.id);
 
   if (recentDeviceInList) {
+    list.push({ label: "Recent", kind: QuickPickItemKind.Separator });
     list.push({
       label: recentDeviceInList.name,
       detail: getDetail(recentDeviceInList),
@@ -53,10 +53,12 @@ function getDevicesPicks(devicesList: Device[]) {
     return list;
   }
 
-  list.push({
-    label: "Other Devices",
-    kind: QuickPickItemKind.Separator,
-  });
+  if (recentDeviceInList) {
+    list.push({
+      label: "Other Devices",
+      kind: QuickPickItemKind.Separator,
+    });
+  }
 
   filtered.forEach((d) => {
     list.push({
