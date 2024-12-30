@@ -6,8 +6,14 @@ import { faker } from "@faker-js/faker";
 
 const app = new Hono();
 
+const delayMiddleware = (delay: number) => async (c: any, next: any) => {
+  await new Promise((resolve) => setTimeout(resolve, delay));
+  return next(c);
+};
+
 app.use("/*", cors());
 app.use(logger());
+app.use(delayMiddleware(2000));
 
 const devices = getRandomDevices(10);
 
