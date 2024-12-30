@@ -111,7 +111,11 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
       .then((res) => {
         return res.status || "unknown";
       })
-      .then((status) => this.postDeviceConnectivityStatus(status));
+      .then((status) => this.postDeviceConnectivityStatus(status))
+      .catch((e) => {
+        Logger.getInstance().log(e);
+        this.postDeviceConnectivityStatus("unknown");
+      });
   }
 
   private onOpenExtSettings() {
