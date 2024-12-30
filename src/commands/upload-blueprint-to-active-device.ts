@@ -1,4 +1,4 @@
-import vscode, { QuickPickItem, QuickPickItemKind } from "vscode";
+import vscode, { CancellationError, ProgressLocation, QuickPickItem, QuickPickItemKind } from "vscode";
 import { ProjectExplorer } from "../project-explorer";
 import { Manifest } from "../manifest";
 import { BlueprintZipper } from "../blueprint-zipper";
@@ -7,6 +7,7 @@ import { Logger } from "../logger";
 import { ExtState } from "../ext-state";
 import { ExtContext } from "../ext-context";
 import { ExtError } from "../ext-error";
+import { PickManifestTask } from "../tasks/pick-manifest-task";
 
 function getDetail(manifest: Manifest): string | undefined {
   return manifest.relativePath;
@@ -82,81 +83,78 @@ function getManifestsPicks(manifests: Manifest[], recentManifest: Manifest | und
   return Promise.all(list);
 }
 
+const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
+  return vscode.window.withProgress(
+    {
+      location: ProgressLocation.Notification,
+      title: "Uploading Blueprint",
+      cancellable: true,
+    },
+    cb,
+  );
+};
+
 export async function uploadBlueprintToActiveDevice() {
-  const logger = Logger.getInstance();
-  logger.group("Upload Blueprint");
-  const state = new ExtState(ExtContext.context);
-
-  try {
-    const pe = new ProjectExplorer();
-
-    const manifests = await pe.findAllManifests().then((manifests) => {
-      return manifests.map((m) => {
-        return new Manifest(m);
-      });
+  return withProgress(async (progress, token) => {
+    token.onCancellationRequested(() => {
+      throw new CancellationError();
     });
 
-    if (manifests.length === 0) {
-      logger.log("No manifest.yml found");
-      vscode.window.showErrorMessage("No manifest.yml found");
-      return;
-    }
+    const logger = Logger.getInstance();
 
-    let manifest = manifests[0];
+    try {
+      logger.group("Upload Blueprint");
+      const state = new ExtState(ExtContext.context);
+      const manifest = await new PickManifestTask().run();
 
-    if (manifests.length > 1) {
-      const recentManifest = state.getRecentManifest();
-      const selectedManifest = await vscode.window.showQuickPick(getManifestsPicks(manifests, recentManifest), {
-        placeHolder: "Choose a manifest.yml file",
-        matchOnDetail: true,
-      });
-
-      if (!selectedManifest) {
+      if (!manifest) {
         return;
       }
 
-      manifest = manifests.find((m) => m.relativePath === selectedManifest.detail) || manifest;
+      void state.setRecentManifest(manifest);
+      await manifest.loadContent();
+      const zipper = new BlueprintZipper(manifest);
+      const client = new ApiClient();
+      const device = state.getActiveDevice();
+
+      if (!device) {
+        vscode.window.showErrorMessage("No active device found");
+        return;
+      }
+
+      progress.report({ message: "Adding files to an archive" });
+      const zip = await zipper.zip();
+
+      if (!zip) {
+        logger.log("Failed to zip the blueprint");
+        vscode.window.showErrorMessage("Failed to zip the blueprint");
+        return;
+      }
+
+      progress.report({ message: "Uploading" });
+      const {
+        blueprint: { id: blueprintId },
+      } = await client.uploadBlueprint(zip);
+
+      vscode.window.showInformationMessage(`Blueprint uploaded successfully. Blueprint ID: ${blueprintId}`);
+      progress.report({ message: "Assigning blueprint to the active device" });
+      await client.assignBlueprintToDevice(blueprintId, device.id);
+      vscode.window.showInformationMessage(`Blueprint assigned to device ${device.name}`);
+      void state.addRecentDevice(device);
+
+      return device;
+    } catch (e) {
+      logger.log("Failed to upload blueprint");
+      logger.log(e);
+
+      if (e instanceof ExtError) {
+        vscode.window.showErrorMessage(e.message);
+        return;
+      }
+
+      vscode.window.showErrorMessage("Failed to upload blueprint");
+    } finally {
+      logger.groupEnd();
     }
-
-    void state.setRecentManifest(manifest);
-    await manifest.loadContent();
-    const zipper = new BlueprintZipper(manifest);
-    const client = new ApiClient();
-    const device = state.getActiveDevice();
-
-    if (!device) {
-      vscode.window.showErrorMessage("No active device found");
-      return;
-    }
-
-    const zip = await zipper.zip();
-
-    if (!zip) {
-      logger.log("Failed to zip the blueprint");
-      vscode.window.showErrorMessage("Failed to zip the blueprint");
-      return;
-    }
-
-    const {
-      blueprint: { id: blueprintId },
-    } = await client.uploadBlueprint(zip);
-
-    vscode.window.showInformationMessage(`Blueprint uploaded successfully. Blueprint ID: ${blueprintId}`);
-    await client.assignBlueprintToDevice(blueprintId, device.id);
-    vscode.window.showInformationMessage(`Blueprint assigned to device ${device.name}`);
-    void state.addRecentDevice(device);
-
-    return device;
-  } catch (e) {
-    logger.log(e);
-
-    if (e instanceof ExtError) {
-      vscode.window.showErrorMessage(e.message);
-      return;
-    }
-    
-    vscode.window.showErrorMessage("Failed to upload blueprint");
-  } finally {
-    logger.groupEnd();
-  }
+  });
 }
