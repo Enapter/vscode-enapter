@@ -1,5 +1,6 @@
 import vscode from "vscode";
 import yaml from "js-yaml";
+import { ExtError } from "./ext-error";
 
 type Content = string | undefined;
 type LuaPath = string | undefined;
@@ -18,7 +19,7 @@ type DescriptionLike = {
   description?: string;
 };
 
-class LuaFilePathNotFoundError extends Error {
+class LuaFilePathNotFoundError extends ExtError {
   constructor() {
     super("Lua file path not found in the manifest.");
   }

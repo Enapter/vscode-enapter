@@ -6,6 +6,7 @@ import { ApiClient } from "../api/client";
 import { Logger } from "../logger";
 import { ExtState } from "../ext-state";
 import { ExtContext } from "../ext-context";
+import { ExtError } from "../ext-error";
 
 function getDetail(manifest: Manifest): string | undefined {
   return manifest.relativePath;
@@ -148,6 +149,12 @@ export async function uploadBlueprintToActiveDevice() {
     return device;
   } catch (e) {
     logger.log(e);
+
+    if (e instanceof ExtError) {
+      vscode.window.showErrorMessage(e.message);
+      return;
+    }
+    
     vscode.window.showErrorMessage("Failed to upload blueprint");
   } finally {
     logger.groupEnd();
