@@ -8,7 +8,13 @@ type LuaPath = string | undefined;
 type LuaPathLike = {
   communication_module?: {
     lua_file?: string;
-  };
+  } | {
+    lua?: {
+      file?: string;
+    } | {
+      dir?: string;
+    }
+  }
 };
 
 type DisplayNameLike = {
@@ -61,7 +67,19 @@ export class Manifest {
     }
 
     const parsed = yaml.load(this.content) as LuaPathLike;
-    const path = parsed.communication_module?.lua_file;
+    let path;
+
+    if (!parsed.communication_module) {
+      throw new LuaFilePathNotFoundError();
+    }
+
+    if ('lua_file' in parsed.communication_module) {
+      path = parsed.communication_module.lua_file;
+    } else if ('lua' in parsed.communication_module && parsed.communication_module.lua && 'file' in parsed.communication_module.lua) {
+      path = parsed.communication_module.lua.file;
+    } else if ('lua' in parsed.communication_module && parsed.communication_module.lua && 'dir' in parsed.communication_module.lua) {
+      path = parsed.communication_module.lua.dir;
+    }
 
     if (!path) {
       throw new LuaFilePathNotFoundError();
