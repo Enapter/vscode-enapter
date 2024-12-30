@@ -2,6 +2,7 @@ import vscode from "vscode";
 
 export interface ILogger {
   log(message: string): void;
+  error(message: string): void;
   group(tag: string): void;
   groupEnd(): void;
 }
@@ -28,6 +29,12 @@ export class Logger {
     const message = this.prependWithAdditionalInfo(messages.map(this.stringify).join(" "));
     this.channel.appendLine(message);
     this.loggers.forEach((ch) => ch.log(message));
+  }
+
+  error(...messages: any[]) {
+    const message = this.prependWithAdditionalInfo(messages.map(this.stringify).join(" "));
+    this.channel.appendLine(message);
+    this.loggers.forEach((ch) => ch.error(message));
   }
 
   group(tag: string) {
