@@ -25,7 +25,7 @@ export class BlueprintZipper {
     this.zipper.file(this.manifest.name, this.manifest.content);
 
     if (await this.isLuaDir()) {
-      this.zipLuaDir();
+      await this.zipLuaDir();
     } else {
       await this.zipLuaFile();
     }
@@ -33,12 +33,30 @@ export class BlueprintZipper {
     return this.zipper.generateAsync({ type: "uint8array" });
   }
 
-  @loggable()
-  private zipLuaDir() {
-    this.zipper.folder(this.getLuaFsPath());
+  private async zipLuaDir() {
+    const luaDirPath = this.getLuaFsPath();
+    const folder = this.zipper.folder(this.manifest.luaPath!);
+    await this.addFilesToZip(luaDirPath, folder!);
   }
 
-  @loggable()
+  private async addFilesToZip(dirPath: string, zipFolder: JSZip) {
+    const dirUri = vscode.Uri.file(dirPath);
+    const files = await vscode.workspace.fs.readDirectory(dirUri);
+
+    for (const [name, type] of files) {
+      const filePath = `${dirPath}/${name}`;
+      const fileUri = vscode.Uri.file(filePath);
+
+      if (type === vscode.FileType.Directory) {
+        const newFolder = zipFolder.folder(name);
+        await this.addFilesToZip(filePath, newFolder!);
+      } else if (type === vscode.FileType.File) {
+        const fileContent = await vscode.workspace.fs.readFile(fileUri);
+        zipFolder.file(name, fileContent);
+      }
+    }
+  }
+
   private async zipLuaFile() {
     if (!this.manifest.luaPath) {
       this.logger.log("No lua path found in manifest");
@@ -50,6 +68,8 @@ export class BlueprintZipper {
   }
 
   private getLuaFsPath() {
+    const path = this.manifest.luaFsPath;
+    this.logger.log("Lua path:", path);
     return this.manifest.luaFsPath;
   }
 
