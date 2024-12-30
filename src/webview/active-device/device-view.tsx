@@ -48,7 +48,6 @@ const useDeviceConnectivityStatus = (deviceId: string) => {
   );
 
   useEffect(() => {
-    postRequest();
     window.addEventListener("message", handleStatusChanged);
 
     return () => {
@@ -57,6 +56,7 @@ const useDeviceConnectivityStatus = (deviceId: string) => {
   }, [handleStatusChanged]);
 
   useEffect(() => {
+    postRequest();
     interval.current = window.setInterval(postRequest, 5000);
 
     return () => {
@@ -65,7 +65,7 @@ const useDeviceConnectivityStatus = (deviceId: string) => {
         interval.current = null;
       }
     };
-  }, []);
+  }, [postRequest]);
 
   return status;
 };
