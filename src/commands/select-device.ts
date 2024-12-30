@@ -30,7 +30,7 @@ function getDevicesPicks(devicesList: Device[]) {
   const list = [];
 
   const recentDevice = state.getRecentDevices()[0];
-  const recentDeviceInList = devicesList.find((d) => d.id === recentDevice.id);
+  const recentDeviceInList = recentDevice ? devicesList.find((d) => d.id === recentDevice.id) : undefined;
 
   if (recentDeviceInList) {
     list.push({ label: "Recent", kind: QuickPickItemKind.Separator });
