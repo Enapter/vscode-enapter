@@ -28,6 +28,12 @@ app.get("/v3/devices/:id", (c) => {
   });
 });
 
+const statuses = ["online", "offline", "unknown"];
+
+app.get("/v3/devices/:id/connectivity_status", (c) => {
+  return c.json({ status: faker.helpers.arrayElement(statuses) });
+});
+
 app.post("/v3/blueprints/upload", async (c) => {
   try {
     const body = await c.req.arrayBuffer();
