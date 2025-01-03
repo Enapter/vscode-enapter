@@ -12,3 +12,8 @@ export const CommandIDs = {
     ReloadActive: "enapter.commands.Devices.ReloadActive",
   },
 } as const;
+
+type ValueOf<T> = T[keyof T];
+type DeepValueOf<T> = T extends object ? ValueOf<{ [K in keyof T]: DeepValueOf<T[K]> }> : T;
+
+export type CommandID = DeepValueOf<typeof CommandIDs>;
