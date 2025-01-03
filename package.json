@@ -17,7 +17,7 @@
         {
           "id": "enapter",
           "title": "Enapter",
-          "icon": "resources/icon.svg"
+          "icon": "resources/logo-sidebar.svg"
         }
       ]
     },
@@ -83,6 +83,28 @@
         "title": "Reset Active Device",
         "category": "Enapter",
         "icon": "$(close)"
+      },
+      {
+        "command": "enapter.commands.InitialSetup.SetEnapterCloudContext",
+        "title": "Use Enapter Cloud",
+        "category": "Enapter",
+        "icon": "$(cloud)"
+      },
+      {
+        "command": "enapter.commands.InitialSetup.SetEnapterGatewayContext",
+        "title": "Use Enapter Gateway",
+        "category": "Enapter",
+        "icon": "$(device-desktop)"
+      },
+      {
+        "command": "enapter.commands.Setup.SetApiHost",
+        "title": "Set API Host",
+        "category": "Enapter"
+      },
+      {
+        "command": "enapter.commands.Setup.SetApiKey",
+        "title": "Set API Key",
+        "category": "Enapter"
       }
     ],
     "menus": {
@@ -93,6 +115,22 @@
         },
         {
           "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
+          "when": "false"
+        },
+        {
+          "command": "enapter.commands.InitialSetup.SetEnapterCloudContext",
+          "when": "false"
+        },
+        {
+          "command": "enapter.commands.InitialSetup.SetEnapterGatewayContext",
+          "when": "false"
+        },
+        {
+          "command": "enapter.commands.Setup.SetApiHost",
+          "when": "false"
+        },
+        {
+          "command": "enapter.commands.Setup.SetApiKey",
           "when": "false"
         }
       ],
@@ -141,7 +179,64 @@
           "markdownDescription": "Enapter API Host\n\n**Default host `https://api.enapter.com` is used if the field is empty.**"
         }
       }
-    }
+    },
+    "walkthroughs": [
+      {
+        "id": "enapter.walkthroughs.initial-setup",
+        "title": "Get Started with Enapter VSCode Extension",
+        "description": "This walkthrough will guide you through the initial setup of the Enapter VSCode Extension. You will need to provide your Enapter API Key and API Host.",
+        "icon": "resources/logo-default.svg",
+        "steps": [
+          {
+            "id": "initial-setup.select-connection-type",
+            "title": "Select connection type",
+            "description": "You can upload blueprints to devices provisioned to the Enapter Cloud (default)\n[Use Enapter Cloud ](command:enapter.commands.Setup.SetEnapterCloudConnectionType)\nOr you can use your local Enapter Gateway\n[Use Enapter Gateway](command:enapter.commands.Setup.SetEnapterGatewayConnectionType)",
+            "media": {
+              "markdown": "media/walkthroughs/initial-setup/select-cloud-or-gateway.md"
+            },
+            "completionEvents": [
+              "onContext:enapter.context.ConnectionType"
+            ]
+          },
+          {
+            "id": "initial-setup.set-api-host",
+            "title": "Set API Host",
+            "description": "Set the API Host for the Enapter Gateway API in the extension settings.\nFor example, \"http://enapter-gateway.local/api\" or \"http://192.168.38.38/api\"\n\n[Open Settings](command:enapter.commands.Setup.SetApiHost)",
+            "when": "enapter.context.ConnectionType == 'gateway'",
+            "media": {
+              "markdown": "media/walkthroughs/initial-setup/set-api-host-gateway.md"
+            },
+            "completionEvents": [
+              "onCommand:enapter.commands.Setup.SetApiHost"
+            ]
+          },
+          {
+            "id": "initial-setupset-api-key-cloud",
+            "title": "Set API Key",
+            "description": "Set the API Key for the Enapter Cloud API in the extension settings.\n\n[Open Settings](command:enapter.commands.Setup.SetApiKey)",
+            "when": "enapter.context.ConnectionType == 'cloud'",
+            "media": {
+              "markdown": "media/walkthroughs/initial-setup/set-api-key-cloud.md"
+            },
+            "completionEvents": [
+              "onCommand:enapter.commands.Setup.SetApiKey"
+            ]
+          },
+          {
+            "id": "initial-setup.set-api-key-gateway",
+            "title": "Set API Key",
+            "description": "Set the API Key for the Enapter Gateway API in the extension settings.\n\n[Open Settings](command:enapter.commands.Setup.SetApiKey)",
+            "when": "enapter.context.ConnectionType == 'gateway'",
+            "media": {
+              "markdown": "media/walkthroughs/initial-setup/set-api-key-gateway.md"
+            },
+            "completionEvents": [
+              "onCommand:enapter.commands.Setup.SetApiKey"
+            ]
+          }
+        ]
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

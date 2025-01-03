@@ -12,6 +12,7 @@ import { ActiveDeviceWebview } from "./active-device-webview";
 import { selectRecentAsActiveByTreeNode } from "./commands/select-recent-as-active-by-tree-node";
 import { reloadActiveDevice } from "./commands/reload-active-device";
 import { ExtSettings } from "./ext-settings";
+import { ContextKeys } from "./constants/context-keys";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -40,6 +41,22 @@ export function activate(context: vscode.ExtensionContext) {
 
   const logger = Logger.getInstance();
   logger.addLogger(console);
+
+  registerCommand(CommandIDs.Setup.SetEnapterCloudConnectionType, () => {
+    vscode.commands.executeCommand("setContext", ContextKeys.ConnectionType, "cloud");
+  });
+
+  registerCommand(CommandIDs.Setup.SetEnapterGatewayConnectionType, () => {
+    vscode.commands.executeCommand("setContext", ContextKeys.ConnectionType, "gateway");
+  });
+
+  registerCommand(CommandIDs.Setup.SetApiHost, () => {
+    vscode.commands.executeCommand("workbench.action.openSettings", "Enapter");
+  });
+
+  registerCommand(CommandIDs.Setup.SetApiKey, () => {
+    vscode.commands.executeCommand("workbench.action.openSettings", "Enapter");
+  });
 
   registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, uploadBlueprintToActiveDevice);
   registerCommand(CommandIDs.Devices.SelectActive, selectDevice);

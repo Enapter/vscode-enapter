@@ -4,7 +4,7 @@ import { useCommands } from "./commands-provider";
 import { CommandIDs } from "../../constants/commands";
 
 export const SelectDevice = () => {
-  const send = useCommands();
+  const { send } = useCommands();
 
   const handleSelectDevice = () => {
     send(CommandIDs.Devices.SelectActive);
