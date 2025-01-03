@@ -2,6 +2,7 @@ import wretch, { Middleware } from "wretch";
 import { loggable, Logger } from "../logger";
 import { ExtSettings } from "../ext-settings";
 import { Device, isSupportBlueprints } from "../models/device";
+import { CancellationError, CancellationToken } from "vscode";
 
 const logMiddleware: Middleware = () => (next) => (url, opts) => {
   const logger = Logger.getInstance();
@@ -43,7 +44,11 @@ export class ApiClient {
   }
 
   @loggable()
-  async uploadBlueprint(body: Uint8Array): Promise<{ blueprint: { id: string } }> {
+  async uploadBlueprint(body: Uint8Array, token?: CancellationToken): Promise<{ blueprint: { id: string } }> {
+    if (token?.isCancellationRequested) {
+      throw new CancellationError();
+    }
+
     return this.client
       .url("/v3/blueprints/upload")
       .body(body)
@@ -55,7 +60,11 @@ export class ApiClient {
   }
 
   @loggable()
-  async assignBlueprintToDevice(blueprintId: string, deviceId: string) {
+  async assignBlueprintToDevice(blueprintId: string, deviceId: string, token?: CancellationToken) {
+    if (token?.isCancellationRequested) {
+      throw new CancellationError();
+    }
+
     return this.client
       .url(`/v3/devices/${deviceId}/assign_blueprint`)
       .json({ blueprint_id: blueprintId })
