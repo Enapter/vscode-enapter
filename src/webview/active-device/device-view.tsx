@@ -80,7 +80,7 @@ const DeviceConnectivityStatus = ({ deviceId }: DeviceConnectivityStatus) => {
 
 export const DeviceView = () => {
   const device = useDevice();
-  const send = useCommands();
+  const { send, checkIfRunning } = useCommands();
 
   const startUploadBlueprint = () => {
     send(CommandIDs.Blueprints.UploadToActiveDevice);
@@ -98,7 +98,11 @@ export const DeviceView = () => {
         <DeviceInfoItem title={"Updated At"} value={device.updated_at} />
       </ul>
 
-      <Button onClick={startUploadBlueprint} fullWidth>
+      <Button
+        disabled={checkIfRunning(CommandIDs.Blueprints.UploadToActiveDevice)}
+        onClick={startUploadBlueprint}
+        fullWidth
+      >
         Upload Blueprint
       </Button>
     </div>

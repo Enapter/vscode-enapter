@@ -2,7 +2,7 @@ import vscode, { CancellationToken, WebviewView, WebviewViewResolveContext } fro
 import { ExtState } from "./ext-state";
 import { Device } from "./models/device";
 import { Logger } from "./logger";
-import { CommandIDs } from "./constants/commands";
+import { CommandID, CommandIDs } from "./constants/commands";
 import { getNonce } from "./utils/get-nonce";
 import { ExtSettings } from "./ext-settings";
 import { ApiClient } from "./api/client";
@@ -135,6 +135,20 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
     }
   }
 
+  private startCommand(command: CommandID) {
+    this.view?.webview.postMessage({
+      type: "command-started",
+      command,
+    });
+  }
+
+  private finishCommand(command: CommandID) {
+    this.view?.webview.postMessage({
+      type: "command-finished",
+      command,
+    });
+  }
+
   private onSelectActiveDevice(message: any) {
     vscode.commands.executeCommand<Device | undefined>(CommandIDs.Devices.SelectActive).then((d) => {
       if (!d) {
@@ -148,7 +162,10 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
   }
 
   private onUploadBlueprintToActiveDevice() {
-    void vscode.commands.executeCommand<Device>(CommandIDs.Blueprints.UploadToActiveDevice);
+    this.startCommand(CommandIDs.Blueprints.UploadToActiveDevice);
+    void vscode.commands.executeCommand<Device>(CommandIDs.Blueprints.UploadToActiveDevice).then(() => {
+      this.finishCommand(CommandIDs.Blueprints.UploadToActiveDevice);
+    });
   }
 
   resolveWebviewView(webviewView: WebviewView, _context: WebviewViewResolveContext, _token: CancellationToken) {
