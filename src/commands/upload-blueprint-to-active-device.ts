@@ -96,16 +96,12 @@ const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
 
 export async function uploadBlueprintToActiveDevice() {
   return withProgress(async (progress, token) => {
-    token.onCancellationRequested(() => {
-      throw new CancellationError();
-    });
-
     const logger = Logger.getInstance();
 
     try {
       logger.group("Upload Blueprint");
       const state = new ExtState(ExtContext.context);
-      const manifest = await new PickManifestTask().run();
+      const manifest = await new PickManifestTask().run(token);
 
       if (!manifest) {
         return;
@@ -138,21 +134,24 @@ export async function uploadBlueprintToActiveDevice() {
 
       vscode.window.showInformationMessage(`Blueprint uploaded successfully. Blueprint ID: ${blueprintId}`);
       progress.report({ message: "Assigning blueprint to the active device" });
-      await client.assignBlueprintToDevice(blueprintId, device.id);
+      await client.assignBlueprintToDevice(blueprintId, device.id, token);
       vscode.window.showInformationMessage(`Blueprint assigned to device ${device.name}`);
       void state.addRecentDevice(device);
 
       return device;
     } catch (e) {
+      if (e instanceof CancellationError) {
+        return;
+      }
+
       logger.log("Failed to upload blueprint");
       logger.log(e);
 
       if (e instanceof ExtError) {
         vscode.window.showErrorMessage(e.message);
-        return;
+      } else {
+        vscode.window.showErrorMessage("Failed to upload blueprint");
       }
-
-      vscode.window.showErrorMessage("Failed to upload blueprint");
     } finally {
       logger.groupEnd();
     }
