@@ -10,13 +10,23 @@ export const checkConnection = () => {
     return;
   }
 
+  const logger = Logger.getInstance();
+
+  const handleError = (err: any) => {
+    logger.log(err);
+    vscode.window.showErrorMessage("Connection failed");
+  };
+
   api
     .checkConnection()
-    .then(() => {
+    .res((res) => {
+      if (!res.ok) {
+        handleError(res.statusText);
+      }
+
       vscode.window.showInformationMessage("Connection successful");
     })
     .catch((error) => {
-      Logger.getInstance().log(error);
-      vscode.window.showErrorMessage("Connection failed");
+      handleError(error);
     });
 };

@@ -82,7 +82,7 @@ export class ApiClient {
 
   @loggable()
   checkConnection() {
-    return this.client.url("/v3/devices").get().json();
+    return this.client.url("/v3/devices").get();
   }
 
   get isConfigured(): boolean {
