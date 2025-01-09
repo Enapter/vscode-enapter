@@ -13,6 +13,7 @@ import { selectRecentAsActiveByTreeNode } from "./commands/select-recent-as-acti
 import { reloadActiveDevice } from "./commands/reload-active-device";
 import { ExtSettings } from "./ext-settings";
 import { ContextKeys } from "./constants/context-keys";
+import { checkConnection } from "./commands/check-connection";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -58,6 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.executeCommand("workbench.action.openSettings", "Enapter");
   });
 
+  registerCommand(CommandIDs.Setup.CheckConnection, checkConnection);
   registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, uploadBlueprintToActiveDevice);
   registerCommand(CommandIDs.Devices.SelectActive, selectDevice);
   registerCommand(CommandIDs.Devices.ReloadActive, reloadActiveDevice);

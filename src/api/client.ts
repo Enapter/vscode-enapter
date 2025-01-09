@@ -80,6 +80,15 @@ export class ApiClient {
     return this.client.url(`/v3/devices/${deviceId}/connectivity_status`).get().json<{ status: string }>();
   }
 
+  @loggable()
+  checkConnection() {
+    return this.client.url("/v3/devices").get().json();
+  }
+
+  get isConfigured(): boolean {
+    return !!this.host && !!this.token;
+  }
+
   private get client() {
     return wretch(this.host)
       .headers({

@@ -4,6 +4,7 @@ export const CommandIDs = {
     SetEnapterGatewayConnectionType: "enapter.commands.Setup.SetEnapterGatewayConnectionType",
     SetApiHost: "enapter.commands.Setup.SetApiHost",
     SetApiKey: "enapter.commands.Setup.SetApiKey",
+    CheckConnection: "enapter.commands.Setup.CheckConnection",
   },
   Blueprints: {
     SelectDeviceAndUploadBlueprint: "enapter.commands.Blueprints.SelectDeviceAndUploadBlueprint",

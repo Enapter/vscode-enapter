@@ -105,6 +105,11 @@
         "command": "enapter.commands.Setup.SetApiKey",
         "title": "Set API Key",
         "category": "Enapter"
+      },
+      {
+        "command": "enapter.commands.Setup.CheckConnection",
+        "title": "Check Connection",
+        "category": "Enapter"
       }
     ],
     "menus": {
@@ -233,6 +238,14 @@
             "completionEvents": [
               "onCommand:enapter.commands.Setup.SetApiKey"
             ]
+          },
+          {
+            "id": "initial-setup.check-connection",
+            "title": "Check Connection",
+            "description": "Check the connection to the Enapter API.\n\n[Check](command:enapter.commands.Setup.CheckConnection)",
+            "media": {
+              "markdown": "media/walkthroughs/initial-setup/check-connection.md"
+            }
           }
         ]
       }
