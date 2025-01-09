@@ -15,14 +15,28 @@ export class Logger {
 
   constructor() {
     this.channel = vscode.window.createOutputChannel("Enapter");
+
+    if (!Logger.instance) {
+      Logger.instance = this;
+    }
+
+    return Logger.instance;
   }
 
   static getInstance() {
     if (!Logger.instance) {
-      Logger.instance = new Logger();
+      throw new Error("Logger is not initialized");
     }
 
     return Logger.instance;
+  }
+
+  static log(...messages: any[]) {
+    Logger.getInstance().log(...messages);
+  }
+
+  static error(...messages: any[]) {
+    Logger.getInstance().error(...messages);
   }
 
   log(...messages: any[]) {

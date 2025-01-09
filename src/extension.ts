@@ -40,7 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
   const extContext = new ExtContext(context);
   const extSettings = new ExtSettings();
 
-  const logger = Logger.getInstance();
+  const logger = new Logger();
   logger.addLogger(console);
 
   registerCommand(CommandIDs.Setup.SetEnapterCloudConnectionType, () => {
