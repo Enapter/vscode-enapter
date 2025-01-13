@@ -127,7 +127,11 @@
         ],
         "extensions": [
           ".enbp"
-        ]
+        ],
+        "icon": {
+          "light": "resources/logo-fileicon-light.svg",
+          "dark": "resources/logo-fileicon-dark.svg"
+        }
       }
     ],
     "menus": {
