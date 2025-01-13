@@ -33,7 +33,7 @@ async function main() {
     minify: production,
     sourcemap: !production,
     sourcesContent: false,
-    platform: "browser",
+    platform: "node",
     outdir: "dist/",
     external: ["vscode"],
     logLevel: "silent",

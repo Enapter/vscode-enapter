@@ -14,6 +14,8 @@ import { reloadActiveDevice } from "./commands/reload-active-device";
 import { ExtSettings } from "./ext-settings";
 import { ContextKeys } from "./constants/context-keys";
 import { checkConnection } from "./commands/check-connection";
+import { mountEnbp } from "./commands/mount-enbp";
+import { EnbpFileSystemProvider } from "./enbp-file-system-provider";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -43,6 +45,12 @@ export function activate(context: vscode.ExtensionContext) {
   const logger = new Logger();
   logger.addLogger(console);
 
+  context.subscriptions.push(
+    vscode.workspace.registerFileSystemProvider("enbp", new EnbpFileSystemProvider(), {
+      isCaseSensitive: true,
+    }),
+  );
+
   registerCommand(CommandIDs.Setup.SetEnapterCloudConnectionType, () => {
     vscode.commands.executeCommand("setContext", ContextKeys.ConnectionType, "cloud");
   });
@@ -66,6 +74,8 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Devices.ResetActive, resetActiveDevice);
   registerCommand(CommandIDs.Devices.RemoveRecentByTreeNode, removeRecentDeviceNode);
   registerCommand(CommandIDs.Devices.SelectRecentAsActiveByTreeNode, selectRecentAsActiveByTreeNode);
+
+  registerCommand(CommandIDs.Enbp.Mount, mountEnbp);
 
   activator.createTreeView(ViewIDs.Devices.Recent, { treeDataProvider: new RecentDevicesProvider(context) });
   activator.registerWebview(ViewIDs.Devices.Active, new ActiveDeviceWebview(context));

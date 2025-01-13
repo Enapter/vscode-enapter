@@ -18,6 +18,9 @@ export const CommandIDs = {
     ResetActive: "enapter.commands.Devices.ResetActive",
     ReloadActive: "enapter.commands.Devices.ReloadActive",
   },
+  Enbp: {
+    Mount: "enapter.commands.Enbp.Mount",
+  },
 } as const;
 
 type ValueOf<T> = T[keyof T];

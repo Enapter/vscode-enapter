@@ -110,9 +110,34 @@
         "command": "enapter.commands.Setup.CheckConnection",
         "title": "Check Connection",
         "category": "Enapter"
+      },
+      {
+        "command": "enapter.commands.Enbp.Mount",
+        "title": "Open Enapter Blueprint Archive",
+        "category": "Enapter"
+      }
+    ],
+    "languages": [
+      {
+        "id": "enbp",
+        "aliases": [
+          "enbp",
+          "Enapter Blueprint",
+          "Enapter Blueprint Archive"
+        ],
+        "extensions": [
+          ".enbp"
+        ]
       }
     ],
     "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceLangId == enbp && !explorerResourceIsRoot",
+          "command": "enapter.commands.Enbp.Mount",
+          "group": "navigation"
+        }
+      ],
       "commandPalette": [
         {
           "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
