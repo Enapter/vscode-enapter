@@ -1,8 +1,8 @@
 import vscode from "vscode";
 
 export interface ILogger {
-  log(message: string): void;
-  error(message: string): void;
+  log(...messages: any[]): void;
+  error(...messages: any[]): void;
   group(tag: string): void;
   groupEnd(): void;
 }
