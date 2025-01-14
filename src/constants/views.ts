@@ -3,4 +3,7 @@ export const ViewIDs = {
     Active: "enapter.views.devices.active",
     Recent: "enapter.views.devices.recent",
   },
+  Enbp: {
+    Files: "enapter.views.enbp.files",
+  },
 } as const;

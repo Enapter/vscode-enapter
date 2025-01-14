@@ -34,6 +34,11 @@
           "id": "enapter.views.devices.recent",
           "name": "Previously Used Devices",
           "visibility": "visible"
+        },
+        {
+          "id": "enapter.views.enbp.files",
+          "name": "Enapter Blueprint Archives",
+          "visibility": "visible"
         }
       ]
     },
@@ -115,6 +120,11 @@
         "command": "enapter.commands.Enbp.Mount",
         "title": "Open Enapter Blueprint Archive",
         "category": "Enapter"
+      },
+      {
+        "command": "enapter.commands.Enbp.OpenTreeItem",
+        "title": "enapter.commands.Enbp.OpenTreeItem",
+        "category": "Enapter"
       }
     ],
     "languages": [
@@ -166,6 +176,10 @@
         {
           "command": "enapter.commands.Setup.SetApiKey",
           "when": "false"
+        },
+        {
+          "command": "enapter.commands.Enbp.OpenTreeItem",
+          "when": false
         }
       ],
       "view/title": [

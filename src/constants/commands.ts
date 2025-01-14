@@ -20,6 +20,7 @@ export const CommandIDs = {
   },
   Enbp: {
     Mount: "enapter.commands.Enbp.Mount",
+    OpenTreeItem: "enapter.commands.Enbp.OpenTreeItem",
   },
 } as const;
 

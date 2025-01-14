@@ -8,6 +8,10 @@ export class ProjectExplorer {
     return this.ws.findFiles("**/manifest.yml");
   }
 
+  findAllEnbpFiles() {
+    return this.ws.findFiles("**/*.enbp");
+  }
+
   private get ws() {
     return vscode.workspace;
   }

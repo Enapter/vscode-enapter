@@ -16,6 +16,9 @@ import { ContextKeys } from "./constants/context-keys";
 import { checkConnection } from "./commands/check-connection";
 import { mountEnbp } from "./commands/mount-enbp";
 import { EnbpFileSystemProvider } from "./enbp-file-system-provider";
+import { EnbpFilesTreeView } from "./enbp-files-tree-view";
+import { openEnbpTreeItem } from "./commands/open-enbp-tree-item";
+import { EnbpContentFileProvider } from "./enbp-content-file-provider";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -51,6 +54,8 @@ export function activate(context: vscode.ExtensionContext) {
     }),
   );
 
+  vscode.workspace.registerTextDocumentContentProvider("enbp-content-file", new EnbpContentFileProvider());
+
   registerCommand(CommandIDs.Setup.SetEnapterCloudConnectionType, () => {
     vscode.commands.executeCommand("setContext", ContextKeys.ConnectionType, "cloud");
   });
@@ -76,8 +81,11 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Devices.SelectRecentAsActiveByTreeNode, selectRecentAsActiveByTreeNode);
 
   registerCommand(CommandIDs.Enbp.Mount, mountEnbp);
+  registerCommand(CommandIDs.Enbp.OpenTreeItem, openEnbpTreeItem);
 
   activator.createTreeView(ViewIDs.Devices.Recent, { treeDataProvider: new RecentDevicesProvider(context) });
+  activator.createTreeView(ViewIDs.Enbp.Files, { treeDataProvider: new EnbpFilesTreeView(context) });
+
   activator.registerWebview(ViewIDs.Devices.Active, new ActiveDeviceWebview(context));
 }
 
