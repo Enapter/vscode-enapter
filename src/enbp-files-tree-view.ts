@@ -3,6 +3,7 @@ import { ExtState } from "./ext-state";
 import { ProjectExplorer } from "./project-explorer";
 import JSZip from "jszip";
 import { JSZipTools } from "./utils/jszip-tools";
+import { CommandIDs } from "./constants/commands";
 
 enum Level {
   Root,
@@ -25,14 +26,8 @@ export class EnbpFileTreeItem extends vscode.TreeItem {
       this.contextValue = this.getContextValue(node.type);
 
       if (this.isFile(node)) {
-        this.iconPath = new vscode.ThemeIcon("file");
-      } else {
-        this.iconPath = new vscode.ThemeIcon("folder");
-      }
-
-      if (this.isFile(node)) {
         this.command = {
-          command: "enapter.commands.Enbp.OpenTreeItem",
+          command: CommandIDs.Enbp.OpenTreeItem,
           title: "Open File",
           arguments: [vscode.Uri.parse(`enbp:/${node.path}?${this.uri.fsPath}`)],
         };
@@ -40,17 +35,18 @@ export class EnbpFileTreeItem extends vscode.TreeItem {
     }
   }
 
+  static build(uri: vscode.Uri, node: JSZipTools.TreeNode) {
+    const collapsibleState = this.isFile(node)
+      ? vscode.TreeItemCollapsibleState.None
+      : vscode.TreeItemCollapsibleState.Collapsed;
+
+    return new EnbpFileTreeItem(uri, collapsibleState, node);
+  }
+
   async getChildren(): Promise<EnbpFileTreeItem[]> {
     try {
       if (this.node) {
-        return this.node.children.map(
-          (childNode) =>
-            new EnbpFileTreeItem(
-              this.uri,
-              this.isFile(childNode) ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed,
-              childNode,
-            ),
-        );
+        return this.node.children.map((childNode) => EnbpFileTreeItem.build(this.uri, childNode));
       }
 
       if (!this.zip) {
@@ -62,14 +58,7 @@ export class EnbpFileTreeItem extends vscode.TreeItem {
 
       this.node = root;
 
-      return root.children.map(
-        (childNode) =>
-          new EnbpFileTreeItem(
-            this.uri,
-            this.isFile(childNode) ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed,
-            childNode,
-          ),
-      );
+      return root.children.map((childNode) => EnbpFileTreeItem.build(this.uri, childNode));
     } catch (error) {
       console.error("Error getting children:", error);
       return [];
@@ -77,19 +66,22 @@ export class EnbpFileTreeItem extends vscode.TreeItem {
   }
 
   private getContextValue(v: any) {
-    if (v === JSZipTools.FileType.File) {
-      return "file";
+    switch (v) {
+      case JSZipTools.FileType.File:
+        return "file";
+      case JSZipTools.FileType.Dir:
+        return "directory";
+      default:
+        return String(v);
     }
+  }
 
-    if (v === JSZipTools.FileType.Dir) {
-      return "directory";
-    }
-
-    return String(v);
+  private static isFile(node: JSZipTools.TreeNode) {
+    return node.type === JSZipTools.FileType.File;
   }
 
   private isFile(node: JSZipTools.TreeNode) {
-    return node.type === JSZipTools.FileType.File;
+    return EnbpFileTreeItem.isFile(node);
   }
 }
 
