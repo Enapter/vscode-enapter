@@ -1,11 +1,27 @@
 import vscode from "vscode";
+import { getFilename } from "../../utils/get-filename";
 
 interface IManifestError {
   showErrorMessage(): void;
 }
 
+class OpenManifestMessageItem implements vscode.MessageItem {
+  constructor(private uri: vscode.Uri) {}
+
+  get title() {
+    return `Open ${getFilename(this.uri)}`;
+  }
+
+  openManifest() {
+    vscode.window.showTextDocument(this.uri);
+  }
+}
+
 export class ManifestError extends Error implements IManifestError {
-  constructor(uri: vscode.Uri, message: string = "Error loading manifest.") {
+  constructor(
+    private uri: vscode.Uri,
+    message: string = "Error loading manifest.",
+  ) {
     super(`${message} ${uri.path}`);
   }
 
@@ -14,7 +30,13 @@ export class ManifestError extends Error implements IManifestError {
   }
 
   showErrorMessage() {
-    vscode.window.showErrorMessage(this.message);
+    vscode.window.showErrorMessage(this.message, new OpenManifestMessageItem(this.uri)).then((item) => {
+      if (!item) {
+        return;
+      }
+
+      item.openManifest();
+    });
   }
 }
 
