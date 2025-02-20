@@ -1,14 +1,14 @@
 import vscode from "vscode";
-import { Manifest } from "./manifest";
+import { LoadedManifest } from "./models/manifests/manifest";
 import JSZip from "jszip";
 import { loggable, Logger } from "./logger";
 
 export class BlueprintZipper {
-  private manifest: Manifest;
+  private manifest: LoadedManifest;
   private zipper: JSZip;
 
   constructor(
-    manifest: Manifest,
+    manifest: LoadedManifest,
     private readonly logger = Logger.getInstance(),
   ) {
     this.manifest = manifest;
@@ -17,12 +17,7 @@ export class BlueprintZipper {
 
   @loggable()
   async zip() {
-    if (!this.manifest.content) {
-      this.logger.log("No content found in manifest");
-      return;
-    }
-
-    this.zipper.file(this.manifest.name, this.manifest.content);
+    this.zipper.file(this.manifest.filename, this.manifest.contentStr);
 
     if (await this.isLuaDir()) {
       await this.zipLuaDir();
@@ -35,7 +30,7 @@ export class BlueprintZipper {
 
   private async zipLuaDir() {
     const luaDirPath = this.getLuaFsPath();
-    const folder = this.zipper.folder(this.manifest.luaPath!);
+    const folder = this.zipper.folder(this.manifest.luaPath);
     await this.addFilesToZip(luaDirPath, folder!);
   }
 
@@ -58,11 +53,6 @@ export class BlueprintZipper {
   }
 
   private async zipLuaFile() {
-    if (!this.manifest.luaPath) {
-      this.logger.log("No lua path found in manifest");
-      return;
-    }
-
     const luaContent = await vscode.workspace.fs.readFile(vscode.Uri.file(this.getLuaFsPath()));
     this.zipper.file(this.manifest.luaPath, luaContent);
   }

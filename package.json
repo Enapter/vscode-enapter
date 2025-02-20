@@ -2,7 +2,7 @@
   "name": "enapter",
   "displayName": "Enapter",
   "description": "Enapter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.96.0"
   },
@@ -310,7 +310,8 @@
     "check-types": "npm-run-all -p check-types:*",
     "check-types:base": "tsc --noEmit --project tsconfig.json",
     "check-types:webview": "tsc --noEmit --project tsconfig.webview.json",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "gen:manifests-schemas": "node manifests-schemas-to-ts.mjs"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
@@ -327,6 +328,7 @@
     "esbuild": "^0.24.0",
     "eslint": "^9.13.0",
     "glob": "^11.0.0",
+    "json-schema-to-typescript": "^15.0.4",
     "mocha": "^10.7.3",
     "npm-run-all": "^4.1.5",
     "prettier": "3.4.2",

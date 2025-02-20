@@ -1,6 +1,6 @@
 import vscode, { CancellationError, ProgressLocation, QuickPickItem, QuickPickItemKind } from "vscode";
 import { ProjectExplorer } from "../project-explorer";
-import { Manifest } from "../manifest";
+import { IManifest, Manifest } from "../models/manifests/manifest";
 import { BlueprintZipper } from "../blueprint-zipper";
 import { ApiClient } from "../api/client";
 import { Logger } from "../logger";
@@ -16,7 +16,7 @@ function getDetail(manifest: Manifest): string | undefined {
 function getManifestsPicks(manifests: Manifest[], recentManifest: Manifest | undefined): Thenable<QuickPickItem[]> {
   const list: Promise<QuickPickItem>[] = [];
 
-  const recentManifestInList = manifests.find((m) => m.fsPath === recentManifest?.fsPath);
+  const recentManifestInList = manifests.find((m) => m.uri.fsPath === recentManifest?.uri.fsPath);
 
   if (recentManifestInList) {
     list.push(
@@ -31,9 +31,9 @@ function getManifestsPicks(manifests: Manifest[], recentManifest: Manifest | und
     list.push(
       new Promise((resolve) => {
         resolve(
-          recentManifestInList.loadContent().then((m) => {
+          recentManifestInList.load().then((m) => {
             return {
-              label: m.displayName || m.name,
+              label: m.displayName || m.filename,
               detail: getDetail(recentManifestInList),
             };
           }),
@@ -47,7 +47,7 @@ function getManifestsPicks(manifests: Manifest[], recentManifest: Manifest | und
       return true;
     }
 
-    return m.fsPath !== recentManifestInList.fsPath;
+    return m.uri.fsPath !== recentManifestInList.uri.fsPath;
   });
 
   if (filtered.length === 0) {
@@ -69,9 +69,9 @@ function getManifestsPicks(manifests: Manifest[], recentManifest: Manifest | und
     list.push(
       new Promise((resolve) => {
         resolve(
-          m.loadContent().then((manifest) => {
+          m.load().then((manifest) => {
             return {
-              label: manifest.displayName || manifest.name,
+              label: manifest.displayName || manifest.filename,
               detail: getDetail(m),
             };
           }),
@@ -101,15 +101,18 @@ export async function uploadBlueprintToActiveDevice() {
     try {
       logger.group("Upload Blueprint");
       const state = new ExtState(ExtContext.context);
+      console.log("123x", "picking manifests");
       const manifest = await new PickManifestTask().run(token);
+      console.log("123x", "picked");
 
       if (!manifest) {
         return;
       }
 
       void state.setRecentManifest(manifest);
-      await manifest.loadContent();
-      const zipper = new BlueprintZipper(manifest);
+      console.log("123x", "blueprint zipper");
+      const zipper = new BlueprintZipper(await manifest.load());
+      console.log("123x", "api client");
       const client = new ApiClient();
       const device = state.getActiveDevice();
 

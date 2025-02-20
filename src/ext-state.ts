@@ -1,7 +1,7 @@
 import vscode, { ExtensionContext } from "vscode";
 import { Device } from "./models/device";
 import { ContextKeys } from "./constants/context-keys";
-import { Manifest, SerializedManifest } from "./manifest";
+import { Manifest, SerializedManifest } from "./models/manifests/manifest";
 
 export class ExtState {
   static instance: ExtState;
