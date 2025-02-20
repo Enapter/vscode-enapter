@@ -24,7 +24,7 @@ definitions.forEach((definition) => {
   fetch(definition.url)
     .then((res) => res.json())
     .then((schema) => {
-      compile(schema, definition.name).then((ts) => {
+      compile(schema, definition.name, { bannerComment: "" }).then((ts) => {
         fs.writeFileSync(`${OUTPUT_DIR}/${definition.name}.ts`, ts);
       });
     });
