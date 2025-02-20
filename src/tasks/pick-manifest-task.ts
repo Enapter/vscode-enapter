@@ -80,10 +80,6 @@ export class PickManifestTask {
         .map((i) => i.value)
         .filter((i) => !!i);
 
-      otherPickItems.forEach((i) => {
-        console.log("item", i.manifest?.uri?.path);
-      });
-
       items.push(...otherPickItems);
     } catch (e) {}
 

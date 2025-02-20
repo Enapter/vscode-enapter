@@ -101,18 +101,14 @@ export async function uploadBlueprintToActiveDevice() {
     try {
       logger.group("Upload Blueprint");
       const state = new ExtState(ExtContext.context);
-      console.log("123x", "picking manifests");
       const manifest = await new PickManifestTask().run(token);
-      console.log("123x", "picked");
 
       if (!manifest) {
         return;
       }
 
       void state.setRecentManifest(manifest);
-      console.log("123x", "blueprint zipper");
       const zipper = new BlueprintZipper(await manifest.load());
-      console.log("123x", "api client");
       const client = new ApiClient();
       const device = state.getActiveDevice();
 
