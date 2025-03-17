@@ -252,3 +252,4 @@ dist
 
 .vscode-test-web/
 .idea/codeStyles
+/CLAUDE.md
