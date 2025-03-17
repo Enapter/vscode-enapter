@@ -19,5 +19,5 @@ export type Device = {
 };
 
 export const isSupportBlueprints = (device: Device) => {
-  return device.type === "lua" || device.type === "standalone";
+  return String(device.type).toLowerCase() === "lua" || String(device.type).toLowerCase() === "standalone";
 };
