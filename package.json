@@ -2,7 +2,7 @@
   "name": "enapter",
   "displayName": "Enapter",
   "description": "Enapter",
-  "version": "0.0.2",
+  "version": "0.0.5",
   "engines": {
     "vscode": "^1.96.0"
   },
@@ -28,17 +28,20 @@
           "type": "webview",
           "name": "Active Device",
           "visibility": "visible",
-          "initialSize": 2
+          "initialSize": 2,
+          "icon": "resources/logo-sidebar.svg"
         },
         {
           "id": "enapter.views.devices.recent",
           "name": "Previously Used Devices",
-          "visibility": "visible"
+          "visibility": "visible",
+          "icon": "resources/logo-sidebar.svg"
         },
         {
           "id": "enapter.views.enbp.files",
           "name": "Enapter Blueprint Archives",
-          "visibility": "visible"
+          "visibility": "visible",
+          "icon": "resources/logo-sidebar.svg"
         }
       ]
     },
@@ -179,7 +182,7 @@
         },
         {
           "command": "enapter.commands.Enbp.OpenTreeItem",
-          "when": false
+          "when": "false"
         }
       ],
       "view/title": [
