@@ -219,15 +219,30 @@
       "title": "Enapter",
       "type": "object",
       "properties": {
+        "enapter.connectionType": {
+          "type": "string",
+          "default": "cloud",
+          "markdownDescription": "Connection Type\n\nSelect the connection type to use with the Enapter extension. You can upload blueprints to devices provisioned to the Enapter Cloud or use your local Enapter Gateway.",
+          "enum": [
+            "cloud",
+            "gateway"
+          ],
+          "enumDescriptions": [
+            "Enapter Cloud",
+            "Enapter Gateway"
+          ],
+          "order": 0
+        },"enapter.apiHost": {
+          "type": "string",
+          "default": "https://api.enapter.com",
+          "markdownDescription": "Enapter API Host\n\n**Default host `https://api.enapter.com` is used if the field is empty or connection type is set to Enapter Cloud.**",
+          "order": 1
+        },
         "enapter.apiKey": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Enapter API Key\n\nRefer to https://go.enapter.com/how-to-get-api-key for more information."
-        },
-        "enapter.apiHost": {
-          "type": "string",
-          "default": "https://api.enapter.com",
-          "markdownDescription": "Enapter API Host\n\n**Default host `https://api.enapter.com` is used if the field is empty.**"
+          "markdownDescription": "Enapter API Key\n\nRefer to https://go.enapter.com/how-to-get-api-key for more information.",
+          "order": 2
         }
       }
     },

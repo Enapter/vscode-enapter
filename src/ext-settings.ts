@@ -1,5 +1,7 @@
 import vscode from "vscode";
 
+const CLOUD_HOST = "https://api.enapter.com";
+
 export class ExtSettings {
   static instance: ExtSettings;
 
@@ -11,11 +13,27 @@ export class ExtSettings {
     ExtSettings.instance = this;
   }
 
+  setConnectionType(type: "cloud" | "gateway") {
+    return this.config.update("connectionType", type);
+  }
+
+  get connectionType(): "cloud" | "gateway" {
+    return this.config.get("connectionType") || "cloud";
+  }
+
   get apiKey(): string {
-    return vscode.workspace.getConfiguration("enapter").get("apiKey") || "";
+    return this.config.get("apiKey") || "";
   }
 
   get apiHost(): string {
-    return vscode.workspace.getConfiguration("enapter").get("apiHost") || "";
+    if (this.connectionType === "cloud") {
+      return CLOUD_HOST;
+    }
+
+    return this.config.get("apiHost") || "";
+  }
+
+  private get config() {
+    return vscode.workspace.getConfiguration("enapter");
   }
 }
