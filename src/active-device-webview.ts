@@ -21,10 +21,8 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
     this.state.onDidChangeActiveDevice((d) => this.postDeviceChanged(d));
 
     this.disposables.push(
-      vscode.workspace.onDidChangeConfiguration((e) => {
-        if (e.affectsConfiguration("enapter.apiKey") || e.affectsConfiguration("enapter.apiHost")) {
-          this.postSettingsChanged();
-        }
+      this.extSettings.onDidChangeSettings(() => {
+        this.postSettingsChanged();
       }),
     );
   }

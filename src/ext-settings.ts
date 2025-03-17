@@ -4,13 +4,30 @@ const CLOUD_HOST = "https://api.enapter.com";
 
 export class ExtSettings {
   static instance: ExtSettings;
+  
+  private _onDidChangeSettings = new vscode.EventEmitter<void>();
+  readonly onDidChangeSettings = this._onDidChangeSettings.event;
+  
+  private disposables: vscode.Disposable[] = [];
 
   constructor() {
     if (ExtSettings.instance) {
       return ExtSettings.instance;
     }
+    
+    this.disposables.push(
+      vscode.workspace.onDidChangeConfiguration(e => {
+        if (e.affectsConfiguration("enapter")) {
+          this._onDidChangeSettings.fire();
+        }
+      })
+    );
 
     ExtSettings.instance = this;
+  }
+  
+  dispose() {
+    this.disposables.forEach(d => d.dispose());
   }
 
   setConnectionType(type: "cloud" | "gateway") {
