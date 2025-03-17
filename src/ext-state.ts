@@ -21,12 +21,12 @@ export class ExtState {
   async addRecentDevice(device: Device) {
     let recent = this.getRecentDevices();
     recent = recent.filter((d) => d.id !== device.id);
-    await this.updateGlobalState("recentDevices", [device, ...recent]);
+    await this.update("recentDevices", [device, ...recent]);
     this._onDidChangeDevices.fire();
   }
 
   getRecentDevices() {
-    return (this.getGlobalState<Device[]>("recentDevices") || [])
+    return (this.get<Device[]>("recentDevices") || [])
       .map((d) => {
         try {
           return {
@@ -49,24 +49,24 @@ export class ExtState {
   async removeRecentDevice(device: Device) {
     let recent = this.getRecentDevices();
     recent = recent.filter((d) => d.id !== device.id);
-    await this.updateGlobalState("recentDevices", recent);
+    await this.update("recentDevices", recent);
     this._onDidChangeDevices.fire();
   }
 
   getActiveDevice() {
-    const device = this.getGlobalState<Device | undefined>("activeDevice");
+    const device = this.get<Device | undefined>("activeDevice");
     this.setIsActiveDevicePresentContext(!!device);
     return device;
   }
 
   async setActiveDevice(device: Device) {
-    await this.updateGlobalState("activeDevice", device);
+    await this.state.update("activeDevice", device);
     this.setIsActiveDevicePresentContext(true);
     return this._onDidChangeActiveDevice.fire(device);
   }
 
   async clearActiveDevice() {
-    await this.updateGlobalState("activeDevice", undefined);
+    await this.state.update("activeDevice", undefined);
     this.setIsActiveDevicePresentContext(false);
     return this._onDidChangeActiveDevice.fire(undefined);
   }
@@ -76,35 +76,23 @@ export class ExtState {
   }
 
   async setRecentManifest(manifest: Manifest) {
-    await this.updateWsState("recentManifest", manifest.serialize());
+    await this.state.update("recentManifest", manifest.serialize());
   }
 
   getRecentManifest() {
-    const serialized = this.getWsState<SerializedManifest>("recentManifest");
+    const serialized = this.get<SerializedManifest>("recentManifest");
     return serialized ? Manifest.deserialize(serialized) : undefined;
   }
 
-  getWsState<T>(key: string): T | undefined {
-    return this.wsState.get<T>(key);
+  get<T>(key: string): T | undefined {
+    return this.state.get<T>(key);
   }
 
-  getGlobalState<T>(key: string): T | undefined {
-    return this.globalState.get<T>(key);
+  update(key: string, value: any): Thenable<void> {
+    return this.state.update(key, value);
   }
 
-  updateWsState(key: string, value: any): Thenable<void> {
-    return this.wsState.update(key, value);
-  }
-
-  updateGlobalState(key: string, value: any): Thenable<void> {
-    return this.globalState.update(key, value);
-  }
-
-  private get wsState() {
+  private get state() {
     return this.context.workspaceState;
-  }
-
-  private get globalState() {
-    return this.context.globalState;
   }
 }
