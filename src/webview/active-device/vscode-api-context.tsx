@@ -1,5 +1,4 @@
-import React from "react";
-import { createContext, PropsWithChildren, useContext, useRef } from "react";
+import React, { createContext, PropsWithChildren, useContext, useRef } from "react";
 import { WebviewApi } from "vscode-webview";
 
 const VSCodeApiContext = createContext<WebviewApi<undefined> | null>(null);

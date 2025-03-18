@@ -1,4 +1,3 @@
-import { Logger } from "../logger";
 import vscode from "vscode";
 
 export const openEnbpTreeItem = async (uri: vscode.Uri) => {

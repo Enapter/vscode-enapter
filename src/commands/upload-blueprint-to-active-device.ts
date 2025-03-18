@@ -1,6 +1,5 @@
 import vscode, { CancellationError, ProgressLocation, QuickPickItem, QuickPickItemKind } from "vscode";
-import { ProjectExplorer } from "../project-explorer";
-import { IManifest, Manifest } from "../models/manifests/manifest";
+import { Manifest } from "../models/manifests/manifest";
 import { BlueprintZipper } from "../blueprint-zipper";
 import { ApiClient } from "../api/client";
 import { Logger } from "../logger";

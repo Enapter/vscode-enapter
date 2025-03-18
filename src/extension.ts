@@ -12,7 +12,6 @@ import { ActiveDeviceWebview } from "./active-device-webview";
 import { selectRecentAsActiveByTreeNode } from "./commands/select-recent-as-active-by-tree-node";
 import { reloadActiveDevice } from "./commands/reload-active-device";
 import { ExtSettings } from "./ext-settings";
-import { ContextKeys } from "./constants/context-keys";
 import { checkConnection } from "./commands/check-connection";
 import { mountEnbp } from "./commands/mount-enbp";
 import { EnbpFileSystemProvider } from "./enbp-file-system-provider";

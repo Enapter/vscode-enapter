@@ -1,4 +1,4 @@
-import vscode, { QuickPickItemKind, ThemeIcon } from "vscode";
+import vscode, { QuickPickItemKind } from "vscode";
 import { ApiClient } from "../api/client";
 import { Logger } from "../logger";
 import { Device } from "../models/device";
