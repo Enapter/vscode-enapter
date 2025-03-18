@@ -2,6 +2,7 @@ import vscode, { ExtensionContext } from "vscode";
 import { Device } from "./models/device";
 import { ContextKeys } from "./constants/context-keys";
 import { Manifest, SerializedManifest } from "./models/manifests/manifest";
+import { ExtSettings } from "./ext-settings";
 
 export class ExtState {
   static instance: ExtState;
@@ -14,6 +15,9 @@ export class ExtState {
     if (ExtState.instance) {
       return ExtState.instance;
     }
+
+    const extSettings = ExtSettings.instance;
+    extSettings.onDidChangeConnectionSettings(this.clearActiveDevice.bind(this));
 
     ExtState.instance = this;
   }
