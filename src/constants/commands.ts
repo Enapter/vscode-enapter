@@ -9,6 +9,7 @@ export const CommandIDs = {
   Blueprints: {
     SelectDeviceAndUploadBlueprint: "enapter.commands.Blueprints.SelectDeviceAndUploadBlueprint",
     UploadToActiveDevice: "enapter.commands.Blueprints.UploadToActiveDevice",
+    UploadActiveEditorManifest: "enapter.commands.Blueprints.UploadActiveEditorManifest",
   },
   Devices: {
     RefreshRecent: "enapter.commands.Devices.RefreshRecent",

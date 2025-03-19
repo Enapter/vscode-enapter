@@ -59,6 +59,12 @@
         "icon": "$(cloud-upload)"
       },
       {
+        "command": "enapter.commands.Blueprints.UploadActiveEditorManifest",
+        "title": "Upload Open Manifest to Device",
+        "category": "Enapter",
+        "icon": "$(cloud-upload)"
+      },
+      {
         "command": "enapter.commands.Devices.RefreshRecent",
         "title": "Refresh Recent Devices",
         "category": "Enapter"
@@ -148,6 +154,20 @@
       }
     ],
     "menus": {
+      "editor/context": [
+        {
+          "when": "resourceFilename == manifest.yml && enapter.context.Devices.IsActivePresent",
+          "command": "enapter.commands.Blueprints.UploadActiveEditorManifest",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "when": "resourceFilename == manifest.yml && enapter.context.Devices.IsActivePresent",
+          "command": "enapter.commands.Blueprints.UploadActiveEditorManifest",
+          "group": "navigation"
+        }
+      ],
       "explorer/context": [
         {
           "when": "resourceLangId == enbp && !explorerResourceIsRoot",

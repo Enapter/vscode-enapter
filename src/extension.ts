@@ -6,6 +6,7 @@ import { Logger } from "./logger";
 import { ExtContext } from "./ext-context";
 import { selectDevice } from "./commands/select-device";
 import { uploadBlueprintToActiveDevice } from "./commands/upload-blueprint-to-active-device";
+import { uploadActiveEditorManifest } from "./commands/upload-active-editor-manifest";
 import { removeRecentDeviceNode } from "./commands/remove-recent-device-node";
 import { resetActiveDevice } from "./commands/reset-active-device";
 import { ActiveDeviceWebview } from "./active-device-webview";
@@ -73,6 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   registerCommand(CommandIDs.Setup.CheckConnection, checkConnection);
   registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, uploadBlueprintToActiveDevice);
+  registerCommand(CommandIDs.Blueprints.UploadActiveEditorManifest, uploadActiveEditorManifest);
   registerCommand(CommandIDs.Devices.SelectActive, selectDevice);
   registerCommand(CommandIDs.Devices.ReloadActive, reloadActiveDevice);
   registerCommand(CommandIDs.Devices.ResetActive, resetActiveDevice);
