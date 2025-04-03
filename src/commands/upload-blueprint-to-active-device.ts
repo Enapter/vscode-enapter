@@ -94,21 +94,23 @@ const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
 };
 
 export async function uploadBlueprintToActiveDevice(providedManifest?: Manifest) {
+  const tokenSource = new vscode.CancellationTokenSource();
+
+  let manifest = providedManifest;
+  if (!manifest) {
+    manifest = await new PickManifestTask().run(tokenSource.token);
+  }
+
+  if (!manifest) {
+    return;
+  }
+
   return withProgress(async (progress, token) => {
     const logger = Logger.getInstance();
 
     try {
       logger.group("Upload Blueprint");
       const state = new ExtState(ExtContext.context);
-
-      let manifest = providedManifest;
-      if (!manifest) {
-        manifest = await new PickManifestTask().run(token);
-      }
-
-      if (!manifest) {
-        return;
-      }
 
       void state.setRecentManifest(manifest);
       const zipper = new BlueprintZipper(await manifest.load());
