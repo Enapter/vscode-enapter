@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import { ManifestParser } from "./manifest-parser";
-import { ManifestV1Schema } from "./schemas";
+import { BlueprintSpec, ManifestV1Schema } from "./schemas";
 
 export class ManifestV1Parser implements ManifestParser<ManifestV1Schema> {
   constructor(
@@ -30,6 +30,10 @@ export class ManifestV1Parser implements ManifestParser<ManifestV1Schema> {
     if (luaProperty?.dir) {
       return luaProperty.dir;
     }
+  }
+
+  getBlueprintSpec(): BlueprintSpec {
+    return BlueprintSpec.V1;
   }
 
   private get commModule(): ManifestV1Schema["communication_module"] {

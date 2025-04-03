@@ -24,6 +24,7 @@ export interface IManifest {
   luaUri: vscode.Uri;
   luaFsPath: string;
 
+  blueprintSpec?: BlueprintSpec;
   contentStr?: string;
   contentJson?: ManifestSchema;
   displayName?: string;
@@ -31,6 +32,7 @@ export interface IManifest {
 }
 
 export interface LoadedManifest extends IManifest {
+  blueprintSpec: BlueprintSpec;
   contentStr: string;
   contentJson: ManifestSchema;
   displayName: string;
@@ -113,6 +115,10 @@ export class Manifest implements IManifest {
 
   get displayName(): ManifestSchema["display_name"] {
     return this.parser.getDisplayName();
+  }
+
+  get blueprintSpec(): BlueprintSpec {
+    return this.parser.getBlueprintSpec();
   }
 
   private get parser(): ManifestParser {

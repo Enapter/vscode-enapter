@@ -1,7 +1,8 @@
-import { ManifestSchema } from "./schemas";
+import { BlueprintSpec, ManifestSchema } from "./schemas";
 
 export interface ManifestParser<T extends ManifestSchema = ManifestSchema> {
   contentJson: T;
   getLuaPath(): string | undefined;
   getDisplayName(): T["display_name"];
+  getBlueprintSpec(): BlueprintSpec;
 }

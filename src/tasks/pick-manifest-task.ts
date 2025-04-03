@@ -4,10 +4,40 @@ import { loggable, Logger } from "../logger";
 import vscode, { CancellationError, CancellationToken, QuickPickItem, QuickPickItemKind } from "vscode";
 import { ExtState } from "../ext-state";
 import { ManifestError } from "../models/manifests/manifest-errors";
+import { BlueprintSpec } from "../models/manifests/schemas";
 
-interface ManifestQuickPickItem extends QuickPickItem {
+class ManifestQuickPickItem implements QuickPickItem {
+  label: string;
+  detail: string;
+  kind: QuickPickItemKind;
   manifest?: LoadedManifest;
+
+  constructor(label: string, detail: string, manifest?: LoadedManifest) {
+    this.label = label;
+    this.detail = detail;
+    this.manifest = manifest;
+    this.kind = QuickPickItemKind.Default;
+  }
+
+  get description() {
+    switch (this.manifest?.blueprintSpec) {
+      case BlueprintSpec.V1:
+        return "Manifest V1";
+      case BlueprintSpec.V3:
+        return "Manifest V3";
+      default:
+        return undefined;
+    }
+  }
 }
+
+class SeparatorItem implements QuickPickItem {
+  kind = QuickPickItemKind.Separator;
+
+  constructor(public label: string) {}
+}
+
+type PickItem = ManifestQuickPickItem | SeparatorItem;
 
 export class PickManifestTask {
   constructor(
@@ -58,8 +88,8 @@ export class PickManifestTask {
     vscode.window.showErrorMessage(message);
   }
 
-  private async createQuickPickItems(manifests: Manifest[]): Promise<ManifestQuickPickItem[]> {
-    const items: Array<ManifestQuickPickItem> = [];
+  private async createQuickPickItems(manifests: Manifest[]): Promise<PickItem[]> {
+    const items: PickItem[] = [];
 
     try {
       const persisted = this.state.getRecentManifest();
@@ -86,18 +116,15 @@ export class PickManifestTask {
     return items;
   }
 
-  private async showQuickPick(items: ManifestQuickPickItem[]): Promise<ManifestQuickPickItem | undefined> {
+  private async showQuickPick(items: PickItem[]): Promise<ManifestQuickPickItem | QuickPickItem | undefined> {
     return vscode.window.showQuickPick(items, {
       placeHolder: "Choose a manifest.yml file",
       matchOnDetail: true,
     });
   }
 
-  private createSeparatorItem(label: string): ManifestQuickPickItem {
-    return {
-      label,
-      kind: QuickPickItemKind.Separator,
-    };
+  private createSeparatorItem(label: string): SeparatorItem {
+    return new SeparatorItem(label);
   }
 
   private async createManifestQuickPickItem(manifest?: Manifest): Promise<ManifestQuickPickItem | undefined> {
@@ -107,11 +134,7 @@ export class PickManifestTask {
 
     try {
       const m = await manifest.load();
-      return {
-        label: m.displayName,
-        detail: m.relativePath,
-        manifest: m,
-      };
+      return new ManifestQuickPickItem(m.displayName, m.relativePath, m);
     } catch (e) {
       if (ManifestError.isManifestError(e)) {
         e.showErrorMessage();
