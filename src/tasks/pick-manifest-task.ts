@@ -135,10 +135,6 @@ export class PickManifestTask {
     try {
       const m = await manifest.load();
       return new ManifestQuickPickItem(m.displayName, m.relativePath, m);
-    } catch (e) {
-      if (ManifestError.isManifestError(e)) {
-        e.showErrorMessage();
-      }
-    }
+    } catch (_) {}
   }
 }
