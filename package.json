@@ -136,6 +136,12 @@
         "command": "enapter.commands.Enbp.OpenTreeItem",
         "title": "enapter.commands.Enbp.OpenTreeItem",
         "category": "Enapter"
+      },
+      {
+        "command": "enapter.commands.Devices.CopyProperty",
+        "title": "Copy",
+        "category": "Enapter",
+        "icon": "$(copy)"
       }
     ],
     "languages": [
@@ -205,6 +211,10 @@
         {
           "command": "enapter.commands.Enbp.OpenTreeItem",
           "when": "false"
+        },
+        {
+          "command": "enapter.commands.Devices.CopyProperty",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -227,12 +237,17 @@
       "view/item/context": [
         {
           "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
-          "when": "view == enapter.views.devices.recent",
+          "when": "view == enapter.views.devices.recent && viewItem == enapter.viewItems.Device",
           "group": "inline"
         },
         {
           "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
-          "when": "view == enapter.views.devices.recent",
+          "when": "view == enapter.views.devices.recent && viewItem == enapter.viewItems.Device",
+          "group": "inline"
+        },
+        {
+          "command": "enapter.commands.Devices.CopyProperty",
+          "when": "view == enapter.views.devices.recent && viewItem == enapter.viewItems.DeviceProperty",
           "group": "inline"
         }
       ]

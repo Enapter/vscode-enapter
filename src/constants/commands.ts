@@ -18,6 +18,7 @@ export const CommandIDs = {
     SelectActive: "enapter.commands.Devices.SelectActive",
     ResetActive: "enapter.commands.Devices.ResetActive",
     ReloadActive: "enapter.commands.Devices.ReloadActive",
+    CopyProperty: "enapter.commands.Devices.CopyProperty",
   },
   Enbp: {
     Mount: "enapter.commands.Enbp.Mount",

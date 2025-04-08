@@ -19,6 +19,7 @@ import { EnbpFileSystemProvider } from "./enbp-file-system-provider";
 import { EnbpFilesTreeView } from "./enbp-files-tree-view";
 import { openEnbpTreeItem } from "./commands/open-enbp-tree-item";
 import { EnbpContentFileProvider } from "./enbp-content-file-provider";
+import { copyDeviceProperty } from "./commands/copy-device-property";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -80,6 +81,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Devices.ResetActive, resetActiveDevice);
   registerCommand(CommandIDs.Devices.RemoveRecentByTreeNode, removeRecentDeviceNode);
   registerCommand(CommandIDs.Devices.SelectRecentAsActiveByTreeNode, selectRecentAsActiveByTreeNode);
+  registerCommand(CommandIDs.Devices.CopyProperty, copyDeviceProperty);
 
   registerCommand(CommandIDs.Enbp.Mount, mountEnbp);
   registerCommand(CommandIDs.Enbp.OpenTreeItem, openEnbpTreeItem);
