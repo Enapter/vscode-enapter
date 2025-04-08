@@ -35,12 +35,14 @@
           "id": "enapter.views.devices.recent",
           "name": "Previously Used Devices",
           "visibility": "visible",
+          "initialSize": 1,
           "icon": "resources/logo-sidebar.svg"
         },
         {
           "id": "enapter.views.enbp.files",
           "name": "Enapter Blueprint Archives",
           "visibility": "visible",
+          "initialSize": 1,
           "icon": "resources/logo-sidebar.svg"
         }
       ]
@@ -252,7 +254,8 @@
             "Enapter Gateway"
           ],
           "order": 0
-        },"enapter.apiHost": {
+        },
+        "enapter.apiHost": {
           "type": "string",
           "default": "https://api.enapter.com",
           "markdownDescription": "Enapter API Host\n\n**Default host `https://api.enapter.com` is used if the field is empty or connection type is set to Enapter Cloud.**",
