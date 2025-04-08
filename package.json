@@ -134,7 +134,7 @@
       },
       {
         "command": "enapter.commands.Enbp.OpenTreeItem",
-        "title": "enapter.commands.Enbp.OpenTreeItem",
+        "title": "Open",
         "category": "Enapter"
       },
       {
