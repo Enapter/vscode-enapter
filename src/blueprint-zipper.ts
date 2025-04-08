@@ -30,8 +30,7 @@ export class BlueprintZipper {
 
   private async zipLuaDir() {
     const luaDirPath = this.getLuaFsPath();
-    const folder = this.zipper.folder(this.manifest.luaPath);
-    await this.addFilesToZip(luaDirPath, folder!);
+    await this.addFilesToZip(luaDirPath, this.zipper);
   }
 
   private async addFilesToZip(dirPath: string, zipFolder: JSZip) {
@@ -47,7 +46,8 @@ export class BlueprintZipper {
         await this.addFilesToZip(filePath, newFolder!);
       } else if (type === vscode.FileType.File) {
         const fileContent = await vscode.workspace.fs.readFile(fileUri);
-        zipFolder.file(name, fileContent);
+        const relativePath = this.manifest.luaPath.replace(/\\/g, "/") + `/${name}`;
+        zipFolder.file(relativePath, fileContent, { createFolders: false });
       }
     }
   }
