@@ -318,6 +318,56 @@
           "default": "",
           "markdownDescription": "Enapter API Key\n\nRefer to https://go.enapter.com/how-to-get-api-key for more information.",
           "order": 2
+        },
+        "enapter.mainGateway": {
+          "type": "object",
+          "description": "Main Enapter Gateway Settings",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of the Gateway"
+            },
+            "address": {
+              "type": "string",
+              "description": "Address (host) of the Gateway"
+            },
+            "token": {
+              "type": "string",
+              "description": "API Key (token) of the Gateway"
+            }
+          },
+          "default": {
+            "name": "",
+            "address": "",
+            "token": ""
+          },
+          "additionalProperties": false
+        },
+        "enapter.otherGateways": {
+          "type": "array",
+          "title": "Other Gateways",
+          "description": "Specify the Enapter Gateways you want to connect to. You can add multiple gateways additionally to the main Enapter Gateway.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "default": "",
+                "markdownDescription": "Name of the Enapter Gateway"
+              },
+              "host": {
+                "type": "string",
+                "default": "",
+                "markdownDescription": "Host of the Enapter Gateway"
+              },
+              "apiKey": {
+                "type": "string",
+                "default": "",
+                "markdownDescription": "API Key of the Enapter Gateway"
+              }
+            },
+            "additionalProperties": false
+          }
         }
       }
     },
@@ -401,10 +451,6 @@
         "id": "enapter.colors.Devices.OfflineIndicator",
         "description": "Enapter offline device indicator color",
         "defaults": {
-          "dark": "#23C248",
-          "light": "#23C248",
-          "highContrast": "#20B644",
-          "highContrastLight": "#20B644"
           "dark": "#ffffff55",
           "light": "#0000003b",
           "highContrast": "#ffffff55",
