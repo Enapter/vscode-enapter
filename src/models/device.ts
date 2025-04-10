@@ -7,7 +7,7 @@ type DeviceProperties = {
   description?: string;
 };
 
-export interface IDevice {
+export interface Device {
   id: UUID;
   blueprint_id: UUID;
   site_id: UUID;
@@ -18,8 +18,6 @@ export interface IDevice {
   properties?: DeviceProperties;
   connectivity_status?: string;
 }
-
-export class Device implements IDevice {}
 
 export const isSupportBlueprints = (device: Device) => {
   return String(device.type).toLowerCase() === "lua" || String(device.type).toLowerCase() === "standalone";
