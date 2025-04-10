@@ -405,6 +405,10 @@
           "light": "#23C248",
           "highContrast": "#20B644",
           "highContrastLight": "#20B644"
+          "dark": "#ffffff55",
+          "light": "#0000003b",
+          "highContrast": "#ffffff55",
+          "highContrastLight": "#0000003b"
         }
       }
     ]

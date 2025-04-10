@@ -10,7 +10,7 @@ class GreenColor extends vscode.ThemeColor {
 }
 class LightGrayColor extends vscode.ThemeColor {
   constructor() {
-    super("terminal.inactiveSelectionBackground");
+    super("enapter.colors.Devices.OfflineIndicator");
   }
 }
 
