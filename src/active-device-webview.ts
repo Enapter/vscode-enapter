@@ -147,7 +147,7 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
     });
   }
 
-  private onSelectActiveDevice(message: any) {
+  private onSelectActiveDevice() {
     vscode.commands.executeCommand<Device | undefined>(CommandIDs.Devices.SelectActive).then((d) => {
       if (!d) {
         return;

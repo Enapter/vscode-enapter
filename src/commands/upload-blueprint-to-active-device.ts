@@ -1,4 +1,4 @@
-import vscode, { CancellationError, ProgressLocation, QuickPickItem, QuickPickItemKind } from "vscode";
+import vscode, { CancellationError, ProgressLocation } from "vscode";
 import { Manifest } from "../models/manifests/manifest";
 import { BlueprintZipper } from "../blueprint-zipper";
 import { ApiClient } from "../api/client";
@@ -7,80 +7,6 @@ import { ExtState } from "../ext-state";
 import { ExtContext } from "../ext-context";
 import { ExtError } from "../ext-error";
 import { PickManifestTask } from "../tasks/pick-manifest-task";
-
-function getDetail(manifest: Manifest): string | undefined {
-  return manifest.relativePath;
-}
-
-function getManifestsPicks(manifests: Manifest[], recentManifest: Manifest | undefined): Thenable<QuickPickItem[]> {
-  const list: Promise<QuickPickItem>[] = [];
-
-  const recentManifestInList = manifests.find((m) => m.uri.fsPath === recentManifest?.uri.fsPath);
-
-  if (recentManifestInList) {
-    list.push(
-      new Promise((resolve) => {
-        resolve({
-          label: "Last used",
-          kind: QuickPickItemKind.Separator,
-        });
-      }),
-    );
-
-    list.push(
-      new Promise((resolve) => {
-        resolve(
-          recentManifestInList.load().then((m) => {
-            return {
-              label: m.displayName || m.filename,
-              detail: getDetail(recentManifestInList),
-            };
-          }),
-        );
-      }),
-    );
-  }
-
-  const filtered = manifests.filter((m) => {
-    if (!recentManifestInList) {
-      return true;
-    }
-
-    return m.uri.fsPath !== recentManifestInList.uri.fsPath;
-  });
-
-  if (filtered.length === 0) {
-    return Promise.all(list);
-  }
-
-  if (recentManifestInList) {
-    list.push(
-      new Promise((resolve) => {
-        resolve({
-          label: "",
-          kind: QuickPickItemKind.Separator,
-        });
-      }),
-    );
-  }
-
-  filtered.forEach((m) => {
-    list.push(
-      new Promise((resolve) => {
-        resolve(
-          m.load().then((manifest) => {
-            return {
-              label: manifest.displayName || manifest.filename,
-              detail: getDetail(m),
-            };
-          }),
-        );
-      }),
-    );
-  });
-
-  return Promise.all(list);
-}
 
 const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
   return vscode.window.withProgress(

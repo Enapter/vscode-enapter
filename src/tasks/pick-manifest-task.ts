@@ -3,7 +3,6 @@ import { LoadedManifest, Manifest } from "../models/manifests/manifest";
 import { loggable, Logger } from "../logger";
 import vscode, { CancellationError, CancellationToken, QuickPickItem, QuickPickItemKind } from "vscode";
 import { ExtState } from "../ext-state";
-import { ManifestError } from "../models/manifests/manifest-errors";
 import { BlueprintSpec } from "../models/manifests/schemas";
 
 class ManifestQuickPickItem implements QuickPickItem {
@@ -111,7 +110,9 @@ export class PickManifestTask {
         .filter((i) => !!i);
 
       items.push(...otherPickItems);
-    } catch (e) {}
+    } catch (_) {
+      /* empty */
+    }
 
     return items;
   }
@@ -135,6 +136,8 @@ export class PickManifestTask {
     try {
       const m = await manifest.load();
       return new ManifestQuickPickItem(m.displayName, m.relativePath, m);
-    } catch (_) {}
+    } catch (_) {
+      /* empty */
+    }
   }
 }

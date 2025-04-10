@@ -53,7 +53,7 @@ export class JSZipTools {
         paths.push({
           name: relativePath,
           dir: file.dir,
-          // @ts-ignore
+          // @ts-expect-error _data is not defined in the type
           size: file._data ? file._data.uncompressedSize : 0,
         });
       });
@@ -67,7 +67,8 @@ export class JSZipTools {
   }
 }
 
-export module JSZipTools {
+// eslint-disable-next-line @typescript-eslint/no-namespace
+export namespace JSZipTools {
   export enum FileType {
     File,
     Dir,

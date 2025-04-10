@@ -100,7 +100,7 @@ export class Logger {
 }
 
 export function loggable() {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (_target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
 
     descriptor.value = function (...args: any[]) {

@@ -1,5 +1,4 @@
 import type { UUID } from "./shared";
-import { OfflineIcon, OnlineIcon } from "../ui/icons";
 
 type DeviceType = "standalone" | "lua" | string;
 
@@ -8,7 +7,7 @@ type DeviceProperties = {
   description?: string;
 };
 
-export type Device = {
+export interface IDevice {
   id: UUID;
   blueprint_id: UUID;
   site_id: UUID;
@@ -18,7 +17,9 @@ export type Device = {
   type: DeviceType;
   properties?: DeviceProperties;
   connectivity_status?: string;
-};
+}
+
+export class Device implements IDevice {}
 
 export const isSupportBlueprints = (device: Device) => {
   return String(device.type).toLowerCase() === "lua" || String(device.type).toLowerCase() === "standalone";

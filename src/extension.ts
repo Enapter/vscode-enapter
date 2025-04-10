@@ -44,7 +44,7 @@ class Activator {
 
 export function activate(context: vscode.ExtensionContext) {
   const activator = new Activator(context);
-  const extContext = new ExtContext(context);
+  new ExtContext(context);
   const extSettings = new ExtSettings();
 
   const logger = new Logger();
