@@ -1,4 +1,5 @@
 import type { UUID } from "./shared";
+import { OfflineIcon, OnlineIcon } from "../ui/icons";
 
 type DeviceType = "standalone" | "lua" | string;
 
@@ -28,4 +29,8 @@ export const sortByOnlineStatus = (device: Device) => {
     return device.connectivity_status.toLowerCase() === "online" ? -1 : 1;
   }
   return 0;
+};
+
+export const isOnline = (device: Device) => {
+  return String(device.connectivity_status).toLowerCase() === "online";
 };

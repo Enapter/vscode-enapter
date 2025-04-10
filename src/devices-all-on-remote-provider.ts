@@ -2,39 +2,7 @@ import vscode from "vscode";
 import { ExtState } from "./ext-state";
 import { Device } from "./models/device";
 import { ApiClient } from "./api/client";
-
-class GreenColor extends vscode.ThemeColor {
-  constructor() {
-    super("enapter.colors.green");
-  }
-}
-class LightGrayColor extends vscode.ThemeColor {
-  constructor() {
-    super("enapter.colors.Devices.OfflineIndicator");
-  }
-}
-
-class TextFieldIcon extends vscode.ThemeIcon {
-  constructor() {
-    super("symbol-string");
-  }
-}
-
-class OnlineIcon extends vscode.ThemeIcon {
-  constructor() {
-    super("circle-filled", new GreenColor());
-  }
-}
-
-class OfflineIcon extends vscode.ThemeIcon {
-  constructor() {
-    super("circle-filled", new LightGrayColor());
-  }
-}
-
-function getStatusIcon(status?: string) {
-  return String(status).toLowerCase() === "online" ? new OnlineIcon() : new OfflineIcon();
-}
+import { DeviceStatusIcon } from "./ui/icons";
 
 export class RemoteDeviceNode extends vscode.TreeItem {
   constructor(
@@ -43,7 +11,7 @@ export class RemoteDeviceNode extends vscode.TreeItem {
   ) {
     super(device.name, collapsibleState);
     this.contextValue = "enapter.viewItems.Device";
-    this.iconPath = getStatusIcon(device.connectivity_status);
+    this.iconPath = new DeviceStatusIcon(device);
   }
 }
 
