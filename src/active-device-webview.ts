@@ -123,7 +123,7 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
   private handleCommand(message: any) {
     switch (message.command) {
       case CommandIDs.Devices.SelectActive:
-        void this.onSelectActiveDevice(message);
+        void this.onSelectActiveDevice();
         break;
       case CommandIDs.Blueprints.UploadToActiveDevice:
         void this.onUploadBlueprintToActiveDevice();
