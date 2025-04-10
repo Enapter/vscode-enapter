@@ -32,6 +32,13 @@
           "icon": "resources/logo-sidebar.svg"
         },
         {
+          "id": "enapter.views.devices.allOnRemote",
+          "name": "All Devices",
+          "visibility": "visible",
+          "initialSize": 1,
+          "icon": "resources/logo-sidebar.svg"
+        },
+        {
           "id": "enapter.views.devices.recent",
           "name": "Previously Used Devices",
           "visibility": "visible",
@@ -63,6 +70,12 @@
       {
         "command": "enapter.commands.Blueprints.UploadActiveEditorManifest",
         "title": "Upload Open Manifest to Device",
+        "category": "Enapter",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "enapter.commands.Devices.UploadBlueprintToDevice",
+        "title": "Upload a Blueprint to the Device",
         "category": "Enapter",
         "icon": "$(cloud-upload)"
       },
@@ -215,6 +228,10 @@
         {
           "command": "enapter.commands.Devices.CopyProperty",
           "when": "false"
+        },
+        {
+          "command": "enapter.commands.Devices.UploadBlueprintToDevice",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -248,6 +265,26 @@
         {
           "command": "enapter.commands.Devices.CopyProperty",
           "when": "view == enapter.views.devices.recent && viewItem == enapter.viewItems.DeviceProperty",
+          "group": "inline"
+        },
+        {
+          "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
+          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
+          "group": "inline@1"
+        },
+        {
+          "command": "enapter.commands.Devices.UploadBlueprintToDevice",
+          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
+          "group": "inline@2"
+        },
+        {
+          "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
+          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
+          "group": "inline@3"
+        },
+        {
+          "command": "enapter.commands.Devices.CopyProperty",
+          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.DeviceProperty",
           "group": "inline"
         }
       ]
@@ -347,6 +384,28 @@
             }
           }
         ]
+      }
+    ],
+    "colors": [
+      {
+        "id": "enapter.colors.green",
+        "description": "Base Enapter green color",
+        "defaults": {
+          "dark": "#23C248",
+          "light": "#23C248",
+          "highContrast": "#20B644",
+          "highContrastLight": "#20B644"
+        }
+      },
+      {
+        "id": "enapter.colors.Devices.OfflineIndicator",
+        "description": "Enapter offline device indicator color",
+        "defaults": {
+          "dark": "#23C248",
+          "light": "#23C248",
+          "highContrast": "#20B644",
+          "highContrastLight": "#20B644"
+        }
       }
     ]
   },

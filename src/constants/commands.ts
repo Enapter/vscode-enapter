@@ -19,6 +19,7 @@ export const CommandIDs = {
     ResetActive: "enapter.commands.Devices.ResetActive",
     ReloadActive: "enapter.commands.Devices.ReloadActive",
     CopyProperty: "enapter.commands.Devices.CopyProperty",
+    UploadBlueprintToDevice: "enapter.commands.Devices.UploadBlueprintToDevice",
   },
   Enbp: {
     Mount: "enapter.commands.Enbp.Mount",

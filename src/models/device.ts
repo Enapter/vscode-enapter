@@ -16,8 +16,16 @@ export type Device = {
   authorized_role: string;
   type: DeviceType;
   properties?: DeviceProperties;
+  connectivity_status?: string;
 };
 
 export const isSupportBlueprints = (device: Device) => {
   return String(device.type).toLowerCase() === "lua" || String(device.type).toLowerCase() === "standalone";
+};
+
+export const sortByOnlineStatus = (device: Device) => {
+  if (device.connectivity_status) {
+    return device.connectivity_status.toLowerCase() === "online" ? -1 : 1;
+  }
+  return 0;
 };
