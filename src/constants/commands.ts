@@ -1,6 +1,5 @@
 export const CommandIDs = {
   Setup: {
-    SetApiKey: "enapter.commands.Setup.SetApiKey",
     CheckConnection: "enapter.commands.Setup.CheckConnection",
   },
   Blueprints: {

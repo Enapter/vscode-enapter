@@ -179,11 +179,6 @@
         "icon": "$(device-desktop)"
       },
       {
-        "command": "enapter.commands.Setup.SetApiKey",
-        "title": "Set API Key",
-        "category": "Enapter"
-      },
-      {
         "command": "enapter.commands.Enbp.Mount",
         "title": "Open Enapter Blueprint Archive",
         "category": "Enapter"
@@ -254,10 +249,6 @@
         },
         {
           "command": "enapter.commands.InitialSetup.SetEnapterGatewayContext",
-          "when": "false"
-        },
-        {
-          "command": "enapter.commands.Setup.SetApiKey",
           "when": "false"
         },
         {
