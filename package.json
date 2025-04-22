@@ -179,11 +179,6 @@
         "icon": "$(device-desktop)"
       },
       {
-        "command": "enapter.commands.Setup.SetApiHost",
-        "title": "Set API Host",
-        "category": "Enapter"
-      },
-      {
         "command": "enapter.commands.Setup.SetApiKey",
         "title": "Set API Key",
         "category": "Enapter"
@@ -259,10 +254,6 @@
         },
         {
           "command": "enapter.commands.InitialSetup.SetEnapterGatewayContext",
-          "when": "false"
-        },
-        {
-          "command": "enapter.commands.Setup.SetApiHost",
           "when": "false"
         },
         {

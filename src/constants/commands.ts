@@ -1,6 +1,5 @@
 export const CommandIDs = {
   Setup: {
-    SetApiHost: "enapter.commands.Setup.SetApiHost",
     SetApiKey: "enapter.commands.Setup.SetApiKey",
     CheckConnection: "enapter.commands.Setup.CheckConnection",
   },
