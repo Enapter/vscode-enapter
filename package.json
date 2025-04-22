@@ -138,12 +138,6 @@
         "icon": "$(close)"
       },
       {
-        "command": "enapter.commands.InitialSetup.SetEnapterGatewayContext",
-        "title": "Use Enapter Gateway",
-        "category": "Enapter",
-        "icon": "$(device-desktop)"
-      },
-      {
         "command": "enapter.commands.Enbp.Mount",
         "title": "Open Enapter Blueprint Archive",
         "category": "Enapter"
@@ -200,10 +194,6 @@
         }
       ],
       "commandPalette": [
-        {
-          "command": "enapter.commands.InitialSetup.SetEnapterGatewayContext",
-          "when": "false"
-        },
         {
           "command": "enapter.commands.Enbp.OpenTreeItem",
           "when": "false"
