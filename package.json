@@ -127,12 +127,6 @@
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
-        "title": "Remove",
-        "category": "Enapter",
-        "icon": "$(trash)"
-      },
-      {
         "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
         "title": "Select as Active",
         "category": "Enapter",
@@ -225,10 +219,6 @@
       ],
       "commandPalette": [
         {
-          "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
-          "when": "false"
-        },
-        {
           "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
           "when": "false"
         },
@@ -301,11 +291,6 @@
         {
           "command": "enapter.commands.Sites.CopyApiToken",
           "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.ApiTokenProperty",
-          "group": "inline@1"
-        },
-        {
-          "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
-          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
           "group": "inline@1"
         },
         {

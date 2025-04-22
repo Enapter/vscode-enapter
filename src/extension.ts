@@ -73,7 +73,6 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Devices.SelectActive, selectDevice);
   registerCommand(CommandIDs.Devices.ReloadActive, reloadActiveDevice);
   registerCommand(CommandIDs.Devices.ResetActive, resetActiveDevice);
-  registerCommand(CommandIDs.Devices.RemoveRecentByTreeNode, removeRecentDeviceNode);
   registerCommand(CommandIDs.Devices.SelectRecentAsActiveByTreeNode, selectRecentAsActiveByTreeNode);
   registerCommand(CommandIDs.Devices.CopyProperty, copyDeviceProperty);
   registerCommand(CommandIDs.Devices.UploadBlueprint, devicesUploadBlueprint);
