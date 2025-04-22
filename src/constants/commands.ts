@@ -1,7 +1,4 @@
 export const CommandIDs = {
-  Setup: {
-    CheckConnection: "enapter.commands.Setup.CheckConnection",
-  },
   Blueprints: {
     SelectDeviceAndUploadBlueprint: "enapter.commands.Blueprints.SelectDeviceAndUploadBlueprint",
     UploadToActiveDevice: "enapter.commands.Blueprints.UploadToActiveDevice",
