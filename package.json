@@ -125,12 +125,6 @@
         "title": "Upload a Blueprint to the Device",
         "category": "Enapter",
         "icon": "$(cloud-upload)"
-      },
-      {
-        "command": "enapter.commands.Devices.SelectActive",
-        "title": "Select Device",
-        "category": "Enapter"
-      },
       {
         "command": "enapter.commands.Devices.ReloadActive",
         "title": "Reload Active Device",

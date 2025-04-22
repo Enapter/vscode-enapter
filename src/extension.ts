@@ -70,7 +70,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, uploadBlueprintToActiveDevice);
   registerCommand(CommandIDs.Blueprints.UploadActiveEditorManifest, uploadActiveEditorManifest);
-  registerCommand(CommandIDs.Devices.SelectActive, selectDevice);
   registerCommand(CommandIDs.Devices.ReloadActive, reloadActiveDevice);
   registerCommand(CommandIDs.Devices.ResetActive, resetActiveDevice);
   registerCommand(CommandIDs.Devices.CopyProperty, copyDeviceProperty);
