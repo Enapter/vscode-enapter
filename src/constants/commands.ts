@@ -4,7 +4,6 @@ export const CommandIDs = {
     UploadActiveEditorManifest: "enapter.commands.Blueprints.UploadActiveEditorManifest",
   },
   Devices: {
-    RefreshRecent: "enapter.commands.Devices.RefreshRecent",
     RemoveRecentByTreeNode: "enapter.commands.Devices.RemoveRecentByTreeNode",
     SelectRecentAsActiveByTreeNode: "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
     SelectActive: "enapter.commands.Devices.SelectActive",

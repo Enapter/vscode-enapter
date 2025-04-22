@@ -127,11 +127,6 @@
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "enapter.commands.Devices.RefreshRecent",
-        "title": "Refresh Recent Devices",
-        "category": "Enapter"
-      },
-      {
         "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
         "title": "Remove",
         "category": "Enapter",
