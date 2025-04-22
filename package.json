@@ -44,13 +44,6 @@
           "visibility": "visible",
           "initialSize": 1,
           "icon": "resources/logo-sidebar.svg"
-        },
-        {
-          "id": "enapter.views.devices.recent",
-          "name": "Previously Used Devices",
-          "visibility": "collapsed",
-          "initialSize": 1,
-          "icon": "resources/logo-sidebar.svg"
         }
       ]
     },
@@ -338,21 +331,6 @@
           "command": "enapter.commands.Sites.CopyApiToken",
           "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.ApiTokenProperty",
           "group": "inline@1"
-        },
-        {
-          "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
-          "when": "view == enapter.views.devices.recent && viewItem == enapter.viewItems.Device",
-          "group": "inline"
-        },
-        {
-          "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
-          "when": "view == enapter.views.devices.recent && viewItem == enapter.viewItems.Device",
-          "group": "inline"
-        },
-        {
-          "command": "enapter.commands.Devices.CopyProperty",
-          "when": "view == enapter.views.devices.recent && viewItem == enapter.viewItems.DeviceProperty",
-          "group": "inline"
         },
         {
           "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
