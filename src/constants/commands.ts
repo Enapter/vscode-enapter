@@ -1,6 +1,5 @@
 export const CommandIDs = {
   Setup: {
-    SetEnapterCloudConnectionType: "enapter.commands.Setup.SetEnapterCloudConnectionType",
     SetEnapterGatewayConnectionType: "enapter.commands.Setup.SetEnapterGatewayConnectionType",
     SetApiHost: "enapter.commands.Setup.SetApiHost",
     SetApiKey: "enapter.commands.Setup.SetApiKey",

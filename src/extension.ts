@@ -68,10 +68,6 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.workspace.registerTextDocumentContentProvider("enbp-content-file", new EnbpContentFileProvider());
 
-  registerCommand(CommandIDs.Setup.SetEnapterCloudConnectionType, () => {
-    void extSettings.setConnectionType("cloud");
-  });
-
   registerCommand(CommandIDs.Setup.SetEnapterGatewayConnectionType, () => {
     void extSettings.setConnectionType("gateway");
   });
