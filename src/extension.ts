@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { RecentDevicesProvider } from "./recent-devices-provider";
 import { CommandIDs } from "./constants/commands";
 import { ViewIDs } from "./constants/views";
 import { Logger } from "./logger";
@@ -9,18 +8,29 @@ import { uploadBlueprintToActiveDevice } from "./commands/upload-blueprint-to-ac
 import { uploadActiveEditorManifest } from "./commands/upload-active-editor-manifest";
 import { removeRecentDeviceNode } from "./commands/remove-recent-device-node";
 import { resetActiveDevice } from "./commands/reset-active-device";
-import { ActiveDeviceWebview } from "./active-device-webview";
 import { selectRecentAsActiveByTreeNode } from "./commands/select-recent-as-active-by-tree-node";
 import { reloadActiveDevice } from "./commands/reload-active-device";
 import { ExtSettings } from "./ext-settings";
-import { checkConnection } from "./commands/check-connection";
 import { mountEnbp } from "./commands/mount-enbp";
 import { EnbpFileSystemProvider } from "./enbp-file-system-provider";
 import { EnbpFilesTreeView } from "./enbp-files-tree-view";
 import { openEnbpTreeItem } from "./commands/open-enbp-tree-item";
 import { EnbpContentFileProvider } from "./enbp-content-file-provider";
 import { copyDeviceProperty } from "./commands/copy-device-property";
-import { DevicesAllOnRemoteProvider } from "./devices-all-on-remote-provider";
+import { DevicesAllOnSiteProvider } from "./devices-all-on-site-provider";
+import { SitesProvider } from "./sites-provider";
+import { sitesConnectToNew } from "./commands/sites-connect-to-new";
+import { sitesDisconnect } from "./commands/sites-disconnect";
+import { sitesConnect } from "./commands/sites-connect";
+import { sitesCopyApiToken } from "./commands/sites-copy-api-token";
+import { ExtState } from "./ext-state";
+import { sitesConnectToCloudSite } from "./commands/sites-connect-to-cloud-site";
+import { sitesConnectToGatewaySite } from "./commands/sites-connect-to-gateway-site";
+import { sitesSetCloudApiToken } from "./commands/sites-set-cloud-api-token";
+import { sitesRemoveCloudApiToken } from "./commands/sites-remove-cloud-api-token";
+import { DevicesActiveDeviceProvider } from "./devices-active-device-provider";
+import { devicesUploadBlueprint } from "./commands/devices-upload-blueprint";
+import { sitesDisconnectAll } from "./commands/sites-disconnect-all";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -44,8 +54,9 @@ class Activator {
 
 export function activate(context: vscode.ExtensionContext) {
   const activator = new Activator(context);
-  new ExtContext(context);
   const extSettings = new ExtSettings();
+  const extContext = new ExtContext(context);
+  new ExtState(extContext.context);
 
   const logger = new Logger();
   logger.addLogger(console);
@@ -74,7 +85,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.executeCommand("workbench.action.openSettings", "Enapter");
   });
 
-  registerCommand(CommandIDs.Setup.CheckConnection, checkConnection);
   registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, uploadBlueprintToActiveDevice);
   registerCommand(CommandIDs.Blueprints.UploadActiveEditorManifest, uploadActiveEditorManifest);
   registerCommand(CommandIDs.Devices.SelectActive, selectDevice);
@@ -83,23 +93,36 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Devices.RemoveRecentByTreeNode, removeRecentDeviceNode);
   registerCommand(CommandIDs.Devices.SelectRecentAsActiveByTreeNode, selectRecentAsActiveByTreeNode);
   registerCommand(CommandIDs.Devices.CopyProperty, copyDeviceProperty);
+  registerCommand(CommandIDs.Devices.UploadBlueprint, devicesUploadBlueprint);
+
+  registerCommand(CommandIDs.Sites.ConnectToNew, sitesConnectToNew);
+  registerCommand(CommandIDs.Sites.ConnectToCloudSite, sitesConnectToCloudSite);
+  registerCommand(CommandIDs.Sites.ConnectToGatewaySite, sitesConnectToGatewaySite);
+  registerCommand(CommandIDs.Sites.Connect, sitesConnect);
+  registerCommand(CommandIDs.Sites.Disconnect, sitesDisconnect);
+  registerCommand(CommandIDs.Sites.DisconnectAll, sitesDisconnectAll);
+  registerCommand(CommandIDs.Sites.RemoveCloudApiToken, sitesRemoveCloudApiToken);
+  registerCommand(CommandIDs.Sites.SetCloudApiToken, sitesSetCloudApiToken);
+  registerCommand(CommandIDs.Sites.CopyApiToken, sitesCopyApiToken);
 
   registerCommand(CommandIDs.Enbp.Mount, mountEnbp);
   registerCommand(CommandIDs.Enbp.OpenTreeItem, openEnbpTreeItem);
 
-  activator.createTreeView(ViewIDs.Devices.AllOnRemote, {
-    treeDataProvider: new DevicesAllOnRemoteProvider(context),
+  activator.createTreeView(ViewIDs.Sites.All, {
+    treeDataProvider: new SitesProvider(),
     showCollapseAll: true,
   });
 
-  activator.createTreeView(ViewIDs.Devices.Recent, {
-    treeDataProvider: new RecentDevicesProvider(context),
+  activator.createTreeView(ViewIDs.Devices.AllOnRemote, {
+    treeDataProvider: new DevicesAllOnSiteProvider(),
     showCollapseAll: true,
+  });
+
+  activator.createTreeView(ViewIDs.Devices.Active, {
+    treeDataProvider: new DevicesActiveDeviceProvider(),
   });
 
   activator.createTreeView(ViewIDs.Enbp.Files, { treeDataProvider: new EnbpFilesTreeView(context) });
-
-  activator.registerWebview(ViewIDs.Devices.Active, new ActiveDeviceWebview(context));
 }
 
 export function deactivate() {}

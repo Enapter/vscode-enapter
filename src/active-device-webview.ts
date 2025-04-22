@@ -4,7 +4,6 @@ import { Device } from "./models/device";
 import { Logger } from "./logger";
 import { CommandID, CommandIDs } from "./constants/commands";
 import { getNonce } from "./utils/get-nonce";
-import { ExtSettings } from "./ext-settings";
 import { ApiClient } from "./api/client";
 
 export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
@@ -12,19 +11,12 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
   private readonly extensionUri: vscode.Uri;
   private readonly state: ExtState;
   private readonly nonce = getNonce();
-  private readonly extSettings = ExtSettings.instance;
   private disposables: vscode.Disposable[] = [];
 
   constructor(private readonly context: vscode.ExtensionContext) {
     this.extensionUri = context.extensionUri;
-    this.state = ExtState.instance;
+    this.state = ExtState.getInstance();
     this.state.onDidChangeActiveDevice((d) => this.postDeviceChanged(d));
-
-    this.disposables.push(
-      this.extSettings.onDidChangeSettings(() => {
-        this.postSettingsChanged();
-      }),
-    );
   }
 
   dispose() {
@@ -49,8 +41,6 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
 
     this.view.webview.postMessage({
       type: "ext-settings-updated",
-      apiKey: this.extSettings.apiKey,
-      apiHost: this.extSettings.apiHost,
     });
   }
 
@@ -104,7 +94,7 @@ export class ActiveDeviceWebview implements vscode.WebviewViewProvider {
   }
 
   private onRequestDeviceConnectivityStatus(deviceId: string) {
-    new ApiClient()
+    new ApiClient("1", "2")
       .getDeviceConnectivityStatus(deviceId)
       .then((res) => {
         return res.status || "unknown";

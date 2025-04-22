@@ -15,7 +15,7 @@ export class ExtSettings {
 
   constructor() {
     if (ExtSettings.instance) {
-      return ExtSettings.instance;
+      throw new Error("ExtSettings is already initialized");
     }
 
     this.disposables.push(
@@ -41,6 +41,14 @@ export class ExtSettings {
     ExtSettings.instance = this;
   }
 
+  static getInstance() {
+    if (!ExtSettings.instance) {
+      throw new Error("ExtSettings is not initialized");
+    }
+
+    return ExtSettings.instance;
+  }
+
   dispose() {
     this.disposables.forEach((d) => d.dispose());
   }
@@ -63,6 +71,18 @@ export class ExtSettings {
     }
 
     return this.config.get("apiHost") || "";
+  }
+
+  get cloudApiToken() {
+    return this.config.get("enapter.cloudApiToken");
+  }
+
+  setCloudApiToken(token: string | undefined) {
+    return this.config.update("cloudApiToken", token);
+  }
+
+  isCloudApiTokenSet() {
+    return !!this.cloudApiToken;
   }
 
   private get config() {

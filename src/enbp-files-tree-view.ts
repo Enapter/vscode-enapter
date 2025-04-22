@@ -93,7 +93,7 @@ export class EnbpFilesTreeView implements vscode.TreeDataProvider<EnbpFileTreeIt
   readonly onDidChangeTreeData: vscode.Event<EnbpFileTreeItem | undefined> = this._onDidChangeTreeData.event;
 
   constructor(private context: vscode.ExtensionContext) {
-    this.state = new ExtState(context);
+    this.state = ExtState.getInstance();
     this.state.onDidChangeDevices(() => this.refresh());
   }
 

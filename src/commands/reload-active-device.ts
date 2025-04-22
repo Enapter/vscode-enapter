@@ -2,11 +2,22 @@ import { ExtState } from "../ext-state";
 import { ApiClient } from "../api/client";
 
 export const reloadActiveDevice = async () => {
-  const state = ExtState.instance;
+  const state = ExtState.getInstance();
   const active = state.getActiveDevice();
-  const api = new ApiClient();
 
   if (!active) {
+    return;
+  }
+
+  const site = state.getActiveSite()
+
+  if (!site) {
+    return;
+  }
+
+  const api = await ApiClient.forSite(site);
+
+  if (!api) {
     return;
   }
 

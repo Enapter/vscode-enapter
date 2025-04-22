@@ -2,7 +2,7 @@ import vscode from "vscode";
 import { ExtState } from "./ext-state";
 import { Device } from "./models/device";
 import { ApiClient } from "./api/client";
-import { DeviceStatusIcon } from "./ui/icons";
+import { DeviceStatusIcon, StringIcon } from "./ui/icons";
 
 export class RemoteDeviceNode extends vscode.TreeItem {
   constructor(
@@ -21,7 +21,7 @@ export class PropertyNode extends vscode.TreeItem {
     private readonly property: "id" | "connectivity_status",
   ) {
     super(PropertyNode.getLabel(device, property), vscode.TreeItemCollapsibleState.None);
-    // this.iconPath = new TextFieldIcon();
+    this.iconPath = new StringIcon();
     this.contextValue = "enapter.viewItems.DeviceProperty";
   }
 
@@ -59,16 +59,16 @@ export class PropertyNode extends vscode.TreeItem {
 
 type TreeNode = RemoteDeviceNode | PropertyNode;
 
-export class DevicesAllOnRemoteProvider implements vscode.TreeDataProvider<TreeNode> {
-  private readonly api: ApiClient;
+export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNode> {
   private readonly state: ExtState;
   private _onDidChangeTreeData: vscode.EventEmitter<TreeNode | undefined> = new vscode.EventEmitter<TreeNode>();
   readonly onDidChangeTreeData: vscode.Event<TreeNode | undefined> = this._onDidChangeTreeData.event;
 
-  constructor(private context: vscode.ExtensionContext) {
-    this.state = new ExtState(context);
-    this.state.onDidChangeDevices(() => this.refresh());
-    this.api = new ApiClient();
+  constructor() {
+    this.state = ExtState.getInstance();
+    this.state.onDidChangeDevices(this.refresh.bind(this));
+    this.state.onDidActivateSite(this.refresh.bind(this));
+    this.state.onDidDisconnectAllSites(this.refresh.bind(this));
   }
 
   refresh() {
@@ -80,15 +80,24 @@ export class DevicesAllOnRemoteProvider implements vscode.TreeDataProvider<TreeN
   }
 
   async getChildren(element?: TreeNode): Promise<Array<TreeNode>> {
-    if (!element) {
-      const devices = await this.api.getDevicesSupportBlueprints();
+    const activeSite = this.state.getActiveSite();
 
-      return Promise.resolve(devices.map((d) => new RemoteDeviceNode(d, vscode.TreeItemCollapsibleState.Expanded)));
+    if (!activeSite) {
+      return [];
     }
 
-    return Promise.resolve([
-      new PropertyNode(element.device, "connectivity_status"),
-      new PropertyNode(element.device, "id"),
-    ]);
+    const apiClient = await ApiClient.forSite(activeSite);
+
+    if (!apiClient) {
+      return [];
+    }
+
+    if (!element) {
+      const devices = await apiClient.getSiteDevices(activeSite);
+
+      return Promise.resolve(devices.map((d) => new RemoteDeviceNode(d, vscode.TreeItemCollapsibleState.Collapsed)));
+    }
+
+    return Promise.resolve([new PropertyNode(element.device, "id")]);
   }
 }

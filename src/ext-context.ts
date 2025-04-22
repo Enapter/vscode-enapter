@@ -3,7 +3,7 @@ import vscode from "vscode";
 export class ExtContext {
   private static instance: ExtContext;
 
-  constructor(private readonly context: vscode.ExtensionContext) {
+  constructor(public readonly context: vscode.ExtensionContext) {
     ExtContext.instance = this;
   }
 

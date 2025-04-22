@@ -3,6 +3,7 @@ import { ApiClient } from "../api/client";
 import { Logger } from "../logger";
 import { Device } from "../models/device";
 import { ExtState } from "../ext-state";
+import { Site } from "../models/sites/site";
 
 function isPresent(s: string | undefined): s is string {
   return !!s && s.length > 0;
@@ -26,7 +27,7 @@ function getDetail(device: Device): string | undefined {
 }
 
 function getDevicesPicks(devicesList: Device[]) {
-  const state = ExtState.instance;
+  const state = ExtState.getInstance();
   const list = [];
 
   const recentDevice = state.getRecentDevices()[0];
@@ -76,7 +77,15 @@ export async function selectDevice(): Promise<Device | undefined> {
   logger.group("Upload Blueprint");
 
   try {
-    const client = new ApiClient();
+    const site = {} as Site;
+    const client = await ApiClient.forSite(site);
+
+    if (!client) {
+      logger.log("Failed to get API client");
+      vscode.window.showErrorMessage("Failed to get API client");
+      return;
+    }
+
     const devices = await client.getDevicesSupportBlueprints();
 
     const chosen = await vscode.window.showQuickPick(getDevicesPicks(devices), {

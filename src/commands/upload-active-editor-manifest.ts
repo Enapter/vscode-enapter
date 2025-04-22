@@ -48,7 +48,7 @@ export async function uploadActiveEditorManifest() {
 
     const fileUri = document.uri;
     const manifest = new Manifest(fileUri);
-    const state = ExtState.instance;
+    const state = ExtState.getInstance();
     void state.setRecentManifest(manifest);
 
     return uploadBlueprintToActiveDevice(manifest);

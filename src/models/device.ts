@@ -1,4 +1,5 @@
 import type { UUID } from "./shared";
+import { Site } from "./sites/site";
 
 type DeviceType = "standalone" | "lua" | string;
 
@@ -17,6 +18,7 @@ export interface Device {
   type: DeviceType;
   properties?: DeviceProperties;
   connectivity_status?: string;
+  site: Site;
 }
 
 export const isSupportBlueprints = (device: Device) => {

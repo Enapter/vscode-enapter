@@ -4,6 +4,9 @@ export const ViewIDs = {
     Recent: "enapter.views.devices.recent",
     AllOnRemote: "enapter.views.devices.allOnRemote",
   },
+  Sites: {
+    All: "enapter.views.sites.all",
+  },
   Enbp: {
     Files: "enapter.views.enbp.files",
   },

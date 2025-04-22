@@ -1,8 +1,12 @@
 import wretch, { Middleware } from "wretch";
+import AbortAddon from "wretch/addons/abort";
 import { loggable, Logger } from "../logger";
 import { ExtSettings } from "../ext-settings";
 import { Device, isSupportBlueprints, sortByOnlineStatus } from "../models/device";
 import { CancellationError, CancellationToken } from "vscode";
+import { CloudSite } from "../models/sites/cloud-site";
+import { Site, SiteType } from "../models/sites/site";
+import { ExtState } from "../ext-state";
 
 const logMiddleware: Middleware = () => (next) => (url, opts) => {
   const logger = Logger.getInstance();
@@ -18,13 +22,66 @@ type AllLuaDevicesResponse = {
 
 type UploadBlueprintResponse = { blueprint: { id: string } };
 
-export class ApiClient {
-  private host: string;
-  private token: string;
+export type SiteResponse = {
+  id: string;
+  name: string;
+};
 
-  constructor(private readonly logger = Logger.getInstance()) {
-    this.host = this.extensionSettings.apiHost;
-    this.token = this.extensionSettings.apiKey;
+export type AllSitesResponse = {
+  sites: SiteResponse[];
+};
+
+export class ApiClient {
+  private logger = Logger.getInstance();
+
+  constructor(
+    public readonly host: string,
+    public readonly token: string,
+  ) {}
+
+  static async forSite(site: Site): Promise<ApiClient | undefined> {
+    const extState = ExtState.getInstance();
+
+    if (site.type === SiteType.Cloud) {
+      const token = await extState.getCloudApiToken();
+      return token ? ApiClient.forCloud(token) : undefined;
+    }
+
+    if (site.type === SiteType.Gateway) {
+      const token = await extState.getGatewayApiToken(site);
+      return token ? ApiClient.forGateway(site.address, token) : undefined;
+    }
+
+    return undefined;
+  }
+
+  static forCloud(token: string): ApiClient {
+    return new ApiClient(CloudSite.ADDRESS, token);
+  }
+
+  static forGateway(host: string, token: string): ApiClient {
+    return new ApiClient(host, token);
+  }
+
+  async getSiteDevices(site: Site) {
+    return this.client
+      .url(`/v3/sites/${site.id}/devices`)
+      .get()
+      .json<AllLuaDevicesResponse>()
+      .then((res) => {
+        return res.devices.filter(isSupportBlueprints).sort(sortByOnlineStatus);
+      });
+  }
+
+  @loggable()
+  async getAllSites(name?: string, controller?: AbortController) {
+    const abortController = controller || new AbortController();
+    return this.client.url(`/v3/sites?name=${name}`).signal(abortController).get().json<AllSitesResponse>();
+  }
+
+  @loggable()
+  async getGatewaySiteInfo() {
+    return this.client.url("/v3/site").get().json<{ site: SiteResponse }>();
   }
 
   @loggable()
@@ -75,7 +132,6 @@ export class ApiClient {
       .json();
   }
 
-  @loggable()
   async getDeviceConnectivityStatus(deviceId: string) {
     return this.client.url(`/v3/devices/${deviceId}/connectivity_status`).get().json<{ status: string }>();
   }
@@ -94,11 +150,12 @@ export class ApiClient {
       .headers({
         "X-Enapter-Auth-Token": this.token,
       })
+      .addon(AbortAddon())
       .middlewares([logMiddleware()])
       .errorType("json");
   }
 
   private get extensionSettings() {
-    return new ExtSettings();
+    return ExtSettings.getInstance();
   }
 }

@@ -1,4 +1,5 @@
 {
+  "$schema": "./package-json-schema.json",
   "name": "enapter",
   "displayName": "Enapter",
   "description": "Enapter",
@@ -25,7 +26,6 @@
       "enapter": [
         {
           "id": "enapter.views.devices.active",
-          "type": "webview",
           "name": "Active Device",
           "visibility": "visible",
           "initialSize": 2,
@@ -33,7 +33,14 @@
         },
         {
           "id": "enapter.views.devices.allOnRemote",
-          "name": "All Devices",
+          "name": "All Devices On Site",
+          "visibility": "visible",
+          "initialSize": 1,
+          "icon": "resources/logo-sidebar.svg"
+        },
+        {
+          "id": "enapter.views.sites.all",
+          "name": "Sites Connections",
           "visibility": "visible",
           "initialSize": 1,
           "icon": "resources/logo-sidebar.svg"
@@ -41,20 +48,80 @@
         {
           "id": "enapter.views.devices.recent",
           "name": "Previously Used Devices",
-          "visibility": "visible",
+          "visibility": "collapsed",
           "initialSize": 1,
           "icon": "resources/logo-sidebar.svg"
         },
         {
           "id": "enapter.views.enbp.files",
           "name": "Enapter Blueprint Archives",
-          "visibility": "visible",
+          "visibility": "collapsed",
           "initialSize": 1,
           "icon": "resources/logo-sidebar.svg"
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "enapter.views.sites.all",
+        "contents": "You haven't added any Enapter Cloud sites or Enapter Gateways.\n[Add new](command:enapter.commands.Sites.ConnectToNew)"
+      }
+    ],
     "commands": [
+      {
+        "command": "enapter.commands.Sites.ConnectToNew",
+        "title": "Connect to Enapter Cloud Site or Gateway",
+        "category": "Enapter",
+        "icon": "$(plus)"
+      },
+      {
+        "command": "enapter.commands.Sites.ConnectToCloudSite",
+        "title": "Connect to Enapter Cloud Site",
+        "category": "Enapter",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "enapter.commands.Sites.ConnectToGatewaySite",
+        "title": "Connect to Enapter Gateway",
+        "category": "Enapter",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "enapter.commands.Sites.RemoveCloudApiToken",
+        "title": "Remove Enapter Cloud API Token",
+        "category": "Enapter",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "enapter.commands.Sites.SetCloudApiToken",
+        "title": "Set Enapter Cloud API Token",
+        "category": "Enapter",
+        "icon": "$(key)"
+      },
+      {
+        "command": "enapter.commands.Sites.Disconnect",
+        "title": "Disconnect",
+        "category": "Enapter",
+        "icon": "$(debug-disconnect)"
+      },
+      {
+        "command": "enapter.commands.Sites.DisconnectAll",
+        "title": "Disconnect All Sites",
+        "category": "Enapter",
+        "icon": "$(debug-disconnect)"
+      },
+      {
+        "command": "enapter.commands.Sites.Connect",
+        "title": "Connect",
+        "category": "Enapter",
+        "icon": "$(play)"
+      },
+      {
+        "command": "enapter.commands.Sites.CopyApiToken",
+        "title": "Copy",
+        "category": "Enapter",
+        "icon": "$(copy)"
+      },
       {
         "command": "enapter.commands.Blueprints.SelectDeviceAndUploadBlueprint",
         "title": "Select Device and Upload Blueprint",
@@ -74,7 +141,7 @@
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "enapter.commands.Devices.UploadBlueprintToDevice",
+        "command": "enapter.commands.Devices.UploadBlueprint",
         "title": "Upload a Blueprint to the Device",
         "category": "Enapter",
         "icon": "$(cloud-upload)"
@@ -133,11 +200,6 @@
       {
         "command": "enapter.commands.Setup.SetApiKey",
         "title": "Set API Key",
-        "category": "Enapter"
-      },
-      {
-        "command": "enapter.commands.Setup.CheckConnection",
-        "title": "Check Connection",
         "category": "Enapter"
       },
       {
@@ -230,7 +292,15 @@
           "when": "false"
         },
         {
-          "command": "enapter.commands.Devices.UploadBlueprintToDevice",
+          "command": "enapter.commands.Devices.UploadBlueprint",
+          "when": "false"
+        },
+        {
+          "command": "enapter.commands.Sites.Connect",
+          "when": "false"
+        },
+        {
+          "command": "enapter.commands.Sites.Disconnect",
           "when": "false"
         }
       ],
@@ -249,9 +319,33 @@
           "command": "enapter.commands.Devices.ResetActive",
           "when": "view == enapter.views.devices.active && enapter.context.Devices.IsActivePresent",
           "group": "navigation@1"
+        },
+        {
+          "command": "enapter.commands.Sites.ConnectToNew",
+          "when": "view == enapter.views.sites.all",
+          "group": "navigation@1"
+        },
+        {
+          "command": "enapter.commands.Sites.SetCloudApiToken",
+          "when": "view == enapter.views.sites.all"
         }
       ],
       "view/item/context": [
+        {
+          "command": "enapter.commands.Sites.Disconnect",
+          "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.Site",
+          "group": "inline@1"
+        },
+        {
+          "command": "enapter.commands.Sites.Connect",
+          "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.Site",
+          "group": "inline@2"
+        },
+        {
+          "command": "enapter.commands.Sites.CopyApiToken",
+          "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.ApiTokenProperty",
+          "group": "inline@1"
+        },
         {
           "command": "enapter.commands.Devices.RemoveRecentByTreeNode",
           "when": "view == enapter.views.devices.recent && viewItem == enapter.viewItems.Device",
@@ -273,7 +367,7 @@
           "group": "inline@1"
         },
         {
-          "command": "enapter.commands.Devices.UploadBlueprintToDevice",
+          "command": "enapter.commands.Devices.UploadBlueprint",
           "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
           "group": "inline@2"
         },
@@ -288,88 +382,6 @@
           "group": "inline"
         }
       ]
-    },
-    "configuration": {
-      "title": "Enapter",
-      "type": "object",
-      "properties": {
-        "enapter.connectionType": {
-          "type": "string",
-          "default": "cloud",
-          "markdownDescription": "Connection Type\n\nSelect the connection type to use with the Enapter extension. You can upload blueprints to devices provisioned to the Enapter Cloud or use your local Enapter Gateway.",
-          "enum": [
-            "cloud",
-            "gateway"
-          ],
-          "enumDescriptions": [
-            "Enapter Cloud",
-            "Enapter Gateway"
-          ],
-          "order": 0
-        },
-        "enapter.apiHost": {
-          "type": "string",
-          "default": "https://api.enapter.com",
-          "markdownDescription": "Enapter API Host\n\n**Default host `https://api.enapter.com` is used if the field is empty or connection type is set to Enapter Cloud.**",
-          "order": 1
-        },
-        "enapter.apiKey": {
-          "type": "string",
-          "default": "",
-          "markdownDescription": "Enapter API Key\n\nRefer to https://go.enapter.com/how-to-get-api-key for more information.",
-          "order": 2
-        },
-        "enapter.mainGateway": {
-          "type": "object",
-          "description": "Main Enapter Gateway Settings",
-          "properties": {
-            "name": {
-              "type": "string",
-              "description": "Name of the Gateway"
-            },
-            "address": {
-              "type": "string",
-              "description": "Address (host) of the Gateway"
-            },
-            "token": {
-              "type": "string",
-              "description": "API Key (token) of the Gateway"
-            }
-          },
-          "default": {
-            "name": "",
-            "address": "",
-            "token": ""
-          },
-          "additionalProperties": false
-        },
-        "enapter.otherGateways": {
-          "type": "array",
-          "title": "Other Gateways",
-          "description": "Specify the Enapter Gateways you want to connect to. You can add multiple gateways additionally to the main Enapter Gateway.",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "default": "",
-                "markdownDescription": "Name of the Enapter Gateway"
-              },
-              "host": {
-                "type": "string",
-                "default": "",
-                "markdownDescription": "Host of the Enapter Gateway"
-              },
-              "apiKey": {
-                "type": "string",
-                "default": "",
-                "markdownDescription": "API Key of the Enapter Gateway"
-              }
-            },
-            "additionalProperties": false
-          }
-        }
-      }
     },
     "walkthroughs": [
       {
@@ -428,7 +440,7 @@
           {
             "id": "initial-setup.check-connection",
             "title": "Check Connection",
-            "description": "Check the connection to the Enapter API.\n\n[Check](command:enapter.commands.Setup.CheckConnection)",
+            "description": "Check the connection to the Enapter API.\n\n",
             "media": {
               "markdown": "media/walkthroughs/initial-setup/check-connection.md"
             }
@@ -457,7 +469,30 @@
           "highContrastLight": "#0000003b"
         }
       }
-    ]
+    ],
+    "icons": {
+      "enapter-gateway": {
+        "description": "Enapter Gateway icon",
+        "default": {
+          "fontPath": "resources/Lucide.woff2",
+          "fontCharacter": "\\e3c3"
+        }
+      },
+      "enapter-cloud": {
+        "description": "Enapter Gateway icon",
+        "default": {
+          "fontPath": "resources/Lucide.woff2",
+          "fontCharacter": "\\e08c"
+        }
+      },
+      "enapter-id": {
+        "description": "Enapter ID icon",
+        "default": {
+          "fontPath": "resources/Lucide.woff2",
+          "fontCharacter": "\\e0f3"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
@@ -512,7 +547,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "reflect-metadata": "^0.2.2",
-    "wretch": "^2.11.0"
+    "wretch": "^2.11.0",
+    "zod": "^3.24.3"
   },
   "bundleDependencies": [
     "reflect-metadata"

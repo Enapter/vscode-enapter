@@ -20,3 +20,75 @@ export class DeviceStatusIcon extends vscode.ThemeIcon {
     super(icon.id, icon.color);
   }
 }
+
+export class KeyIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("key");
+  }
+}
+
+export class EnapterCloudIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("cloud");
+  }
+}
+
+export class EnapterGatewayIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("enapter-gateway");
+  }
+}
+
+export class StringIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("symbol-string");
+  }
+}
+
+export class TextIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("symbol-text");
+  }
+}
+
+export class GlobeIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("globe");
+  }
+}
+
+export class IdIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("enapter-id");
+  }
+}
+
+export class CloudUploadIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("cloud-upload");
+  }
+}
+
+export class ConnectToSiteIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("plug");
+  }
+}
+
+export class DisconnectFromSiteIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("debug-disconnect");
+  }
+}
+
+export class PlayIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("play");
+  }
+}
+
+export class PlusIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("plus");
+  }
+}

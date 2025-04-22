@@ -40,7 +40,7 @@ type PickItem = ManifestQuickPickItem | SeparatorItem;
 
 export class PickManifestTask {
   constructor(
-    private readonly state: ExtState = ExtState.instance,
+    private readonly state: ExtState = ExtState.getInstance(),
     private readonly pe: ProjectExplorer = new ProjectExplorer(),
     private readonly logger: Logger = Logger.getInstance(),
   ) {}

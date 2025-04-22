@@ -36,11 +36,10 @@ export async function uploadBlueprintToActiveDevice(providedManifest?: Manifest)
 
     try {
       logger.group("Upload Blueprint");
-      const state = new ExtState(ExtContext.context);
+      const state = ExtState.getInstance();
 
       void state.setRecentManifest(manifest);
       const zipper = new BlueprintZipper(await manifest.load());
-      const client = new ApiClient();
       const device = state.getActiveDevice();
 
       if (!device) {
@@ -57,7 +56,15 @@ export async function uploadBlueprintToActiveDevice(providedManifest?: Manifest)
         return;
       }
 
+      const client = await ApiClient.forSite(device?.site);
       progress.report({ message: "Uploading" });
+
+      if (!client) {
+        logger.log("Failed to get API client");
+        vscode.window.showErrorMessage("Failed to get API client");
+        return;
+      }
+
       const {
         blueprint: { id: blueprintId },
       } = await client.uploadBlueprint(zip);

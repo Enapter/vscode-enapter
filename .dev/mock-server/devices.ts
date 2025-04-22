@@ -11,6 +11,7 @@ function generateDevice() {
     updated_at: faker.date.recent(),
     authorized_role: faker.helpers.arrayElement(["installer", "user"]),
     type: faker.helpers.arrayElement(deviceTypes),
+    connectivity_status: faker.helpers.arrayElement(["online", "offline", undefined]),
   };
 }
 

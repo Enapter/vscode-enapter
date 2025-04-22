@@ -3,7 +3,6 @@ import { Logger } from "../logger";
 import { ExtState } from "../ext-state";
 import { PickManifestTask } from "../tasks/pick-manifest-task";
 import { Device } from "../models/device";
-import { ExtContext } from "../ext-context";
 import { BlueprintZipper } from "../blueprint-zipper";
 import { ApiClient } from "../api/client";
 import { ExtError } from "../ext-error";
@@ -19,7 +18,7 @@ const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
   );
 };
 
-export async function devicesUploadBlueprintToDevice(device: Device) {
+export async function devicesUploadBlueprint(device: Device) {
   const tokenSource = new vscode.CancellationTokenSource();
 
   const manifest = await new PickManifestTask().run(tokenSource.token);
@@ -33,11 +32,25 @@ export async function devicesUploadBlueprintToDevice(device: Device) {
 
     try {
       logger.group("Upload Blueprint");
-      const state = new ExtState(ExtContext.context);
+      const state = ExtState.getInstance();
 
       void state.setRecentManifest(manifest);
       const zipper = new BlueprintZipper(await manifest.load());
-      const client = new ApiClient();
+      const site = state.getSiteById(device.site_id);
+
+      if (!site) {
+        logger.log("Failed to get site");
+        vscode.window.showErrorMessage("Failed to get site");
+        return;
+      }
+
+      const client = await ApiClient.forSite(site);
+
+      if (!client) {
+        logger.log("Failed to get API client");
+        vscode.window.showErrorMessage("Failed to get API client");
+        return;
+      }
 
       progress.report({ message: "Adding files to an archive" });
       const zip = await zipper.zip();

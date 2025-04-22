@@ -50,7 +50,7 @@ export class RecentDevicesProvider implements vscode.TreeDataProvider<RecentDevi
   readonly onDidChangeTreeData: vscode.Event<RecentDevicesTreeItem | undefined> = this._onDidChangeTreeData.event;
 
   constructor(private context: vscode.ExtensionContext) {
-    this.state = new ExtState(context);
+    this.state = ExtState.getInstance();
     this.state.onDidChangeDevices(() => this.refresh());
   }
 
