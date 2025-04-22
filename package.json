@@ -51,13 +51,6 @@
           "visibility": "collapsed",
           "initialSize": 1,
           "icon": "resources/logo-sidebar.svg"
-        },
-        {
-          "id": "enapter.views.enbp.files",
-          "name": "Enapter Blueprint Archives",
-          "visibility": "collapsed",
-          "initialSize": 1,
-          "icon": "resources/logo-sidebar.svg"
         }
       ]
     },

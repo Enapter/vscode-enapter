@@ -7,7 +7,4 @@ export const ViewIDs = {
   Sites: {
     All: "enapter.views.sites.all",
   },
-  Enbp: {
-    Files: "enapter.views.enbp.files",
-  },
 } as const;

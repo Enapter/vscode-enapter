@@ -13,7 +13,6 @@ import { reloadActiveDevice } from "./commands/reload-active-device";
 import { ExtSettings } from "./ext-settings";
 import { mountEnbp } from "./commands/mount-enbp";
 import { EnbpFileSystemProvider } from "./enbp-file-system-provider";
-import { EnbpFilesTreeView } from "./enbp-files-tree-view";
 import { openEnbpTreeItem } from "./commands/open-enbp-tree-item";
 import { EnbpContentFileProvider } from "./enbp-content-file-provider";
 import { copyDeviceProperty } from "./commands/copy-device-property";
@@ -121,8 +120,6 @@ export function activate(context: vscode.ExtensionContext) {
   activator.createTreeView(ViewIDs.Devices.Active, {
     treeDataProvider: new DevicesActiveDeviceProvider(),
   });
-
-  activator.createTreeView(ViewIDs.Enbp.Files, { treeDataProvider: new EnbpFilesTreeView(context) });
 }
 
 export function deactivate() {}
