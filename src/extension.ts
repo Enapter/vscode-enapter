@@ -42,10 +42,6 @@ class Activator {
     this.pushToSubscriptions(vscode.window.createTreeView(...args));
   }
 
-  registerWebview(...args: Parameters<typeof vscode.window.registerWebviewViewProvider>) {
-    this.pushToSubscriptions(vscode.window.registerWebviewViewProvider(...args));
-  }
-
   private pushToSubscriptions(subscription: vscode.Disposable) {
     this.context.subscriptions.push(subscription);
   }
