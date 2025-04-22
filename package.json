@@ -127,12 +127,6 @@
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
-        "title": "Select as Active",
-        "category": "Enapter",
-        "icon": "$(play)"
-      },
-      {
         "command": "enapter.commands.Devices.SelectActive",
         "title": "Select Device",
         "category": "Enapter"
@@ -219,10 +213,6 @@
       ],
       "commandPalette": [
         {
-          "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
-          "when": "false"
-        },
-        {
           "command": "enapter.commands.InitialSetup.SetEnapterCloudContext",
           "when": "false"
         },
@@ -297,11 +287,6 @@
           "command": "enapter.commands.Devices.UploadBlueprint",
           "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
           "group": "inline@2"
-        },
-        {
-          "command": "enapter.commands.Devices.SelectRecentAsActiveByTreeNode",
-          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
-          "group": "inline@3"
         },
         {
           "command": "enapter.commands.Devices.CopyProperty",
