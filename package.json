@@ -138,12 +138,6 @@
         "icon": "$(close)"
       },
       {
-        "command": "enapter.commands.InitialSetup.SetEnapterCloudContext",
-        "title": "Use Enapter Cloud",
-        "category": "Enapter",
-        "icon": "$(cloud)"
-      },
-      {
         "command": "enapter.commands.InitialSetup.SetEnapterGatewayContext",
         "title": "Use Enapter Gateway",
         "category": "Enapter",
@@ -206,10 +200,6 @@
         }
       ],
       "commandPalette": [
-        {
-          "command": "enapter.commands.InitialSetup.SetEnapterCloudContext",
-          "when": "false"
-        },
         {
           "command": "enapter.commands.InitialSetup.SetEnapterGatewayContext",
           "when": "false"
