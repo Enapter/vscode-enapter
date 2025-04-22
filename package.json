@@ -300,7 +300,7 @@
         }
       },
       "enapter-cloud": {
-        "description": "Enapter Gateway icon",
+        "description": "Enapter Cloud icon",
         "default": {
           "fontPath": "resources/Lucide.woff2",
           "fontCharacter": "\\e08c"
