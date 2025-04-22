@@ -7,7 +7,6 @@ import { CloudSite } from "./models/sites/cloud-site";
 import { GatewaySite } from "./models/sites/gateway-site";
 import { Site } from "./models/sites/site";
 import { SiteRepository } from "./models/sites/sites-repository";
-import { Logger } from "./logger";
 
 export class ExtState {
   private static instance: ExtState;

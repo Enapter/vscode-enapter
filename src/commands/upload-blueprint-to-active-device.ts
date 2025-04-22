@@ -4,7 +4,6 @@ import { BlueprintZipper } from "../blueprint-zipper";
 import { ApiClient } from "../api/client";
 import { Logger } from "../logger";
 import { ExtState } from "../ext-state";
-import { ExtContext } from "../ext-context";
 import { ExtError } from "../ext-error";
 import { PickManifestTask } from "../tasks/pick-manifest-task";
 
