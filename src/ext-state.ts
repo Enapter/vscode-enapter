@@ -50,42 +50,6 @@ export class ExtState {
     return ExtState.instance;
   }
 
-  async addRecentDevice(device: Device) {
-    let recent = this.getRecentDevices();
-    recent = recent.filter((d) => d.id !== device.id);
-    await this.updateGlobalState("recentDevices", [device, ...recent]);
-    this._onDidChangeDevices.fire();
-  }
-
-  getRecentDevices() {
-    return (this.getGlobalState<Device[]>("recentDevices") || [])
-      .map((d) => {
-        try {
-          return {
-            id: d.id,
-            blueprint_id: d.blueprint_id,
-            site_id: d.site_id,
-            name: d.name,
-            updated_at: d.updated_at,
-            authorized_role: d.authorized_role,
-            type: d.type,
-            properties: d.properties,
-            site: {},
-          } as Device;
-        } catch (_) {
-          return null;
-        }
-      })
-      .filter((d) => !!d);
-  }
-
-  async removeRecentDevice(device: Device) {
-    let recent = this.getRecentDevices();
-    recent = recent.filter((d) => d.id !== device.id);
-    await this.updateGlobalState("recentDevices", recent);
-    this._onDidChangeDevices.fire();
-  }
-
   getActiveDevice() {
     const device = this.getGlobalState<Device | undefined>("activeDevice");
     this.setIsActiveDevicePresentContext(!!device);
