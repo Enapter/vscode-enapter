@@ -31,6 +31,20 @@ export type AllSitesResponse = {
   sites: SiteResponse[];
 };
 
+export class TokenNotFoundError extends Error {
+  constructor() {
+    super("Token not found");
+    this.name = "TokenNotFoundError";
+  }
+}
+
+export class InvalidSiteTypeError extends Error {
+  constructor() {
+    super("Invalid site type");
+    this.name = "InvalidSiteTypeError";
+  }
+}
+
 export class ApiClient {
   private logger = Logger.getInstance();
 
@@ -39,20 +53,30 @@ export class ApiClient {
     public readonly token: string,
   ) {}
 
-  static async forSite(site: Site): Promise<ApiClient | undefined> {
+  static async forSite(site: Site): Promise<ApiClient> {
     const extState = ExtState.getInstance();
 
     if (site.type === SiteType.Cloud) {
       const token = await extState.getCloudApiToken();
-      return token ? ApiClient.forCloud(token) : undefined;
+
+      if (!token) {
+        throw new TokenNotFoundError();
+      }
+
+      return ApiClient.forCloud(token);
     }
 
     if (site.type === SiteType.Gateway) {
       const token = await extState.getGatewayApiToken(site);
-      return token ? ApiClient.forGateway(site.address, token) : undefined;
+
+      if (!token) {
+        throw new TokenNotFoundError();
+      }
+
+      return ApiClient.forGateway(site.address, token);
     }
 
-    return undefined;
+    throw new InvalidSiteTypeError();
   }
 
   static forCloud(token: string): ApiClient {
@@ -77,6 +101,10 @@ export class ApiClient {
   async getAllSites(name?: string, controller?: AbortController) {
     const abortController = controller || new AbortController();
     return this.client.url(`/v3/sites?name=${name}`).signal(abortController).get().json<AllSitesResponse>();
+  }
+
+  getSiteInfo(site: Site) {
+    return this.client.url(`/v3/sites/${site.id}`).get();
   }
 
   @loggable()
@@ -151,8 +179,7 @@ export class ApiClient {
         "X-Enapter-Auth-Token": this.token,
       })
       .addon(AbortAddon())
-      .middlewares([logMiddleware()])
-      .errorType("json");
+      .middlewares([logMiddleware()]);
   }
 
   private get extensionSettings() {
