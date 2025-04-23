@@ -32,7 +32,7 @@ export class SitesCheckConnectionTask {
 
       if (!id) {
         vscode.window.showErrorMessage(
-          `Unable to connect to site ${this.site.name}. Please check your API token and that the site exists and is reachable.`,
+          `Unable to connect to site "${this.site.name}". Please check your API token and that the site exists and is reachable.`,
           { modal: true, detail: `Site ID: ${this.site.id}` },
         );
 
@@ -41,7 +41,7 @@ export class SitesCheckConnectionTask {
 
       if (id !== this.site.id) {
         vscode.window.showErrorMessage(
-          `Site ID mismatch for site ${this.site.name}. Please check your API token and that the site exists and is reachable.`,
+          `Site ID mismatch for site "${this.site.name}". Please check your API token and that the site exists and is reachable.`,
           { modal: true, detail: `Site ID: ${this.site.id}` },
         );
 
@@ -54,7 +54,7 @@ export class SitesCheckConnectionTask {
 
       if (e instanceof TokenNotFoundError) {
         vscode.window.showErrorMessage(
-          `No API token found for site ${this.site.name}. Please set the API token in the settings.`,
+          `No API token found for site "${this.site.name}". Please set the API token in the settings.`,
           { modal: true, detail: `Site ID: ${this.site.id}` },
         );
 
@@ -63,7 +63,7 @@ export class SitesCheckConnectionTask {
 
       if (e instanceof InvalidSiteTypeError) {
         vscode.window.showErrorMessage(
-          `Invalid site type for site ${this.site.name}. Please disconnect from this site and connect again.`,
+          `Invalid site type for site "${this.site.name}". Please disconnect from this site and connect again.`,
           { modal: true, detail: `Site ID: ${this.site.id}` },
         );
 
