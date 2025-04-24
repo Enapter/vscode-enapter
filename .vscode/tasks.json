@@ -5,9 +5,7 @@
       "label": "npm: watch",
       "dependsOn": [
         "npm: watch:base:esbuild",
-        "npm: watch:webview:esbuild",
-        "npm: watch:base:tsc",
-        "npm: watch:webview:tsc"
+        "npm: watch:base:tsc"
       ],
       "presentation": {
         "reveal": "never"
@@ -31,35 +29,11 @@
     },
     {
       "type": "npm",
-      "script": "watch:webview:esbuild",
-      "group": "build",
-      "problemMatcher": "$esbuild-watch",
-      "isBackground": true,
-      "label": "npm: watch:webview:esbuild",
-      "presentation": {
-        "group": "watch",
-        "reveal": "never"
-      }
-    },
-    {
-      "type": "npm",
       "script": "watch:base:tsc",
       "group": "build",
       "problemMatcher": "$tsc-watch",
       "isBackground": true,
       "label": "npm: watch:base:tsc",
-      "presentation": {
-        "group": "watch",
-        "reveal": "never"
-      }
-    },
-    {
-      "type": "npm",
-      "script": "watch:webview:tsc",
-      "group": "build",
-      "problemMatcher": "$tsc-watch",
-      "isBackground": true,
-      "label": "npm: watch:webview:tsc",
       "presentation": {
         "group": "watch",
         "reveal": "never"
