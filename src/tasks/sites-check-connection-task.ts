@@ -18,12 +18,30 @@ export class SitesCheckConnectionTask {
     try {
       const apiClient = await ApiClient.forSite(this.site);
 
-      const {
-        site: { id },
-      } = await apiClient
+      const response = await apiClient
         .getSiteInfo(this.site)
-        .notFound(() => this.showSiteNotFoundError())
-        .json<{ site: SiteResponse }>();
+        .notFound(() => {
+          this.showSiteNotFoundError();
+          throw new Error("Site not found");
+        })
+        .unauthorized(() => {
+          this.showUnauthorizedError();
+          throw new Error("Unauthorized");
+        })
+        .fetchError(() => {
+          this.showUnreachableError();
+          throw new Error("Unreachable");
+        })
+        .json<{ site: SiteResponse }>()
+        .catch((e) => {
+          this.handleError(e);
+        });
+
+      if (!response || !response.site) {
+        return;
+      }
+
+      const id = response.site.id;
 
       if (!id) {
         return;
@@ -48,6 +66,20 @@ export class SitesCheckConnectionTask {
     } else {
       Logger.log(error);
     }
+  }
+
+  showUnauthorizedError() {
+    vscode.window.showErrorMessage(`Unauthorized to access site "${this.site.name}". Please check your API token.`, {
+      modal: true,
+      detail: `Site ID: ${this.site.id}`,
+    });
+  }
+
+  showUnreachableError() {
+    vscode.window.showErrorMessage(
+      `Unable to reach site "${this.site.name}". Please check your network connection and site status.`,
+      { modal: true, detail: `Site ID: ${this.site.id}` },
+    );
   }
 
   showSiteNotFoundError() {
