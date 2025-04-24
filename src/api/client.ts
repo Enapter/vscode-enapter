@@ -16,7 +16,7 @@ const logMiddleware: Middleware = () => (next) => (url, opts) => {
   return next(url, opts);
 };
 
-type AllLuaDevicesResponse = {
+export type AllLuaDevicesResponse = {
   devices: Array<Device>;
 };
 
@@ -87,14 +87,8 @@ export class ApiClient {
     return new ApiClient(host, token);
   }
 
-  async getSiteDevices(site: Site) {
-    return this.client
-      .url(`/v3/sites/${site.id}/devices`)
-      .get()
-      .json<AllLuaDevicesResponse>()
-      .then((res) => {
-        return res.devices.filter(isSupportBlueprints).sort(sortByOnlineStatus);
-      });
+  getSiteDevices(site: Site) {
+    return this.client.url(`/v3/sites/${site.id}/devices`).get();
   }
 
   @loggable()

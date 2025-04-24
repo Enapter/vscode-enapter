@@ -3,6 +3,7 @@ import { ExtState } from "./ext-state";
 import { Device } from "./models/device";
 import { ApiClient } from "./api/client";
 import { DeviceStatusIcon, StringIcon } from "./ui/icons";
+import { DevicesFetchSiteDevicesTask } from "./tasks/devices-fetch-site-devices-task";
 
 export class RemoteDeviceNode extends vscode.TreeItem {
   constructor(
@@ -93,7 +94,7 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
     }
 
     if (!element) {
-      const devices = await apiClient.getSiteDevices(activeSite);
+      const { devices } = await DevicesFetchSiteDevicesTask.run(activeSite);
 
       return Promise.resolve(devices.map((d) => new RemoteDeviceNode(d, vscode.TreeItemCollapsibleState.Collapsed)));
     }
