@@ -27,6 +27,7 @@ import { sitesRemoveCloudApiToken } from "./commands/sites-remove-cloud-api-toke
 import { DevicesActiveDeviceProvider } from "./devices-active-device-provider";
 import { devicesUploadBlueprint } from "./commands/devices-upload-blueprint";
 import { sitesDisconnectAll } from "./commands/sites-disconnect-all";
+import { devicesConnect } from "./commands/devices-connect";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -63,6 +64,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, uploadBlueprintToActiveDevice);
   registerCommand(CommandIDs.Blueprints.UploadActiveEditorManifest, uploadActiveEditorManifest);
+  registerCommand(CommandIDs.Devices.Connect, devicesConnect);
   registerCommand(CommandIDs.Devices.ReloadActive, reloadActiveDevice);
   registerCommand(CommandIDs.Devices.ResetActive, resetActiveDevice);
   registerCommand(CommandIDs.Devices.CopyProperty, copyDeviceProperty);

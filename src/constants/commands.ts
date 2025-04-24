@@ -4,7 +4,7 @@ export const CommandIDs = {
     UploadActiveEditorManifest: "enapter.commands.Blueprints.UploadActiveEditorManifest",
   },
   Devices: {
-    SelectActive: "enapter.commands.Devices.SelectActive",
+    Connect: "enapter.commands.Devices.Connect",
     ResetActive: "enapter.commands.Devices.ResetActive",
     ReloadActive: "enapter.commands.Devices.ReloadActive",
     CopyProperty: "enapter.commands.Devices.CopyProperty",

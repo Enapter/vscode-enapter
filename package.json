@@ -121,6 +121,12 @@
         "icon": "$(cloud-upload)"
       },
       {
+        "command": "enapter.commands.Devices.Connect",
+        "title": "Connect to Device",
+        "category": "Enapter",
+        "icon": "$(plug)"
+      },
+      {
         "command": "enapter.commands.Devices.UploadBlueprint",
         "title": "Upload a Blueprint to the Device",
         "category": "Enapter",
@@ -214,6 +220,10 @@
         {
           "command": "enapter.commands.Sites.Disconnect",
           "when": "false"
+        },
+        {
+          "command": "enapter.commands.Devices.Connect",
+          "when": "never"
         }
       ],
       "view/title": [
@@ -261,12 +271,17 @@
         {
           "command": "enapter.commands.Devices.UploadBlueprint",
           "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
-          "group": "inline@2"
+          "group": "inline@1"
         },
         {
           "command": "enapter.commands.Devices.CopyProperty",
           "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.DeviceProperty",
           "group": "inline"
+        },
+        {
+          "command": "enapter.commands.Devices.Connect",
+          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
+          "group": "inline@2"
         }
       ]
     },
