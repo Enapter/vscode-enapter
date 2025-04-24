@@ -70,7 +70,6 @@ export async function devicesUploadBlueprint(device: Device) {
       progress.report({ message: "Assigning blueprint to the active device" });
       await client.assignBlueprintToDevice(blueprintId, device.id, token);
       vscode.window.showInformationMessage(`Blueprint assigned to device ${device.name}`);
-      void state.addRecentDevice(device);
 
       return device;
     } catch (e) {
