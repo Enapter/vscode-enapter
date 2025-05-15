@@ -40,6 +40,7 @@ export class ActiveDeviceProvider implements vscode.TreeDataProvider<Node> {
       return [
         new OnlineStatusNode(device),
         new PropertyNode(`Name: ${device.name}`, device.name),
+        new PropertyNode(`Slug: ${device.slug}`, device.slug),
         new PropertyNode(`ID: ${device.id}`, device.id),
         new LogsNode(this, device),
         new CommandsNode(device),

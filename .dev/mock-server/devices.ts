@@ -12,6 +12,7 @@ function generateDevice() {
     authorized_role: faker.helpers.arrayElement(["installer", "user"]),
     type: faker.helpers.arrayElement(deviceTypes),
     connectivity_status: faker.helpers.arrayElement(["online", "offline", undefined]),
+    slug: faker.word.words({ count: { min: 2, max: 3 } }).replace(/\s+/g, "-"),
   };
 }
 

@@ -19,6 +19,7 @@ export interface Device {
   properties?: DeviceProperties;
   connectivity_status?: string;
   site: Site;
+  slug: string;
 }
 
 export const isSupportBlueprints = (device: Device) => {
