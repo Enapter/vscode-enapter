@@ -5,7 +5,7 @@ import { Manifest, SerializedManifest } from "./models/manifests/manifest";
 import { ExtSettings } from "./ext-settings";
 import { CloudSite } from "./models/sites/cloud-site";
 import { GatewaySite } from "./models/sites/gateway-site";
-import { Site } from "./models/sites/site";
+import { Site, SiteType } from "./models/sites/site";
 import { SiteRepository } from "./models/sites/sites-repository";
 
 export class ExtState {
@@ -157,6 +157,10 @@ export class ExtState {
 
   getGatewayApiToken(site: Site) {
     return this.sitesRepository!.getGatewayApiToken(site);
+  }
+
+  async getSiteApiToken(site: Site) {
+    return site.type === SiteType.Cloud ? this.getCloudApiToken() : this.getGatewayApiToken(site);
   }
 
   private get wsState() {

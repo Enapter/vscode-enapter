@@ -7,8 +7,9 @@ export const CommandIDs = {
     Connect: "enapter.commands.Devices.Connect",
     ResetActive: "enapter.commands.Devices.ResetActive",
     ReloadActive: "enapter.commands.Devices.ReloadActive",
-    CopyProperty: "enapter.commands.Devices.CopyProperty",
     UploadBlueprint: "enapter.commands.Devices.UploadBlueprint",
+    StreamLogs: "enapter.commands.Devices.StreamLogs",
+    StopLogs: "enapter.commands.Devices.StopLogs",
   },
   Sites: {
     ConnectToNew: "enapter.commands.Sites.ConnectToNew",
@@ -24,6 +25,14 @@ export const CommandIDs = {
   Enbp: {
     Mount: "enapter.commands.Enbp.Mount",
     OpenTreeItem: "enapter.commands.Enbp.OpenTreeItem",
+  },
+  Common: {
+    CopyProperty: "enapter.commands.Common.CopyProperty",
+  },
+  Channels: {
+    DeviceLogs: {
+      Reveal: "enapter.commands.Channels.DeviceLogs.Reveal",
+    },
   },
 } as const;
 

@@ -45,6 +45,12 @@ export class StringIcon extends vscode.ThemeIcon {
   }
 }
 
+export class PropertyIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("symbol-string");
+  }
+}
+
 export class TextIcon extends vscode.ThemeIcon {
   constructor() {
     super("symbol-text");
@@ -90,5 +96,17 @@ export class PlayIcon extends vscode.ThemeIcon {
 export class PlusIcon extends vscode.ThemeIcon {
   constructor() {
     super("plus");
+  }
+}
+
+export class PauseIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("debug-pause");
+  }
+}
+
+export class DirectRunCommandOnClickIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("play-circle");
   }
 }

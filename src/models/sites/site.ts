@@ -10,9 +10,8 @@ export interface Site {
   readonly isActive: boolean;
   readonly type: SiteType;
 
-  withIsActive(isActive: boolean): Site;
-
-  serialize(): string;
+  withIsActive: (isActive: boolean) => Site;
+  serialize: () => string;
 }
 
 export abstract class BaseSite implements Site {

@@ -96,7 +96,12 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
     if (!element) {
       const { devices } = await DevicesFetchSiteDevicesTask.run(activeSite);
 
-      return Promise.resolve(devices.map((d) => new RemoteDeviceNode(d, vscode.TreeItemCollapsibleState.Collapsed)));
+      return Promise.resolve(
+        devices.map((d) => {
+          d.site = activeSite;
+          return new RemoteDeviceNode(d, vscode.TreeItemCollapsibleState.Collapsed);
+        }),
+      );
     }
 
     return Promise.resolve([new PropertyNode(element.device, "id")]);

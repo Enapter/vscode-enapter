@@ -55,6 +55,18 @@
     ],
     "commands": [
       {
+        "command": "enapter.commands.Devices.StreamLogs",
+        "title": "Stream Device Logs",
+        "category": "Enapter",
+        "icon": "$(debug-start)"
+      },
+      {
+        "command": "enapter.commands.Devices.StopLogs",
+        "title": "Stop Device Logs",
+        "category": "Enapter",
+        "icon": "$(debug-stop)"
+      },
+      {
         "command": "enapter.commands.Sites.ConnectToNew",
         "title": "Connect to Enapter Cloud Site or Gateway",
         "category": "Enapter",
@@ -155,10 +167,16 @@
         "category": "Enapter"
       },
       {
-        "command": "enapter.commands.Devices.CopyProperty",
+        "command": "enapter.commands.Common.CopyProperty",
         "title": "Copy",
         "category": "Enapter",
         "icon": "$(copy)"
+      },
+      {
+        "command": "enapter.commands.Channels.DeviceLogs.Reveal",
+        "title": "Reveal Device Logs Panel",
+        "category": "Enapter",
+        "icon": "$(eye)"
       }
     ],
     "languages": [
@@ -206,7 +224,7 @@
           "when": "false"
         },
         {
-          "command": "enapter.commands.Devices.CopyProperty",
+          "command": "enapter.commands.Common.CopyProperty",
           "when": "false"
         },
         {
@@ -254,6 +272,21 @@
       ],
       "view/item/context": [
         {
+          "command": "enapter.commands.Devices.StreamLogs",
+          "when": "viewItem == enapter.viewItems.ActiveDevice.LogsNode && !enapter.context.Devices.IsLogging",
+          "group": "inline"
+        },
+        {
+          "command": "enapter.commands.Devices.StopLogs",
+          "when": "viewItem == enapter.viewItems.ActiveDevice.LogsNode && enapter.context.Devices.IsLogging",
+          "group": "inline"
+        },
+        {
+          "command": "enapter.commands.Channels.DeviceLogs.Reveal",
+          "when": "viewItem == enapter.viewItems.ActiveDevice.LogsNode",
+          "group": "inline"
+        },
+        {
           "command": "enapter.commands.Sites.Disconnect",
           "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.Site",
           "group": "inline@1"
@@ -274,8 +307,8 @@
           "group": "inline@1"
         },
         {
-          "command": "enapter.commands.Devices.CopyProperty",
-          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.DeviceProperty",
+          "command": "enapter.commands.Common.CopyProperty",
+          "when": "viewItem == enapter.viewItems.PropertyNode",
           "group": "inline"
         },
         {
@@ -354,6 +387,7 @@
     "@types/node": "^22.10.1",
     "@types/vscode": "^1.95.0",
     "@types/vscode-webview": "^1.57.5",
+    "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
     "@typescript-eslint/parser": "^8.7.0",
     "@vscode/test-web": "^0.0.63",
@@ -375,6 +409,7 @@
     "jszip": "^3.10.1",
     "reflect-metadata": "^0.2.2",
     "wretch": "^2.11.0",
+    "ws": "^8.18.2",
     "zod": "^3.24.3"
   },
   "bundleDependencies": [

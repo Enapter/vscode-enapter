@@ -12,7 +12,7 @@ import { mountEnbp } from "./commands/mount-enbp";
 import { EnbpFileSystemProvider } from "./enbp-file-system-provider";
 import { openEnbpTreeItem } from "./commands/open-enbp-tree-item";
 import { EnbpContentFileProvider } from "./enbp-content-file-provider";
-import { copyDeviceProperty } from "./commands/copy-device-property";
+import { copyPropertyNodeValue } from "./commands/copy-property-node-value";
 import { DevicesAllOnSiteProvider } from "./devices-all-on-site-provider";
 import { SitesProvider } from "./sites-provider";
 import { sitesConnectToNew } from "./commands/sites-connect-to-new";
@@ -24,10 +24,14 @@ import { sitesConnectToCloudSite } from "./commands/sites-connect-to-cloud-site"
 import { sitesConnectToGatewaySite } from "./commands/sites-connect-to-gateway-site";
 import { sitesSetCloudApiToken } from "./commands/sites-set-cloud-api-token";
 import { sitesRemoveCloudApiToken } from "./commands/sites-remove-cloud-api-token";
-import { DevicesActiveDeviceProvider } from "./devices-active-device-provider";
 import { devicesUploadBlueprint } from "./commands/devices-upload-blueprint";
 import { sitesDisconnectAll } from "./commands/sites-disconnect-all";
 import { devicesConnect } from "./commands/devices-connect";
+import { devicesStopLogs } from "./commands/devices-stop-logs";
+import { DeviceLogsChannel } from "./channels/device-logs-channel";
+import { ActiveDeviceProvider } from "./providers/devices/active-device-provider";
+import { channelsDeviceLogsChannelReveal } from "./commands/channels-device-logs-channel-reveal";
+import { devicesStreamLogs } from "./commands/devices-stream-logs";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -54,6 +58,11 @@ export function activate(context: vscode.ExtensionContext) {
   const logger = new Logger();
   logger.addLogger(console);
 
+  // Initialize the logs channel and set the initial logging state context
+  const logsChannel = new DeviceLogsChannel();
+  context.subscriptions.push(logsChannel);
+  vscode.commands.executeCommand("setContext", "enapter.context.Devices.IsLogging", false);
+
   context.subscriptions.push(
     vscode.workspace.registerFileSystemProvider("enbp", new EnbpFileSystemProvider(), {
       isCaseSensitive: true,
@@ -67,8 +76,9 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Devices.Connect, devicesConnect);
   registerCommand(CommandIDs.Devices.ReloadActive, reloadActiveDevice);
   registerCommand(CommandIDs.Devices.ResetActive, resetActiveDevice);
-  registerCommand(CommandIDs.Devices.CopyProperty, copyDeviceProperty);
   registerCommand(CommandIDs.Devices.UploadBlueprint, devicesUploadBlueprint);
+  registerCommand(CommandIDs.Devices.StreamLogs, devicesStreamLogs);
+  registerCommand(CommandIDs.Devices.StopLogs, devicesStopLogs);
 
   registerCommand(CommandIDs.Sites.ConnectToNew, sitesConnectToNew);
   registerCommand(CommandIDs.Sites.ConnectToCloudSite, sitesConnectToCloudSite);
@@ -83,6 +93,10 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Enbp.Mount, mountEnbp);
   registerCommand(CommandIDs.Enbp.OpenTreeItem, openEnbpTreeItem);
 
+  registerCommand(CommandIDs.Common.CopyProperty, copyPropertyNodeValue);
+
+  registerCommand(CommandIDs.Channels.DeviceLogs.Reveal, channelsDeviceLogsChannelReveal);
+
   activator.createTreeView(ViewIDs.Sites.All, {
     treeDataProvider: new SitesProvider(),
     showCollapseAll: true,
@@ -94,7 +108,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   activator.createTreeView(ViewIDs.Devices.Active, {
-    treeDataProvider: new DevicesActiveDeviceProvider(),
+    treeDataProvider: new ActiveDeviceProvider(),
   });
 }
 
