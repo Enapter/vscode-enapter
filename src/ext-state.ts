@@ -115,12 +115,12 @@ export class ExtState {
   }
 
   async removeSite(site: CloudSite | GatewaySite) {
-    const id = site.id;
+    const id = this.getActiveSite()?.id;
 
     return this.sitesRepository!.remove(site.id).then(() => {
       this._onDidRemoveSite.fire(site);
 
-      if (site.id === id) {
+      if (!!id && site.id === id) {
         this._onDidDisconnectFromActiveSite.fire(site);
       }
     });
