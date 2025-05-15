@@ -29,6 +29,8 @@ export interface IManifest {
   contentJson?: ManifestSchema;
   displayName?: string;
   luaPath?: string;
+  rockspec?: string;
+  rockspecPath?: string;
 }
 
 export interface LoadedManifest extends IManifest {
@@ -84,6 +86,19 @@ export class Manifest implements IManifest {
     this.parser = this.getParserForContent(this.contentJson);
 
     return this as LoadedManifest;
+  }
+
+  get rockspec() {
+    return this.parser.getRockspecFilename();
+  }
+
+  get rockspecPath() {
+    if (!this.rockspec) {
+      return undefined;
+    }
+
+    const fsDir = this.uri.fsPath.slice(0, this.uri.fsPath.lastIndexOf("/"));
+    return `${fsDir}/${this.rockspec}`;
   }
 
   get filename() {

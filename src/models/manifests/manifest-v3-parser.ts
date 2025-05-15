@@ -26,6 +26,10 @@ export class ManifestV3Parser implements ManifestParser<ManifestV3Schema> {
     return BlueprintSpec.V3;
   }
 
+  getRockspecFilename(): string | undefined {
+    return this.opts?.rockspec;
+  }
+
   private get opts(): ManifestV3Schema["runtime"]["opts"] {
     return this.contentJson.runtime.opts;
   }

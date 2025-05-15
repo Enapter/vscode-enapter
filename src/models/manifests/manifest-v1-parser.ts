@@ -36,6 +36,10 @@ export class ManifestV1Parser implements ManifestParser<ManifestV1Schema> {
     return BlueprintSpec.V1;
   }
 
+  getRockspecFilename(): string | undefined {
+    return this.commModule?.lua?.rockspec;
+  }
+
   private get commModule(): ManifestV1Schema["communication_module"] {
     return this.contentJson.communication_module;
   }

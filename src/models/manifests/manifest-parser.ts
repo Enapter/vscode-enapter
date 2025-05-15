@@ -5,4 +5,5 @@ export interface ManifestParser<T extends ManifestSchema = ManifestSchema> {
   getLuaPath(): string | undefined;
   getDisplayName(): T["display_name"];
   getBlueprintSpec(): BlueprintSpec;
+  getRockspecFilename(): string | undefined;
 }

@@ -25,6 +25,10 @@ export class BlueprintZipper {
       await this.zipLuaFile();
     }
 
+    if (this.manifest.rockspec && this.manifest.rockspecPath) {
+      await this.zipRockspecFile(this.manifest.rockspecPath, this.manifest.rockspec);
+    }
+
     return this.zipper.generateAsync({ type: "uint8array" });
   }
 
@@ -55,6 +59,11 @@ export class BlueprintZipper {
   private async zipLuaFile() {
     const luaContent = await vscode.workspace.fs.readFile(vscode.Uri.file(this.getLuaFsPath()));
     this.zipper.file(this.manifest.luaPath, luaContent);
+  }
+
+  private async zipRockspecFile(path: string, filename: string) {
+    const rockspecContent = await vscode.workspace.fs.readFile(vscode.Uri.file(path));
+    this.zipper.file(filename, rockspecContent);
   }
 
   private getLuaFsPath() {
