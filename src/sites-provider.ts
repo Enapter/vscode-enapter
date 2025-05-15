@@ -27,28 +27,50 @@ export class ApiTokenPropertyNode extends vscode.TreeItem {
 }
 
 export class CloudNode extends vscode.TreeItem {
-  constructor(public remote: CloudSite) {
+  constructor(
+    public remote: CloudSite,
+    isActive: boolean,
+  ) {
     super(remote.name, vscode.TreeItemCollapsibleState.Collapsed);
     this.iconPath = new EnapterCloudIcon();
-    this.contextValue = "enapter.viewItems.Site";
-    this.description = remote.isActive ? "Active" : undefined;
+    this.setContextValue(isActive);
+    this.setDescription(isActive);
   }
 
   getChildren(): vscode.TreeItem[] {
     return [new ApiTokenPropertyNode(this.remote)];
   }
+
+  setContextValue(isActive: boolean) {
+    this.contextValue = isActive ? "enapter.viewItems.ActiveSite" : "enapter.viewItems.Site";
+  }
+
+  setDescription(isActive: boolean) {
+    this.description = isActive ? "Active" : undefined;
+  }
 }
 
 export class GatewayNode extends vscode.TreeItem {
-  constructor(public remote: GatewaySite) {
+  constructor(
+    public remote: GatewaySite,
+    isActive: boolean,
+  ) {
     super(remote.name, vscode.TreeItemCollapsibleState.Collapsed);
     this.iconPath = new EnapterGatewayIcon();
-    this.contextValue = "enapter.viewItems.Site";
-    this.description = remote.isActive ? "Active" : undefined;
+    this.setContextValue(isActive);
+    this.setDescription(isActive);
   }
 
   async getChildren(): Promise<vscode.TreeItem[]> {
     return [{ label: this.remote.address, iconPath: new GlobeIcon() }, new ApiTokenPropertyNode(this.remote)];
+  }
+
+  setContextValue(isActive: boolean) {
+    this.contextValue = isActive ? "enapter.viewItems.ActiveSite" : "enapter.viewItems.Site";
+  }
+
+  setDescription(isActive: boolean) {
+    this.description = isActive ? "Active" : undefined;
   }
 }
 
@@ -63,6 +85,7 @@ export class SitesProvider implements vscode.TreeDataProvider<Node> {
   constructor() {
     this.extState.onDidAddSite(this.refresh.bind(this));
     this.extState.onDidRemoveSite(this.refresh.bind(this));
+    this.extState.onDidDisconnectFromActiveSite(this.refresh.bind(this));
     this.extState.onDidActivateSite(this.refresh.bind(this));
     this.extState.onDidDisconnectAllSites(this.refresh.bind(this));
   }
@@ -89,13 +112,17 @@ export class SitesProvider implements vscode.TreeDataProvider<Node> {
   }
 
   async getSites(): Promise<Array<CloudNode | GatewayNode>> {
+    const activeSite = this.extState.getActiveSite();
+
     return ExtState.getInstance().allSites.map((site) => {
+      const isActive = !!activeSite && activeSite.id === site.id;
+
       if (site.type === SiteType.Cloud) {
-        return new CloudNode(site as CloudSite);
+        return new CloudNode(site as CloudSite, isActive);
       }
 
       if (site.type === SiteType.Gateway) {
-        return new GatewayNode(site as GatewaySite);
+        return new GatewayNode(site as GatewaySite, isActive);
       }
 
       throw new Error(`Unknown site type: ${JSON.stringify(site)}`);

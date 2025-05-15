@@ -73,7 +73,7 @@ export class SiteRepository {
     await this.storage.update(SiteRepository.SITES_STORAGE_KEY, serialized);
   }
 
-  async activate(id: string): Promise<Site> {
+  async activate(id: string | undefined): Promise<Site | undefined> {
     const sites = this.getAll();
     const updatedSites = sites.map((site) => (site.id === id ? site.withIsActive(true) : site.withIsActive(false)));
 
@@ -81,6 +81,10 @@ export class SiteRepository {
       SiteRepository.SITES_STORAGE_KEY,
       updatedSites.map((s) => s.serialize()),
     );
+
+    if (!id) {
+      return undefined;
+    }
 
     const updatedSite = updatedSites.find((site) => site.id === id);
 

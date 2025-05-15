@@ -24,11 +24,14 @@ export class ExtState {
   private _onDidRemoveSite = new vscode.EventEmitter<Site>();
   readonly onDidRemoveSite = this._onDidRemoveSite.event;
 
-  private _onDidActivateSite = new vscode.EventEmitter<Site>();
+  private _onDidActivateSite = new vscode.EventEmitter<Site | undefined>();
   readonly onDidActivateSite = this._onDidActivateSite.event;
 
   private _onDidDisconnectAllSites = new vscode.EventEmitter<void>();
   readonly onDidDisconnectAllSites = this._onDidDisconnectAllSites.event;
+
+  private _onDidDisconnectFromActiveSite = new vscode.EventEmitter<Site>();
+  readonly onDidDisconnectFromActiveSite = this._onDidDisconnectFromActiveSite.event;
 
   constructor(private readonly context: ExtensionContext) {
     if (ExtState.instance) {
@@ -112,8 +115,14 @@ export class ExtState {
   }
 
   async removeSite(site: CloudSite | GatewaySite) {
+    const id = site.id;
+
     return this.sitesRepository!.remove(site.id).then(() => {
       this._onDidRemoveSite.fire(site);
+
+      if (site.id === id) {
+        this._onDidDisconnectFromActiveSite.fire(site);
+      }
     });
   }
 
@@ -124,11 +133,23 @@ export class ExtState {
     });
   }
 
-  async disconnectAllSites() {
+  async removeAllSites() {
     return this.sitesRepository!.removeAll().then(() => {
       this._onDidDisconnectAllSites.fire();
       this.clearActiveDevice();
     });
+  }
+
+  async disconnectFromActiveSite() {
+    const site = this.getActiveSite();
+
+    if (!site) {
+      return;
+    }
+
+    await this.sitesRepository!.activate(undefined);
+    this._onDidDisconnectFromActiveSite.fire(site);
+    await this.clearActiveDevice();
   }
 
   getActiveSite(): Site | undefined {

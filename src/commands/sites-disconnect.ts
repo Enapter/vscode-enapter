@@ -1,7 +1,6 @@
 import { ExtState } from "../ext-state";
-import { CloudNode, GatewayNode } from "../sites-provider";
 
-export const sitesDisconnect = async (node: CloudNode | GatewayNode) => {
+export const sitesDisconnect = async () => {
   const state = ExtState.getInstance();
-  void state.removeSite(node.remote);
+  void state.disconnectFromActiveSite();
 };

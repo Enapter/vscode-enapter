@@ -25,7 +25,7 @@ import { sitesConnectToGatewaySite } from "./commands/sites-connect-to-gateway-s
 import { sitesSetCloudApiToken } from "./commands/sites-set-cloud-api-token";
 import { sitesRemoveCloudApiToken } from "./commands/sites-remove-cloud-api-token";
 import { devicesUploadBlueprint } from "./commands/devices-upload-blueprint";
-import { sitesDisconnectAll } from "./commands/sites-disconnect-all";
+import { sitesRemoveAll } from "./commands/sites-remove-all";
 import { devicesConnect } from "./commands/devices-connect";
 import { devicesStopLogs } from "./commands/devices-stop-logs";
 import { DeviceLogsChannel } from "./channels/device-logs-channel";
@@ -33,6 +33,7 @@ import { ActiveDeviceProvider } from "./providers/devices/active-device-provider
 import { channelsDeviceLogsChannelReveal } from "./commands/channels-device-logs-channel-reveal";
 import { devicesStreamLogs } from "./commands/devices-stream-logs";
 import { devicesDisconnect } from "./commands/devices-disconnect";
+import { sitesRemove } from "./commands/sites-remove";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -86,7 +87,8 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Sites.ConnectToGatewaySite, sitesConnectToGatewaySite);
   registerCommand(CommandIDs.Sites.Connect, sitesConnect);
   registerCommand(CommandIDs.Sites.Disconnect, sitesDisconnect);
-  registerCommand(CommandIDs.Sites.DisconnectAll, sitesDisconnectAll);
+  registerCommand(CommandIDs.Sites.Remove, sitesRemove);
+  registerCommand(CommandIDs.Sites.RemoveAll, sitesRemoveAll);
   registerCommand(CommandIDs.Sites.RemoveCloudApiToken, sitesRemoveCloudApiToken);
   registerCommand(CommandIDs.Sites.SetCloudApiToken, sitesSetCloudApiToken);
   registerCommand(CommandIDs.Sites.CopyApiToken, sitesCopyApiToken);

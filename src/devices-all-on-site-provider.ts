@@ -81,6 +81,7 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
     this.state.onDidChangeActiveDevice(() => this.refresh(undefined));
     this.state.onDidActivateSite(() => this.refresh(undefined));
     this.state.onDidDisconnectAllSites(() => this.refresh(undefined));
+    this.state.onDidDisconnectFromActiveSite(() => this.refresh(undefined));
   }
 
   refresh(node: TreeNode | undefined) {

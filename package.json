@@ -97,22 +97,28 @@
         "icon": "$(key)"
       },
       {
+        "command": "enapter.commands.Sites.Connect",
+        "title": "Connect",
+        "category": "Enapter",
+        "icon": "$(plug)"
+      },
+      {
         "command": "enapter.commands.Sites.Disconnect",
         "title": "Disconnect",
         "category": "Enapter",
         "icon": "$(debug-disconnect)"
       },
       {
-        "command": "enapter.commands.Sites.DisconnectAll",
+        "command": "enapter.commands.Sites.Remove",
         "title": "Disconnect All Sites",
         "category": "Enapter",
-        "icon": "$(debug-disconnect)"
+        "icon": "$(close)"
       },
       {
-        "command": "enapter.commands.Sites.Connect",
-        "title": "Connect",
+        "command": "enapter.commands.Sites.RemoveAll",
+        "title": "Disconnect All Sites",
         "category": "Enapter",
-        "icon": "$(play)"
+        "icon": "$(close-all)"
       },
       {
         "command": "enapter.commands.Sites.CopyApiToken",
@@ -246,6 +252,10 @@
           "when": "false"
         },
         {
+          "command": "enapter.commands.Sites.Remove",
+          "when": "false"
+        },
+        {
           "command": "enapter.commands.Devices.Connect",
           "when": "never"
         }
@@ -293,14 +303,19 @@
           "group": "inline"
         },
         {
-          "command": "enapter.commands.Sites.Disconnect",
-          "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.Site",
-          "group": "inline@1"
-        },
-        {
           "command": "enapter.commands.Sites.Connect",
           "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.Site",
           "group": "inline@2"
+        },
+        {
+          "command": "enapter.commands.Sites.Disconnect",
+          "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.ActiveSite",
+          "group": "inline@2"
+        },
+        {
+          "command": "enapter.commands.Sites.Remove",
+          "when": "view == enapter.views.sites.all && (viewItem == enapter.viewItems.Site || viewItem == enapter.viewItems.ActiveSite)",
+          "group": "inline@1"
         },
         {
           "command": "enapter.commands.Sites.CopyApiToken",

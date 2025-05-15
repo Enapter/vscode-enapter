@@ -18,6 +18,7 @@ export class ActiveDeviceProvider implements vscode.TreeDataProvider<Node> {
     this.state.onDidChangeDevices(() => this.refresh(undefined));
     this.state.onDidChangeActiveDevice(() => this.refresh(undefined));
     this.state.onDidActivateSite(() => this.refresh(undefined));
+    this.state.onDidDisconnectFromActiveSite(() => this.refresh(undefined));
   }
 
   refresh(node: Node | undefined) {
