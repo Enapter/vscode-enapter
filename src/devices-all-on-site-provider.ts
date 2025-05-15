@@ -8,11 +8,17 @@ import { DevicesFetchSiteDevicesTask } from "./tasks/devices-fetch-site-devices-
 export class RemoteDeviceNode extends vscode.TreeItem {
   constructor(
     public readonly device: Device,
+    isActive: boolean,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
   ) {
     super(device.name, collapsibleState);
     this.contextValue = "enapter.viewItems.Device";
     this.iconPath = new DeviceStatusIcon(device);
+    this.setDescription(isActive);
+  }
+
+  setDescription(isActive: boolean) {
+    this.description = isActive ? "(Active)" : undefined;
   }
 }
 
@@ -67,13 +73,14 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
 
   constructor() {
     this.state = ExtState.getInstance();
-    this.state.onDidChangeDevices(this.refresh.bind(this));
-    this.state.onDidActivateSite(this.refresh.bind(this));
-    this.state.onDidDisconnectAllSites(this.refresh.bind(this));
+    this.state.onDidChangeDevices(() => this.refresh(undefined));
+    this.state.onDidChangeActiveDevice(() => this.refresh(undefined));
+    this.state.onDidActivateSite(() => this.refresh(undefined));
+    this.state.onDidDisconnectAllSites(() => this.refresh(undefined));
   }
 
-  refresh() {
-    this._onDidChangeTreeData.fire(undefined);
+  refresh(node: TreeNode | undefined) {
+    this._onDidChangeTreeData.fire(node);
   }
 
   getTreeItem(element: TreeNode): vscode.TreeItem {
@@ -94,13 +101,30 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
     }
 
     if (!element) {
+      const activeDevice = this.state.getActiveDevice();
       const { devices } = await DevicesFetchSiteDevicesTask.run(activeSite);
 
       return Promise.resolve(
-        devices.map((d) => {
-          d.site = activeSite;
-          return new RemoteDeviceNode(d, vscode.TreeItemCollapsibleState.Collapsed);
-        }),
+        devices
+          .sort((d) => {
+            if (PropertyNode.isOnline(d.connectivity_status)) {
+              return -1;
+            }
+
+            return 1;
+          })
+          .sort((d) => {
+            if (d.id === activeDevice?.id) {
+              return -1;
+            }
+
+            return 0;
+          })
+          .map((d) => {
+            const isActive = !!activeDevice && d.id === activeDevice?.id;
+            d.site = activeSite;
+            return new RemoteDeviceNode(d, isActive, vscode.TreeItemCollapsibleState.Collapsed);
+          }),
       );
     }
 

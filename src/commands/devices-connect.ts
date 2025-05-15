@@ -3,5 +3,5 @@ import { RemoteDeviceNode } from "../devices-all-on-site-provider";
 
 export const devicesConnect = (node: RemoteDeviceNode) => {
   const state = ExtState.getInstance();
-  void state.setActiveDevice(node.device);
+  return state.setActiveDevice(node.device);
 };
