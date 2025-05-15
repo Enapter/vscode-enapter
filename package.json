@@ -139,6 +139,12 @@
         "icon": "$(plug)"
       },
       {
+        "command": "enapter.commands.Devices.Disconnect",
+        "title": "Disconnect Device",
+        "category": "Enapter",
+        "icon": "$(debug-disconnect)"
+      },
+      {
         "command": "enapter.commands.Devices.UploadBlueprint",
         "title": "Upload a Blueprint to the Device",
         "category": "Enapter",
@@ -303,7 +309,7 @@
         },
         {
           "command": "enapter.commands.Devices.UploadBlueprint",
-          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
+          "when": "view == enapter.views.devices.allOnRemote && (viewItem == enapter.viewItems.Device || viewItem == enapter.viewItems.ConnectedDevice)",
           "group": "inline@1"
         },
         {
@@ -314,6 +320,11 @@
         {
           "command": "enapter.commands.Devices.Connect",
           "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
+          "group": "inline@2"
+        },
+        {
+          "command": "enapter.commands.Devices.Disconnect",
+          "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.ConnectedDevice",
           "group": "inline@2"
         }
       ]

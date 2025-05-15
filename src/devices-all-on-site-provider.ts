@@ -12,13 +12,17 @@ export class RemoteDeviceNode extends vscode.TreeItem {
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
   ) {
     super(device.name, collapsibleState);
-    this.contextValue = "enapter.viewItems.Device";
     this.iconPath = new DeviceStatusIcon(device);
+    this.setContextValue(isActive);
     this.setDescription(isActive);
   }
 
   setDescription(isActive: boolean) {
     this.description = isActive ? "(Active)" : undefined;
+  }
+
+  setContextValue(isActive: boolean) {
+    this.contextValue = isActive ? "enapter.viewItems.ConnectedDevice" : "enapter.viewItems.Device";
   }
 }
 

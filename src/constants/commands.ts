@@ -5,6 +5,7 @@ export const CommandIDs = {
   },
   Devices: {
     Connect: "enapter.commands.Devices.Connect",
+    Disconnect: "enapter.commands.Devices.Disconnect",
     ResetActive: "enapter.commands.Devices.ResetActive",
     ReloadActive: "enapter.commands.Devices.ReloadActive",
     UploadBlueprint: "enapter.commands.Devices.UploadBlueprint",
