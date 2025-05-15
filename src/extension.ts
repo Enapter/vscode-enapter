@@ -58,7 +58,6 @@ export function activate(context: vscode.ExtensionContext) {
   const logger = new Logger();
   logger.addLogger(console);
 
-  // Initialize the logs channel and set the initial logging state context
   const logsChannel = new DeviceLogsChannel();
   context.subscriptions.push(logsChannel);
   vscode.commands.executeCommand("setContext", "enapter.context.Devices.IsLogging", false);
