@@ -9,12 +9,15 @@ export const sitesConnect = async (node: CloudNode | GatewayNode) => {
     return;
   }
 
-  const isConnected = await SitesCheckConnectionTask.run(site);
+  const result = await SitesCheckConnectionTask.run(site);
 
-  if (!isConnected) {
+  if (typeof result === "string" && result.length > 0) {
+    node.setError(result);
+    node.refresh();
     return;
   }
 
+  node.setError(undefined);
   const state = ExtState.getInstance();
   void state.activateSite(site);
 };

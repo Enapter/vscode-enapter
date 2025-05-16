@@ -120,8 +120,7 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
         await this.state.clearActiveDevice();
       }
 
-      if (!devices.length || !devices.some((d) => d.id === activeDevice?.id)) {
-        await this.state.disconnectFromActiveSite();
+      if (!devices.length || (!!activeDevice && !devices.some((d) => d.id === activeDevice.id))) {
         await this.state.clearActiveDevice();
       }
 

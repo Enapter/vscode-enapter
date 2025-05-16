@@ -1,10 +1,9 @@
 import vscode from "vscode";
 import { CloudSite } from "./models/sites/cloud-site";
 import { GatewaySite } from "./models/sites/gateway-site";
-import { EnapterCloudIcon, EnapterGatewayIcon, GlobeIcon, KeyIcon } from "./ui/icons";
+import { EnapterGatewayIcon, GlobeIcon, KeyIcon, WarningIcon } from "./ui/icons";
 import { ExtState } from "./ext-state";
 import { SiteType } from "./models/sites/site";
-import { Logger } from "./logger";
 
 export class ApiTokenPropertyNode extends vscode.TreeItem {
   static labelWhenHidden = "API Token: [hidden]";
@@ -27,18 +26,36 @@ export class ApiTokenPropertyNode extends vscode.TreeItem {
 }
 
 export class CloudNode extends vscode.TreeItem {
+  error: string | undefined = undefined;
+
   constructor(
+    private readonly provider: SitesProvider,
     public remote: CloudSite,
     isActive: boolean,
   ) {
     super(remote.name, vscode.TreeItemCollapsibleState.Collapsed);
-    this.iconPath = new EnapterCloudIcon();
+    this.setIcon(!!this.error);
     this.setContextValue(isActive);
     this.setDescription(isActive);
   }
 
+  refresh() {
+    this.provider.refresh(this);
+  }
+
   getChildren(): vscode.TreeItem[] {
-    return [new ApiTokenPropertyNode(this.remote)];
+    return [!!this.error && { label: `Error: ${this.error}` }, new ApiTokenPropertyNode(this.remote)].filter(
+      (i) => !!i,
+    );
+  }
+
+  setError(message: string | undefined) {
+    this.error = message;
+    this.setIcon(!!message);
+  }
+
+  setIcon(isInvalid: boolean) {
+    this.iconPath = isInvalid ? new WarningIcon() : new EnapterGatewayIcon();
   }
 
   setContextValue(isActive: boolean) {
@@ -51,18 +68,38 @@ export class CloudNode extends vscode.TreeItem {
 }
 
 export class GatewayNode extends vscode.TreeItem {
+  error: string | undefined = undefined;
+
   constructor(
+    private readonly provider: SitesProvider,
     public remote: GatewaySite,
     isActive: boolean,
   ) {
     super(remote.name, vscode.TreeItemCollapsibleState.Collapsed);
-    this.iconPath = new EnapterGatewayIcon();
+    this.setIcon(!!this.error);
     this.setContextValue(isActive);
     this.setDescription(isActive);
   }
 
   async getChildren(): Promise<vscode.TreeItem[]> {
-    return [{ label: this.remote.address, iconPath: new GlobeIcon() }, new ApiTokenPropertyNode(this.remote)];
+    return [
+      !!this.error && { label: `Error: ${this.error}` },
+      { label: this.remote.address, iconPath: new GlobeIcon() },
+      new ApiTokenPropertyNode(this.remote),
+    ].filter((i) => !!i);
+  }
+
+  refresh() {
+    this.provider.refresh(this);
+  }
+
+  setError(message: string | undefined) {
+    this.error = message;
+    this.setIcon(!!message);
+  }
+
+  setIcon(isInvalid: boolean) {
+    this.iconPath = isInvalid ? new WarningIcon() : new EnapterGatewayIcon();
   }
 
   setContextValue(isActive: boolean) {
@@ -83,16 +120,15 @@ export class SitesProvider implements vscode.TreeDataProvider<Node> {
   readonly onDidChangeTreeData: vscode.Event<any> = this._onDidChangeTreeData.event;
 
   constructor() {
-    this.extState.onDidAddSite(this.refresh.bind(this));
-    this.extState.onDidRemoveSite(this.refresh.bind(this));
-    this.extState.onDidDisconnectFromActiveSite(this.refresh.bind(this));
-    this.extState.onDidActivateSite(this.refresh.bind(this));
-    this.extState.onDidDisconnectAllSites(this.refresh.bind(this));
+    this.extState.onDidAddSite(() => this.refresh(undefined));
+    this.extState.onDidRemoveSite(() => this.refresh(undefined));
+    this.extState.onDidDisconnectFromActiveSite(() => this.refresh(undefined));
+    this.extState.onDidActivateSite(() => this.refresh(undefined));
+    this.extState.onDidDisconnectAllSites(() => this.refresh(undefined));
   }
 
-  private refresh() {
-    Logger.log("Refreshing sites tree");
-    this._onDidChangeTreeData.fire(undefined);
+  refresh(node: Node | undefined) {
+    this._onDidChangeTreeData.fire(node);
   }
 
   getTreeItem(element: Node): vscode.TreeItem {
@@ -118,11 +154,11 @@ export class SitesProvider implements vscode.TreeDataProvider<Node> {
       const isActive = !!activeSite && activeSite.id === site.id;
 
       if (site.type === SiteType.Cloud) {
-        return new CloudNode(site as CloudSite, isActive);
+        return new CloudNode(this, site as CloudSite, isActive);
       }
 
       if (site.type === SiteType.Gateway) {
-        return new GatewayNode(site as GatewaySite, isActive);
+        return new GatewayNode(this, site as GatewaySite, isActive);
       }
 
       throw new Error(`Unknown site type: ${JSON.stringify(site)}`);

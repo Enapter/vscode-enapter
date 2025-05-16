@@ -17,96 +17,93 @@ export class SitesCheckConnectionTask {
   async run() {
     try {
       const apiClient = await ApiClient.forSite(this.site);
+      let message = "";
 
       const response = await apiClient
         .getSiteInfo(this.site)
-        .notFound(() => {
-          this.showSiteNotFoundError();
-          throw new Error("Site not found");
-        })
-        .unauthorized(() => {
-          this.showUnauthorizedError();
-          throw new Error("Unauthorized");
-        })
-        .fetchError(() => {
-          this.showUnreachableError();
-          throw new Error("Unreachable");
-        })
+        .notFound(() => (message = this.showSiteNotFoundError()))
+        .unauthorized(() => (message = this.showUnauthorizedError()))
+        .forbidden(() => (message = this.showUnauthorizedError()))
+        .internalError(() => (message = this.showUnreachableError()))
+        .fetchError(() => (message = this.showUnreachableError()))
         .json<{ site: SiteResponse }>()
         .catch((e) => {
           this.handleError(e);
         });
 
       if (!response || !response.site) {
-        return;
+        return message;
       }
 
       const id = response.site.id;
 
       if (!id) {
-        return;
+        return this.showSiteNotFoundError();
       }
 
       if (id !== this.site.id) {
-        this.showSiteMismatchError();
-        return;
+        return this.showSiteMismatchError();
       }
 
-      return true;
+      return response.site;
     } catch (e) {
       return this.handleError(e);
     }
   }
 
-  handleError(error: unknown) {
+  handleError(error: unknown): string {
     if (error instanceof TokenNotFoundError) {
-      this.showTokenNotFoundError();
+      return this.showTokenNotFoundError();
     } else if (error instanceof InvalidSiteTypeError) {
-      this.showInvalidSiteTypeError();
+      return this.showInvalidSiteTypeError();
     } else {
       Logger.log(error);
+      return "";
     }
   }
 
   showUnauthorizedError() {
-    vscode.window.showErrorMessage(`Unauthorized to access site "${this.site.name}". Please check your API token.`, {
+    const message = `Unauthorized to access site "${this.site.name}". Please check your API token.`;
+
+    vscode.window.showErrorMessage(message, {
       modal: true,
       detail: `Site ID: ${this.site.id}`,
     });
+
+    return message;
   }
 
   showUnreachableError() {
-    vscode.window.showErrorMessage(
-      `Unable to reach site "${this.site.name}". Please check your network connection and site status.`,
-      { modal: true, detail: `Site ID: ${this.site.id}` },
-    );
+    const message = `Unable to reach site "${this.site.name}". Please check your network connection and site status.`;
+    vscode.window.showErrorMessage(message, { modal: true, detail: `Site ID: ${this.site.id}` });
+    return message;
   }
 
   showSiteNotFoundError() {
-    vscode.window.showErrorMessage(
-      `Site "${this.site.name}" not found. Please check your API token and that the site exists and is reachable.`,
-      { modal: true, detail: `Site ID: ${this.site.id}` },
-    );
+    const message = `Site "${this.site.name}" not found. Please check your API token and that the site exists and is reachable.`;
+
+    vscode.window.showErrorMessage(message, { modal: true, detail: `Site ID: ${this.site.id}` });
+    return message;
   }
 
   showSiteMismatchError() {
-    vscode.window.showErrorMessage(
-      `Site ID mismatch for site "${this.site.name}". Please check your API token and that the site exists and is reachable.`,
-      { modal: true, detail: `Site ID: ${this.site.id}` },
-    );
+    const message = `Site ID mismatch for site "${this.site.name}". Please check your API token and that the site exists and is reachable.`;
+
+    vscode.window.showErrorMessage(message, { modal: true, detail: `Site ID: ${this.site.id}` });
+    return message;
   }
 
   showTokenNotFoundError() {
-    vscode.window.showErrorMessage(
-      `No API token found for site "${this.site.name}". Please set the API token in the settings.`,
-      { modal: true, detail: `Site ID: ${this.site.id}` },
-    );
+    const message = `No API token found for site "${this.site.name}". Please set the API token in the settings.`;
+
+    vscode.window.showErrorMessage(message, { modal: true, detail: `Site ID: ${this.site.id}` });
+    return message;
   }
 
   showInvalidSiteTypeError() {
-    vscode.window.showErrorMessage(
-      `Invalid site type for site "${this.site.name}". Please disconnect from this site and connect again.`,
-      { modal: true, detail: `Site ID: ${this.site.id}` },
-    );
+    const message = `Invalid site type for site "${this.site.name}". Please disconnect from this site and connect again.`;
+
+    vscode.window.showErrorMessage(message, { modal: true, detail: `Site ID: ${this.site.id}` });
+    return message;
   }
 }

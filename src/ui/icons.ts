@@ -110,3 +110,9 @@ export class DirectRunCommandOnClickIcon extends vscode.ThemeIcon {
     super("play-circle");
   }
 }
+
+export class WarningIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("warning");
+  }
+}
