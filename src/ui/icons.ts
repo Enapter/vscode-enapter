@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import { GreenColor, OfflineIndicatorColor } from "./colors";
-import { Device, isOnline } from "../models/device";
+import { Device, isDeviceOnline } from "../models/device";
 
 export class OnlineIcon extends vscode.ThemeIcon {
   constructor() {
@@ -16,7 +16,7 @@ export class OfflineIcon extends vscode.ThemeIcon {
 
 export class DeviceStatusIcon extends vscode.ThemeIcon {
   constructor(device: Device) {
-    const icon = isOnline(device) ? new OnlineIcon() : new OfflineIcon();
+    const icon = isDeviceOnline(device) ? new OnlineIcon() : new OfflineIcon();
     super(icon.id, icon.color);
   }
 }

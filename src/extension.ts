@@ -13,7 +13,6 @@ import { EnbpFileSystemProvider } from "./enbp-file-system-provider";
 import { openEnbpTreeItem } from "./commands/open-enbp-tree-item";
 import { EnbpContentFileProvider } from "./enbp-content-file-provider";
 import { copyPropertyNodeValue } from "./commands/copy-property-node-value";
-import { DevicesAllOnSiteProvider } from "./devices-all-on-site-provider";
 import { SitesProvider } from "./sites-provider";
 import { sitesConnectToNew } from "./commands/sites-connect-to-new";
 import { sitesDisconnect } from "./commands/sites-disconnect";
@@ -34,6 +33,7 @@ import { channelsDeviceLogsChannelReveal } from "./commands/channels-device-logs
 import { devicesStreamLogs } from "./commands/devices-stream-logs";
 import { devicesDisconnect } from "./commands/devices-disconnect";
 import { sitesRemove } from "./commands/sites-remove";
+import { DevicesAllOnSiteProvider } from "./providers/devices-on-site/provider";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);

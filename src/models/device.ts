@@ -30,9 +30,18 @@ export const sortByOnlineStatus = (device: Device) => {
   if (device.connectivity_status) {
     return device.connectivity_status.toLowerCase() === "online" ? -1 : 1;
   }
+
   return 0;
 };
 
-export const isOnline = (device: Device) => {
+export const sortByActiveDevice = (device: Device, activeDevice: Device | undefined) => {
+  if (activeDevice) {
+    return device.id === activeDevice.id ? -1 : 1;
+  }
+
+  return 0;
+};
+
+export const isDeviceOnline = (device: Device) => {
   return String(device.connectivity_status).toLowerCase() === "online";
 };
