@@ -14,7 +14,7 @@ export class DevicesFetchSiteDevicesTask {
     return new DevicesFetchSiteDevicesTask(site).run();
   }
 
-  async run(): Promise<AllLuaDevicesResponse> {
+  async run(): Promise<AllLuaDevicesResponse | undefined> {
     try {
       const apiClient = await ApiClient.forSite(this.site);
 
@@ -22,28 +22,23 @@ export class DevicesFetchSiteDevicesTask {
         return { devices: [] };
       }
 
-      return await apiClient
+      const response = await apiClient
         .getSiteDevices(this.site)
-        .unauthorized(() => {
-          this.showUnauthorizedError();
-          throw new Error("Unauthorized");
-        })
-        .fetchError(() => {
-          this.showUnreachableError();
-          throw new Error("Unreachable");
-        })
-        .notFound(() => {
-          this.showSiteNotFoundError();
-          throw new Error("Site not found");
-        })
+        .unauthorized(() => this.showUnauthorizedError())
+        .fetchError(() => this.showUnreachableError())
+        .notFound(() => this.showSiteNotFoundError())
         .json<AllLuaDevicesResponse>()
         .catch((e) => {
           this.handleError(e);
-          return this.defaultResponse;
         });
+
+      if (!response) {
+        return;
+      }
+
+      return response;
     } catch (e) {
       this.handleError(e);
-      return this.defaultResponse;
     }
   }
 
@@ -76,9 +71,5 @@ export class DevicesFetchSiteDevicesTask {
 
   handleError(error: unknown) {
     Logger.log("DevicesFetchSiteDevicesTask error:", error);
-  }
-
-  get defaultResponse(): AllLuaDevicesResponse {
-    return { devices: [] };
   }
 }

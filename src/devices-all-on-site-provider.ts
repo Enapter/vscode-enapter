@@ -107,7 +107,23 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
 
     if (!element) {
       const activeDevice = this.state.getActiveDevice();
-      const { devices } = await DevicesFetchSiteDevicesTask.run(activeSite);
+      let devices: Device[] = [];
+
+      try {
+        const response = await DevicesFetchSiteDevicesTask.run(activeSite);
+
+        if (response) {
+          devices = response.devices;
+        }
+      } catch (_) {
+        await this.state.disconnectFromActiveSite();
+        await this.state.clearActiveDevice();
+      }
+
+      if (!devices.length || !devices.some((d) => d.id === activeDevice?.id)) {
+        await this.state.disconnectFromActiveSite();
+        await this.state.clearActiveDevice();
+      }
 
       return Promise.resolve(
         devices
