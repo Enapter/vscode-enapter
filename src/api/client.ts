@@ -102,8 +102,8 @@ export class ApiClient {
   }
 
   @loggable()
-  async getGatewaySiteInfo() {
-    return this.client.url("/v3/site").get().json<{ site: SiteResponse }>();
+  getGatewaySiteInfo() {
+    return this.client.url("/v3/site").get();
   }
 
   @loggable()
