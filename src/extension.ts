@@ -29,7 +29,7 @@ import { sitesRemoveAll } from "./commands/sites-remove-all";
 import { devicesConnect } from "./commands/devices-connect";
 import { devicesStopLogs } from "./commands/devices-stop-logs";
 import { DeviceLogsChannel } from "./channels/device-logs-channel";
-import { ActiveDeviceProvider } from "./providers/devices/active-device-provider";
+import { ActiveDeviceProvider } from "./providers/active-device/provider";
 import { channelsDeviceLogsChannelReveal } from "./commands/channels-device-logs-channel-reveal";
 import { devicesStreamLogs } from "./commands/devices-stream-logs";
 import { devicesDisconnect } from "./commands/devices-disconnect";

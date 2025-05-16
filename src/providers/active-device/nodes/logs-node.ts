@@ -2,7 +2,7 @@ import vscode from "vscode";
 import { Device } from "../../../models/device";
 import { ExtContext } from "../../../ext-context";
 import { OfflineIcon, OnlineIcon } from "../../../ui/icons";
-import { ActiveDeviceProvider } from "../active-device-provider";
+import { ActiveDeviceProvider } from "../provider";
 
 export class LogsNode extends vscode.TreeItem {
   constructor(
