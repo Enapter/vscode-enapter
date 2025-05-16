@@ -24,24 +24,34 @@ export class RemoteDeviceNode extends vscode.TreeItem {
   setContextValue(isActive: boolean) {
     this.contextValue = isActive ? "enapter.viewItems.ConnectedDevice" : "enapter.viewItems.Device";
   }
+
+  getChildren() {
+    return [new PropertyNode(this.device, "id"), new PropertyNode(this.device, "slug")];
+  }
 }
 
 export class PropertyNode extends vscode.TreeItem {
   constructor(
     public readonly device: Device,
-    private readonly property: "id" | "connectivity_status",
+    private readonly property: "id" | "connectivity_status" | "slug",
   ) {
     super(PropertyNode.getLabel(device, property), vscode.TreeItemCollapsibleState.None);
     this.iconPath = new StringIcon();
     this.contextValue = "enapter.viewItems.DeviceProperty";
   }
 
-  static getLabel(device: Device, property: "id" | "connectivity_status"): string {
+  static getLabel(device: Device, property: "id" | "connectivity_status" | "slug"): string {
     let prefix = "";
 
     switch (property) {
       case "id":
         prefix = "ID: ";
+        break;
+      case "connectivity_status":
+        prefix = "Status: ";
+        break;
+      case "slug":
+        prefix = "Slug: ";
         break;
     }
 
@@ -50,21 +60,6 @@ export class PropertyNode extends vscode.TreeItem {
 
   static isOnline(status?: string) {
     return String(status).toLowerCase() === "online";
-  }
-
-  public getPropertyValue(): string {
-    let prefix = "";
-
-    switch (this.property) {
-      case "id":
-        prefix = "ID: ";
-        break;
-      case "connectivity_status":
-        prefix = "Status: ";
-        break;
-    }
-
-    return prefix + this.device[this.property];
   }
 }
 
@@ -148,6 +143,10 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
       );
     }
 
-    return Promise.resolve([new PropertyNode(element.device, "id")]);
+    if ("getChildren" in element) {
+      return element.getChildren();
+    }
+
+    return [];
   }
 }
