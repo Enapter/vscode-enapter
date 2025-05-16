@@ -13,7 +13,6 @@ import { EnbpFileSystemProvider } from "./enbp-file-system-provider";
 import { openEnbpTreeItem } from "./commands/open-enbp-tree-item";
 import { EnbpContentFileProvider } from "./enbp-content-file-provider";
 import { copyPropertyNodeValue } from "./commands/copy-property-node-value";
-import { SitesProvider } from "./sites-provider";
 import { sitesConnectToNew } from "./commands/sites-connect-to-new";
 import { sitesDisconnect } from "./commands/sites-disconnect";
 import { sitesConnect } from "./commands/sites-connect";
@@ -34,6 +33,7 @@ import { devicesStreamLogs } from "./commands/devices-stream-logs";
 import { devicesDisconnect } from "./commands/devices-disconnect";
 import { sitesRemove } from "./commands/sites-remove";
 import { DevicesAllOnSiteProvider } from "./providers/devices-on-site/provider";
+import { SitesConnectionsProvider } from "./providers/sites-connections/provider";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -101,7 +101,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Channels.DeviceLogs.Reveal, channelsDeviceLogsChannelReveal);
 
   activator.createTreeView(ViewIDs.Sites.All, {
-    treeDataProvider: new SitesProvider(),
+    treeDataProvider: new SitesConnectionsProvider(),
     showCollapseAll: true,
   });
 

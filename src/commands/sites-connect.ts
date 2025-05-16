@@ -1,9 +1,10 @@
 import { ExtState } from "../ext-state";
-import { CloudNode, GatewayNode } from "../sites-provider";
 import { SitesCheckConnectionTask } from "../tasks/sites-check-connection-task";
+import { CloudSiteNode } from "../providers/sites-connections/nodes/cloud-site-node";
+import { GatewayNode } from "../providers/sites-connections/nodes/gateway-node";
 
-export const sitesConnect = async (node: CloudNode | GatewayNode) => {
-  const site = node.remote;
+export const sitesConnect = async (node: CloudSiteNode | GatewayNode) => {
+  const { site } = node;
 
   if (site.isActive) {
     return;

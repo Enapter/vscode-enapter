@@ -1,7 +1,8 @@
 import { ExtState } from "../ext-state";
-import { CloudNode, GatewayNode } from "../sites-provider";
+import { CloudSiteNode } from "../providers/sites-connections/nodes/cloud-site-node";
+import { GatewayNode } from "../providers/sites-connections/nodes/gateway-node";
 
-export const sitesRemove = async (node: CloudNode | GatewayNode) => {
+export const sitesRemove = async (node: CloudSiteNode | GatewayNode) => {
   const extState = ExtState.getInstance();
-  return extState.removeSite(node.remote);
+  return extState.removeSite(node.site);
 };
