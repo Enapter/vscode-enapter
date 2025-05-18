@@ -1,6 +1,5 @@
-import { ExtState } from "../ext-state";
+import { ActiveDeviceService } from "../services/active-device-service";
 
-export const resetActiveDevice = () => {
-  const state = ExtState.getInstance();
-  void state.clearActiveDevice();
+export const resetActiveDevice = (service: ActiveDeviceService) => {
+  return service.updateDevice(undefined);
 };

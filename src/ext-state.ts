@@ -1,8 +1,5 @@
 import vscode, { ExtensionContext } from "vscode";
-import { Device } from "./models/device";
-import { ContextKeys } from "./constants/context-keys";
 import { Manifest, SerializedManifest } from "./models/manifests/manifest";
-import { ExtSettings } from "./ext-settings";
 import { CloudSite } from "./models/sites/cloud-site";
 import { GatewaySite } from "./models/sites/gateway-site";
 import { Site, SiteType } from "./models/sites/site";
@@ -14,9 +11,6 @@ export class ExtState {
 
   private _onDidChangeDevices = new vscode.EventEmitter<void>();
   readonly onDidChangeDevices = this._onDidChangeDevices.event;
-
-  private _onDidChangeActiveDevice = new vscode.EventEmitter<Device | undefined>();
-  readonly onDidChangeActiveDevice = this._onDidChangeActiveDevice.event;
 
   private _onDidAddSite = new vscode.EventEmitter<Site>();
   readonly onDidAddSite = this._onDidAddSite.event;
@@ -39,8 +33,6 @@ export class ExtState {
     }
 
     this.sitesRepository = new SiteRepository(this.globalState);
-    const extSettings = ExtSettings.getInstance();
-    extSettings.onDidChangeConnectionSettings(this.clearActiveDevice.bind(this));
 
     ExtState.instance = this;
   }
@@ -51,28 +43,6 @@ export class ExtState {
     }
 
     return ExtState.instance;
-  }
-
-  getActiveDevice() {
-    const device = this.getGlobalState<Device | undefined>("activeDevice");
-    this.setIsActiveDevicePresentContext(!!device);
-    return device;
-  }
-
-  async setActiveDevice(device: Device) {
-    await this.updateGlobalState("activeDevice", device);
-    this.setIsActiveDevicePresentContext(true);
-    return this._onDidChangeActiveDevice.fire(device);
-  }
-
-  async clearActiveDevice() {
-    await this.updateGlobalState("activeDevice", undefined);
-    this.setIsActiveDevicePresentContext(false);
-    return this._onDidChangeActiveDevice.fire(undefined);
-  }
-
-  private setIsActiveDevicePresentContext(isActive: boolean) {
-    vscode.commands.executeCommand("setContext", ContextKeys.Devices.IsActivePresent, isActive);
   }
 
   async setRecentManifest(manifest: Manifest) {
@@ -129,14 +99,12 @@ export class ExtState {
   async activateSite(site: CloudSite | GatewaySite) {
     return this.sitesRepository!.activate(site.id).then((activeSite) => {
       this._onDidActivateSite.fire(activeSite);
-      this.clearActiveDevice();
     });
   }
 
   async removeAllSites() {
     return this.sitesRepository!.removeAll().then(() => {
       this._onDidDisconnectAllSites.fire();
-      this.clearActiveDevice();
     });
   }
 
@@ -149,7 +117,6 @@ export class ExtState {
 
     await this.sitesRepository!.activate(undefined);
     this._onDidDisconnectFromActiveSite.fire(site);
-    await this.clearActiveDevice();
   }
 
   getActiveSite(): Site | undefined {

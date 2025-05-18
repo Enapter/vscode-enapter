@@ -5,6 +5,7 @@ import { WsConnection, WsConnectionFactory } from "../api/ws/connection";
 import { ExtState } from "../ext-state";
 import { DeviceLogEntry, toDeviceLog } from "../models/log-entries";
 import { ExtContext } from "../ext-context";
+import { ActiveDeviceService } from "../services/active-device-service";
 
 export class DeviceLogsChannel implements vscode.Disposable {
   private static instance: DeviceLogsChannel | undefined;
@@ -13,18 +14,19 @@ export class DeviceLogsChannel implements vscode.Disposable {
 
   static getInstance(): DeviceLogsChannel {
     if (!DeviceLogsChannel.instance) {
-      DeviceLogsChannel.instance = new DeviceLogsChannel();
+      throw new Error("DeviceLogsChannel is not initialized.");
     }
 
-    return (DeviceLogsChannel.instance ||= new DeviceLogsChannel());
+    return DeviceLogsChannel.instance;
   }
 
   constructor(
+    private readonly activeDeviceService: ActiveDeviceService,
     private readonly channel: LogChannel<DeviceLogEntry> = new VscodeLogChannel<DeviceLogEntry>(),
     private readonly wsConnectionFactory: WsConnectionFactory = new WsConnectionFactory(),
     private readonly extState: ExtState = ExtState.getInstance(),
   ) {
-    this.extState.onDidChangeActiveDevice(() => this.disconnect());
+    this.activeDeviceService.onDidChangeDevice(() => this.disconnect());
     DeviceLogsChannel.instance = this;
   }
 

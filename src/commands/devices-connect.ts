@@ -1,7 +1,6 @@
-import { ExtState } from "../ext-state";
 import { DeviceOnSiteNode } from "../providers/devices-on-site/nodes/device-on-site-node";
+import { ActiveDeviceService } from "../services/active-device-service";
 
-export const devicesConnect = (node: DeviceOnSiteNode) => {
-  const state = ExtState.getInstance();
-  return state.setActiveDevice(node.device);
+export const devicesConnect = (service: ActiveDeviceService, node: DeviceOnSiteNode) => {
+  return service.updateDevice(node.device);
 };

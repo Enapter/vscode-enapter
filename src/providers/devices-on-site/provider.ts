@@ -5,6 +5,7 @@ import { ExtState } from "../../ext-state";
 import { ApiClient } from "../../api/client";
 import { DevicesFetchSiteDevicesTask } from "../../tasks/devices-fetch-site-devices-task";
 import { DeviceOnSiteNode } from "./nodes/device-on-site-node";
+import { ActiveDeviceService } from "../../services/active-device-service";
 
 type TreeNode = DeviceOnSiteNode | PropertyNode;
 
@@ -13,10 +14,10 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
   private _onDidChangeTreeData: vscode.EventEmitter<TreeNode | undefined> = new vscode.EventEmitter<TreeNode>();
   readonly onDidChangeTreeData: vscode.Event<TreeNode | undefined> = this._onDidChangeTreeData.event;
 
-  constructor() {
+  constructor(private readonly activeDeviceService: ActiveDeviceService) {
+    this.activeDeviceService.onDidChangeDevice(() => this.refresh(undefined));
     this.state = ExtState.getInstance();
     this.state.onDidChangeDevices(() => this.refresh(undefined));
-    this.state.onDidChangeActiveDevice(() => this.refresh(undefined));
     this.state.onDidActivateSite(() => this.refresh(undefined));
     this.state.onDidDisconnectAllSites(() => this.refresh(undefined));
     this.state.onDidDisconnectFromActiveSite(() => this.refresh(undefined));
@@ -44,7 +45,7 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
     }
 
     if (!element) {
-      const activeDevice = this.state.getActiveDevice();
+      const activeDevice = this.activeDeviceService.getDevice();
       let devices: Device[] = [];
 
       try {
@@ -55,11 +56,6 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
         }
       } catch (_) {
         await this.state.disconnectFromActiveSite();
-        await this.state.clearActiveDevice();
-      }
-
-      if (!devices.length || (!!activeDevice && !devices.some((d) => d.id === activeDevice.id))) {
-        await this.state.clearActiveDevice();
       }
 
       return Promise.resolve(

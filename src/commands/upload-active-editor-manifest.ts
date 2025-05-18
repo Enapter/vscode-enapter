@@ -4,8 +4,9 @@ import { uploadBlueprintToActiveDevice } from "./upload-blueprint-to-active-devi
 import { Logger } from "../logger";
 import { ExtState } from "../ext-state";
 import yaml from "js-yaml";
+import { ActiveDeviceService } from "../services/active-device-service";
 
-export async function uploadActiveEditorManifest() {
+export async function uploadActiveEditorManifest(activeDeviceService: ActiveDeviceService) {
   const logger = Logger.getInstance();
   logger.group("Upload Active Editor Manifest");
 
@@ -51,7 +52,7 @@ export async function uploadActiveEditorManifest() {
     const state = ExtState.getInstance();
     void state.setRecentManifest(manifest);
 
-    return uploadBlueprintToActiveDevice(manifest);
+    return uploadBlueprintToActiveDevice(activeDeviceService, manifest);
   } catch (error) {
     logger.log("Failed to upload manifest from active editor");
     logger.log(error);

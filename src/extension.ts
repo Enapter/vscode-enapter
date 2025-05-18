@@ -34,6 +34,10 @@ import { devicesDisconnect } from "./commands/devices-disconnect";
 import { sitesRemove } from "./commands/sites-remove";
 import { DevicesAllOnSiteProvider } from "./providers/devices-on-site/provider";
 import { SitesConnectionsProvider } from "./providers/sites-connections/provider";
+import { ActiveDeviceService } from "./services/active-device-service";
+import { ActiveDeviceStorage } from "./storages/active-device-storage";
+import { DeviceOnSiteNode } from "./providers/devices-on-site/nodes/device-on-site-node";
+import { Manifest } from "./models/manifests/manifest";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -60,7 +64,10 @@ export function activate(context: vscode.ExtensionContext) {
   const logger = new Logger();
   logger.addLogger(console);
 
-  const logsChannel = new DeviceLogsChannel();
+  const activeDeviceStorage = new ActiveDeviceStorage(context.globalState);
+  const activeDeviceService = new ActiveDeviceService(activeDeviceStorage);
+
+  const logsChannel = new DeviceLogsChannel(activeDeviceService);
   context.subscriptions.push(logsChannel);
   vscode.commands.executeCommand("setContext", "enapter.context.Devices.IsLogging", false);
 
@@ -72,12 +79,24 @@ export function activate(context: vscode.ExtensionContext) {
 
   vscode.workspace.registerTextDocumentContentProvider("enbp-content-file", new EnbpContentFileProvider());
 
-  registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, uploadBlueprintToActiveDevice);
-  registerCommand(CommandIDs.Blueprints.UploadActiveEditorManifest, uploadActiveEditorManifest);
-  registerCommand(CommandIDs.Devices.Connect, devicesConnect);
-  registerCommand(CommandIDs.Devices.Disconnect, devicesDisconnect);
-  registerCommand(CommandIDs.Devices.ReloadActive, reloadActiveDevice);
-  registerCommand(CommandIDs.Devices.ResetActive, resetActiveDevice);
+  registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, (manifest: Manifest) => {
+    return uploadBlueprintToActiveDevice(activeDeviceService, manifest);
+  });
+  registerCommand(CommandIDs.Blueprints.UploadActiveEditorManifest, () => {
+    return uploadActiveEditorManifest(activeDeviceService);
+  });
+  registerCommand(CommandIDs.Devices.Connect, (node: DeviceOnSiteNode) => {
+    return devicesConnect(activeDeviceService, node);
+  });
+  registerCommand(CommandIDs.Devices.Disconnect, () => {
+    return devicesDisconnect(activeDeviceService);
+  });
+  registerCommand(CommandIDs.Devices.ReloadActive, () => {
+    return reloadActiveDevice(activeDeviceService);
+  });
+  registerCommand(CommandIDs.Devices.ResetActive, () => {
+    return resetActiveDevice(activeDeviceService);
+  });
   registerCommand(CommandIDs.Devices.UploadBlueprint, devicesUploadBlueprint);
   registerCommand(CommandIDs.Devices.StreamLogs, devicesStreamLogs);
   registerCommand(CommandIDs.Devices.StopLogs, devicesStopLogs);
@@ -106,12 +125,12 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   activator.createTreeView(ViewIDs.Devices.AllOnRemote, {
-    treeDataProvider: new DevicesAllOnSiteProvider(),
+    treeDataProvider: new DevicesAllOnSiteProvider(activeDeviceService),
     showCollapseAll: true,
   });
 
   activator.createTreeView(ViewIDs.Devices.Active, {
-    treeDataProvider: new ActiveDeviceProvider(),
+    treeDataProvider: new ActiveDeviceProvider(activeDeviceService),
   });
 }
 

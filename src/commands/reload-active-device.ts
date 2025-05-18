@@ -1,15 +1,16 @@
 import { ExtState } from "../ext-state";
 import { ApiClient } from "../api/client";
+import { ActiveDeviceService } from "../services/active-device-service";
 
-export const reloadActiveDevice = async () => {
+export const reloadActiveDevice = async (service: ActiveDeviceService) => {
   const state = ExtState.getInstance();
-  const active = state.getActiveDevice();
+  const active = service.getDevice();
 
   if (!active) {
     return;
   }
 
-  const site = state.getActiveSite()
+  const site = state.getActiveSite();
 
   if (!site) {
     return;
@@ -27,5 +28,5 @@ export const reloadActiveDevice = async () => {
     return;
   }
 
-  void state.setActiveDevice(res.device);
+  return service.updateDevice(res.device);
 };

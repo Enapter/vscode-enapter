@@ -1,6 +1,5 @@
-import { ExtState } from "../ext-state";
+import { ActiveDeviceService } from "../services/active-device-service";
 
-export const devicesDisconnect = () => {
-  const state = ExtState.getInstance();
-  return state.clearActiveDevice();
+export const devicesDisconnect = (service: ActiveDeviceService) => {
+  return service.updateDevice(undefined);
 };

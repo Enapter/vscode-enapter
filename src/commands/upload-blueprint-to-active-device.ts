@@ -6,6 +6,7 @@ import { Logger } from "../logger";
 import { ExtState } from "../ext-state";
 import { ExtError } from "../ext-error";
 import { PickManifestTask } from "../tasks/pick-manifest-task";
+import { ActiveDeviceService } from "../services/active-device-service";
 
 const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
   return vscode.window.withProgress(
@@ -18,7 +19,10 @@ const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
   );
 };
 
-export async function uploadBlueprintToActiveDevice(providedManifest?: Manifest) {
+export async function uploadBlueprintToActiveDevice(
+  activeDeviceService: ActiveDeviceService,
+  providedManifest?: Manifest,
+) {
   const tokenSource = new vscode.CancellationTokenSource();
 
   let manifest = providedManifest;
@@ -39,7 +43,7 @@ export async function uploadBlueprintToActiveDevice(providedManifest?: Manifest)
 
       void state.setRecentManifest(manifest);
       const zipper = new BlueprintZipper(await manifest.load());
-      const device = state.getActiveDevice();
+      const device = activeDeviceService.getDevice();
 
       if (!device) {
         vscode.window.showErrorMessage("No active device found");
