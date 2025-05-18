@@ -6,8 +6,9 @@ import { SiteType } from "../models/sites/site";
 import { SiteFactory } from "../models/sites/site-factory";
 import { Logger } from "../logger";
 import { SitesFetchGatewaySiteTask } from "../tasks/sites-fetch-gateway-site-task";
+import { SitesConnectionsService } from "../services/sites-connections-service";
 
-export const sitesConnectToGatewaySite = async () => {
+export const sitesConnectToGatewaySite = async (service: SitesConnectionsService) => {
   try {
     const extState = ExtState.getInstance();
     const address = await SitesAskForGatewayAddress.run();
@@ -21,11 +22,11 @@ export const sitesConnectToGatewaySite = async () => {
 
     const site = SiteFactory.createGatewaySite(response.site.id, response.site.name, address);
     await extState.storeGatewayApiToken(site, apiToken);
-    await extState.storeSite(site);
-    const activeSite = extState.getActiveSite();
+    await service.add(site);
+    const activeSite = service.getActive();
 
     if (!activeSite) {
-      await extState.activateSite(site);
+      await service.connectById(site.id);
     }
   } catch (e) {
     if (e instanceof vscode.CancellationError) {

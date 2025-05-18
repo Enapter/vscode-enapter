@@ -1,16 +1,18 @@
-import { ExtState } from "../ext-state";
 import { ApiClient } from "../api/client";
 import { ActiveDeviceService } from "../services/active-device-service";
+import { SitesConnectionsService } from "../services/sites-connections-service";
 
-export const reloadActiveDevice = async (service: ActiveDeviceService) => {
-  const state = ExtState.getInstance();
-  const active = service.getDevice();
+export const reloadActiveDevice = async (
+  activeDeviceService: ActiveDeviceService,
+  sitesConnectionsService: SitesConnectionsService,
+) => {
+  const active = activeDeviceService.getDevice();
 
   if (!active) {
     return;
   }
 
-  const site = state.getActiveSite();
+  const site = sitesConnectionsService.getById(active.site_id);
 
   if (!site) {
     return;
@@ -28,5 +30,5 @@ export const reloadActiveDevice = async (service: ActiveDeviceService) => {
     return;
   }
 
-  return service.updateDevice(res.device);
+  return activeDeviceService.updateDevice(res.device);
 };

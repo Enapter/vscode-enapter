@@ -6,22 +6,21 @@ import { PropertyNode } from "../../shared-nodes/property-node";
 export class DeviceOnSiteNode extends vscode.TreeItem {
   constructor(
     public readonly device: Device,
-    isActive: boolean,
     public readonly collapsibleState: vscode.TreeItemCollapsibleState,
   ) {
     super(device.name, collapsibleState);
     const isOnline = isDeviceOnline(device);
     this.iconPath = isOnline ? new OnlineIcon() : new OfflineIcon();
-    this.setContextValue(isActive);
-    this.setDescription(isActive);
+    this.setContextValue();
+    this.setDescription();
   }
 
-  setDescription(isActive: boolean) {
-    this.description = isActive ? "(Active)" : undefined;
+  setDescription() {
+    this.description = this.device.isActive ? "(Active)" : undefined;
   }
 
-  setContextValue(isActive: boolean) {
-    this.contextValue = isActive ? "enapter.viewItems.ConnectedDevice" : "enapter.viewItems.Device";
+  setContextValue() {
+    this.contextValue = this.device.isActive ? "enapter.viewItems.ConnectedDevice" : "enapter.viewItems.Device";
   }
 
   getChildren() {

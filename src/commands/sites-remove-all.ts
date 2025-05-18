@@ -1,6 +1,5 @@
-import { ExtState } from "../ext-state";
+import { SitesConnectionsService } from "../services/sites-connections-service";
 
-export const sitesRemoveAll = async () => {
-  const extState = ExtState.getInstance();
-  await extState.removeAllSites();
+export const sitesRemoveAll = async (service: SitesConnectionsService) => {
+  return service.updateAll([]);
 };

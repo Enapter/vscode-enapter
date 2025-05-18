@@ -7,8 +7,8 @@ export interface Site {
   readonly id: string;
   readonly name: string;
   readonly address: string;
-  readonly isActive: boolean;
   readonly type: SiteType;
+  isActive: boolean;
 
   withIsActive: (isActive: boolean) => Site;
   serialize: () => string;

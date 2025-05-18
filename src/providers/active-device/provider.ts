@@ -23,9 +23,6 @@ export class ActiveDeviceProvider implements vscode.TreeDataProvider<Node>, vsco
         this.refresh(undefined);
       }),
     );
-
-    this.state.onDidActivateSite(() => this.refresh(undefined));
-    this.state.onDidDisconnectFromActiveSite(() => this.refresh(undefined));
   }
 
   refresh(node: Node | undefined) {

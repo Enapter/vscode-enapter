@@ -5,8 +5,9 @@ import { ExtState } from "../ext-state";
 import { SiteFactory } from "../models/sites/site-factory";
 import { SitesFetchSitesAndPickSite } from "../tasks/sites-fetch-sites-and-pick-site";
 import { Logger } from "../logger";
+import { SitesConnectionsService } from "../services/sites-connections-service";
 
-export const sitesConnectToCloudSite = async () => {
+export const sitesConnectToCloudSite = async (service: SitesConnectionsService) => {
   const onCancelCallbacks = [];
 
   try {
@@ -32,11 +33,11 @@ export const sitesConnectToCloudSite = async () => {
       });
     }
 
-    await extState.storeSite(site);
-    const activeSite = extState.getActiveSite();
+    await service.add(site);
+    const activeSite = service.getActive();
 
     if (!activeSite) {
-      await extState.activateSite(site);
+      await service.connectById(site.id);
     }
   } catch (e) {
     if (onCancelCallbacks.length > 0) {

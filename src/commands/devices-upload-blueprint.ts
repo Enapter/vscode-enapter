@@ -6,6 +6,7 @@ import { Device } from "../models/device";
 import { BlueprintZipper } from "../blueprint-zipper";
 import { ApiClient } from "../api/client";
 import { ExtError } from "../ext-error";
+import { SitesConnectionsService } from "../services/sites-connections-service";
 
 const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
   return vscode.window.withProgress(
@@ -18,7 +19,7 @@ const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
   );
 };
 
-export async function devicesUploadBlueprint(device: Device) {
+export async function devicesUploadBlueprint(device: Device, sitesConnectionsService: SitesConnectionsService) {
   const tokenSource = new vscode.CancellationTokenSource();
 
   const manifest = await new PickManifestTask().run(tokenSource.token);
@@ -36,7 +37,7 @@ export async function devicesUploadBlueprint(device: Device) {
 
       void state.setRecentManifest(manifest);
       const zipper = new BlueprintZipper(await manifest.load());
-      const site = state.getSiteById(device.site_id);
+      const site = sitesConnectionsService.getById(device.site_id);
 
       if (!site) {
         logger.log("Failed to get site");

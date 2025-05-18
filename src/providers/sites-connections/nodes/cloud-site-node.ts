@@ -10,12 +10,11 @@ export class CloudSiteNode extends vscode.TreeItem {
   constructor(
     private readonly provider: SitesConnectionsProvider,
     public site: CloudSite,
-    isActive: boolean,
   ) {
     super(site.name, vscode.TreeItemCollapsibleState.Collapsed);
     this.setIcon(!!this.error);
-    this.setContextValue(isActive);
-    this.setDescription(isActive);
+    this.setContextValue();
+    this.setDescription();
   }
 
   refresh() {
@@ -35,11 +34,11 @@ export class CloudSiteNode extends vscode.TreeItem {
     this.iconPath = isInvalid ? new WarningIcon() : new EnapterGatewayIcon();
   }
 
-  setContextValue(isActive: boolean) {
-    this.contextValue = isActive ? "enapter.viewItems.ActiveSite" : "enapter.viewItems.Site";
+  setContextValue() {
+    this.contextValue = this.site.isActive ? "enapter.viewItems.ActiveSite" : "enapter.viewItems.Site";
   }
 
-  setDescription(isActive: boolean) {
-    this.description = isActive ? "Active" : undefined;
+  setDescription() {
+    this.description = this.site.isActive ? "Active" : undefined;
   }
 }

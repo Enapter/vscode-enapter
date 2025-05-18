@@ -42,6 +42,8 @@ import { DevicesOnSiteStorage } from "./storages/devices-on-site-storage";
 import { DevicesOnSiteService } from "./services/devices-on-site-service";
 import { CloudSiteNode } from "./providers/sites-connections/nodes/cloud-site-node";
 import { GatewayNode } from "./providers/sites-connections/nodes/gateway-node";
+import { SitesConnectionsStorage } from "./storages/sites-connections-storage";
+import { SitesConnectionsService } from "./services/sites-connections-service";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -74,6 +76,9 @@ export function activate(context: vscode.ExtensionContext) {
   const devicesOnSiteStorage = new DevicesOnSiteStorage(context.globalState);
   const devicesOnSiteService = new DevicesOnSiteService(devicesOnSiteStorage, activeDeviceService);
 
+  const sitesConnectionsStorage = new SitesConnectionsStorage(context.globalState);
+  const sitesConnectionsService = new SitesConnectionsService(sitesConnectionsStorage);
+
   const logsChannel = new DeviceLogsChannel(activeDeviceService);
   context.subscriptions.push(logsChannel);
   vscode.commands.executeCommand("setContext", "enapter.context.Devices.IsLogging", false);
@@ -99,26 +104,38 @@ export function activate(context: vscode.ExtensionContext) {
     return devicesDisconnect(node, devicesOnSiteService);
   });
   registerCommand(CommandIDs.Devices.ReloadActive, () => {
-    return reloadActiveDevice(activeDeviceService);
+    return reloadActiveDevice(activeDeviceService, sitesConnectionsService);
   });
   registerCommand(CommandIDs.Devices.ResetActive, () => {
     return resetActiveDevice(activeDeviceService);
   });
   registerCommand(CommandIDs.Devices.UploadBlueprint, (node: DeviceOnSiteNode) => {
-    return devicesUploadBlueprint(node.device);
+    return devicesUploadBlueprint(node.device, sitesConnectionsService);
   });
   registerCommand(CommandIDs.Devices.StreamLogs, devicesStreamLogs);
   registerCommand(CommandIDs.Devices.StopLogs, devicesStopLogs);
 
-  registerCommand(CommandIDs.Sites.ConnectToNew, sitesConnectToNew);
-  registerCommand(CommandIDs.Sites.ConnectToCloudSite, sitesConnectToCloudSite);
-  registerCommand(CommandIDs.Sites.ConnectToGatewaySite, sitesConnectToGatewaySite);
-  registerCommand(CommandIDs.Sites.Connect, (node: CloudSiteNode | GatewayNode) => {
-    return sitesConnect(node, devicesOnSiteService);
+  registerCommand(CommandIDs.Sites.ConnectToNew, () => {
+    return sitesConnectToNew(sitesConnectionsService);
   });
-  registerCommand(CommandIDs.Sites.Disconnect, sitesDisconnect);
-  registerCommand(CommandIDs.Sites.Remove, sitesRemove);
-  registerCommand(CommandIDs.Sites.RemoveAll, sitesRemoveAll);
+  registerCommand(CommandIDs.Sites.ConnectToCloudSite, () => {
+    return sitesConnectToCloudSite(sitesConnectionsService);
+  });
+  registerCommand(CommandIDs.Sites.ConnectToGatewaySite, () => {
+    return sitesConnectToGatewaySite(sitesConnectionsService);
+  });
+  registerCommand(CommandIDs.Sites.Connect, (node: CloudSiteNode | GatewayNode) => {
+    return sitesConnect(node, sitesConnectionsService, devicesOnSiteService);
+  });
+  registerCommand(CommandIDs.Sites.Disconnect, (node: CloudSiteNode | GatewayNode) => {
+    return sitesDisconnect(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);
+  });
+  registerCommand(CommandIDs.Sites.Remove, (node: CloudSiteNode | GatewayNode) => {
+    return sitesRemove(node, sitesConnectionsService);
+  });
+  registerCommand(CommandIDs.Sites.RemoveAll, () => {
+    return sitesRemoveAll(sitesConnectionsService);
+  });
   registerCommand(CommandIDs.Sites.RemoveCloudApiToken, sitesRemoveCloudApiToken);
   registerCommand(CommandIDs.Sites.SetCloudApiToken, sitesSetCloudApiToken);
   registerCommand(CommandIDs.Sites.CopyApiToken, sitesCopyApiToken);
@@ -131,12 +148,12 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Channels.DeviceLogs.Reveal, channelsDeviceLogsChannelReveal);
 
   activator.createTreeView(ViewIDs.Sites.All, {
-    treeDataProvider: new SitesConnectionsProvider(),
+    treeDataProvider: new SitesConnectionsProvider(sitesConnectionsService),
     showCollapseAll: true,
   });
 
   activator.createTreeView(ViewIDs.Devices.AllOnRemote, {
-    treeDataProvider: new DevicesAllOnSiteProvider(devicesOnSiteService, activeDeviceService),
+    treeDataProvider: new DevicesAllOnSiteProvider(devicesOnSiteService),
     showCollapseAll: true,
   });
 
