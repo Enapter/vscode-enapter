@@ -1,6 +1,6 @@
 import { DeviceOnSiteNode } from "../providers/devices-on-site/nodes/device-on-site-node";
-import { ActiveDeviceService } from "../services/active-device-service";
+import { DevicesOnSiteService } from "../services/devices-on-site-service";
 
-export const devicesConnect = (service: ActiveDeviceService, node: DeviceOnSiteNode) => {
-  return service.updateDevice(node.device);
+export const devicesConnect = (node: DeviceOnSiteNode, service: DevicesOnSiteService) => {
+  return service.connectById(node.device.id);
 };

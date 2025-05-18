@@ -1,23 +1,27 @@
 import vscode from "vscode";
-import { Device, sortByActiveDevice, sortByOnlineStatus } from "../../models/device";
 import { PropertyNode } from "../shared-nodes/property-node";
 import { ExtState } from "../../ext-state";
 import { ApiClient } from "../../api/client";
-import { DevicesFetchSiteDevicesTask } from "../../tasks/devices-fetch-site-devices-task";
 import { DeviceOnSiteNode } from "./nodes/device-on-site-node";
 import { ActiveDeviceService } from "../../services/active-device-service";
+import { DevicesOnSiteService } from "../../services/devices-on-site-service";
+import { Logger } from "../../logger";
 
 type TreeNode = DeviceOnSiteNode | PropertyNode;
 
-export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNode> {
+export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNode>, vscode.Disposable {
+  private disposables: Array<vscode.Disposable> = [];
+
   private readonly state: ExtState;
   private _onDidChangeTreeData: vscode.EventEmitter<TreeNode | undefined> = new vscode.EventEmitter<TreeNode>();
   readonly onDidChangeTreeData: vscode.Event<TreeNode | undefined> = this._onDidChangeTreeData.event;
 
-  constructor(private readonly activeDeviceService: ActiveDeviceService) {
-    this.activeDeviceService.onDidChangeDevice(() => this.refresh(undefined));
+  constructor(
+    private readonly devicesOnSiteService: DevicesOnSiteService,
+    private readonly activeDeviceService: ActiveDeviceService,
+  ) {
+    this.disposables.push(this.devicesOnSiteService.onDidChangeDevices(() => this.refresh(undefined)));
     this.state = ExtState.getInstance();
-    this.state.onDidChangeDevices(() => this.refresh(undefined));
     this.state.onDidActivateSite(() => this.refresh(undefined));
     this.state.onDidDisconnectAllSites(() => this.refresh(undefined));
     this.state.onDidDisconnectFromActiveSite(() => this.refresh(undefined));
@@ -32,6 +36,7 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
   }
 
   async getChildren(element?: TreeNode): Promise<Array<TreeNode>> {
+    Logger.log("Updating");
     const activeSite = this.state.getActiveSite();
 
     if (!activeSite) {
@@ -46,27 +51,14 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
 
     if (!element) {
       const activeDevice = this.activeDeviceService.getDevice();
-      let devices: Device[] = [];
-
-      try {
-        const response = await DevicesFetchSiteDevicesTask.run(activeSite);
-
-        if (response) {
-          devices = response.devices;
-        }
-      } catch (_) {
-        await this.state.disconnectFromActiveSite();
-      }
+      const devices = this.devicesOnSiteService.getAll();
 
       return Promise.resolve(
-        devices
-          .sort(sortByOnlineStatus)
-          .sort((d) => sortByActiveDevice(d, activeDevice))
-          .map((d) => {
-            const isActive = !!activeDevice && d.id === activeDevice?.id;
-            d.site = activeSite;
-            return new DeviceOnSiteNode(d, isActive, vscode.TreeItemCollapsibleState.Collapsed);
-          }),
+        devices.map((d) => {
+          const isActive = !!activeDevice && d.id === activeDevice?.id;
+          d.site = activeSite;
+          return new DeviceOnSiteNode(d, isActive, vscode.TreeItemCollapsibleState.Collapsed);
+        }),
       );
     }
 
@@ -75,5 +67,9 @@ export class DevicesAllOnSiteProvider implements vscode.TreeDataProvider<TreeNod
     }
 
     return [];
+  }
+
+  dispose() {
+    vscode.Disposable.from(...this.disposables).dispose();
   }
 }

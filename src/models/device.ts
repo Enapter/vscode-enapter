@@ -20,6 +20,7 @@ export interface Device {
   connectivity_status?: string;
   site: Site;
   slug: string;
+  isActive: boolean;
 }
 
 export const isSupportBlueprints = (device: Device) => {

@@ -9,9 +9,6 @@ export class ExtState {
   private static instance: ExtState;
   public sitesRepository: SiteRepository | undefined;
 
-  private _onDidChangeDevices = new vscode.EventEmitter<void>();
-  readonly onDidChangeDevices = this._onDidChangeDevices.event;
-
   private _onDidAddSite = new vscode.EventEmitter<Site>();
   readonly onDidAddSite = this._onDidAddSite.event;
 

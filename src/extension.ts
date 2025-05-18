@@ -38,6 +38,10 @@ import { ActiveDeviceService } from "./services/active-device-service";
 import { ActiveDeviceStorage } from "./storages/active-device-storage";
 import { DeviceOnSiteNode } from "./providers/devices-on-site/nodes/device-on-site-node";
 import { Manifest } from "./models/manifests/manifest";
+import { DevicesOnSiteStorage } from "./storages/devices-on-site-storage";
+import { DevicesOnSiteService } from "./services/devices-on-site-service";
+import { CloudSiteNode } from "./providers/sites-connections/nodes/cloud-site-node";
+import { GatewayNode } from "./providers/sites-connections/nodes/gateway-node";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -67,6 +71,9 @@ export function activate(context: vscode.ExtensionContext) {
   const activeDeviceStorage = new ActiveDeviceStorage(context.globalState);
   const activeDeviceService = new ActiveDeviceService(activeDeviceStorage);
 
+  const devicesOnSiteStorage = new DevicesOnSiteStorage(context.globalState);
+  const devicesOnSiteService = new DevicesOnSiteService(devicesOnSiteStorage, activeDeviceService);
+
   const logsChannel = new DeviceLogsChannel(activeDeviceService);
   context.subscriptions.push(logsChannel);
   vscode.commands.executeCommand("setContext", "enapter.context.Devices.IsLogging", false);
@@ -86,10 +93,10 @@ export function activate(context: vscode.ExtensionContext) {
     return uploadActiveEditorManifest(activeDeviceService);
   });
   registerCommand(CommandIDs.Devices.Connect, (node: DeviceOnSiteNode) => {
-    return devicesConnect(activeDeviceService, node);
+    return devicesConnect(node, devicesOnSiteService);
   });
-  registerCommand(CommandIDs.Devices.Disconnect, () => {
-    return devicesDisconnect(activeDeviceService);
+  registerCommand(CommandIDs.Devices.Disconnect, (node: DeviceOnSiteNode) => {
+    return devicesDisconnect(node, devicesOnSiteService);
   });
   registerCommand(CommandIDs.Devices.ReloadActive, () => {
     return reloadActiveDevice(activeDeviceService);
@@ -97,14 +104,18 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Devices.ResetActive, () => {
     return resetActiveDevice(activeDeviceService);
   });
-  registerCommand(CommandIDs.Devices.UploadBlueprint, devicesUploadBlueprint);
+  registerCommand(CommandIDs.Devices.UploadBlueprint, (node: DeviceOnSiteNode) => {
+    return devicesUploadBlueprint(node.device);
+  });
   registerCommand(CommandIDs.Devices.StreamLogs, devicesStreamLogs);
   registerCommand(CommandIDs.Devices.StopLogs, devicesStopLogs);
 
   registerCommand(CommandIDs.Sites.ConnectToNew, sitesConnectToNew);
   registerCommand(CommandIDs.Sites.ConnectToCloudSite, sitesConnectToCloudSite);
   registerCommand(CommandIDs.Sites.ConnectToGatewaySite, sitesConnectToGatewaySite);
-  registerCommand(CommandIDs.Sites.Connect, sitesConnect);
+  registerCommand(CommandIDs.Sites.Connect, (node: CloudSiteNode | GatewayNode) => {
+    return sitesConnect(node, devicesOnSiteService);
+  });
   registerCommand(CommandIDs.Sites.Disconnect, sitesDisconnect);
   registerCommand(CommandIDs.Sites.Remove, sitesRemove);
   registerCommand(CommandIDs.Sites.RemoveAll, sitesRemoveAll);
@@ -125,7 +136,7 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   activator.createTreeView(ViewIDs.Devices.AllOnRemote, {
-    treeDataProvider: new DevicesAllOnSiteProvider(activeDeviceService),
+    treeDataProvider: new DevicesAllOnSiteProvider(devicesOnSiteService, activeDeviceService),
     showCollapseAll: true,
   });
 
