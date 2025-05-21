@@ -1,6 +1,7 @@
 import vscode from "vscode";
 import { ManifestParser } from "./manifest-parser";
 import { BlueprintSpec, ManifestV1Schema } from "./schemas";
+import { CommModule } from "./schemas/v1";
 
 export class ManifestV1Parser implements ManifestParser<ManifestV1Schema> {
   constructor(
@@ -41,6 +42,15 @@ export class ManifestV1Parser implements ManifestParser<ManifestV1Schema> {
   }
 
   private get commModule(): ManifestV1Schema["communication_module"] {
-    return this.contentJson.communication_module;
+    return this.contentJson.communication_module || this.commModuleFromModulesSection;
+  }
+
+  private get commModuleFromModulesSection(): CommModule | undefined {
+    if (!this.contentJson.communication_modules) {
+      return;
+    }
+
+    const keys = Object.keys(this.contentJson.communication_modules);
+    return this.contentJson.communication_modules[keys[0]] as CommModule;
   }
 }
