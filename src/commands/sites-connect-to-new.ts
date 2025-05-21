@@ -28,6 +28,16 @@ export const sitesConnectToNew = async (
       return;
     }
 
+    site = sitesConnectionsService.getById(site.id);
+
+    if (!site) {
+      return;
+    }
+
+    if (!site.isActive) {
+      return site;
+    }
+
     const response = await vscode.window.withProgress({ location: { viewId: ViewIDs.Devices.AllOnRemote } }, async () =>
       DevicesFetchSiteDevicesTask.run(site),
     );
