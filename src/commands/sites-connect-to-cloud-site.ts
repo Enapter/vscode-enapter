@@ -1,13 +1,13 @@
 import vscode from "vscode";
 import { SettingsAskForApiTokenTask } from "../tasks/settings-ask-for-api-token-task";
-import { SiteType } from "../models/sites/site";
+import { Site, SiteType } from "../models/sites/site";
 import { ExtState } from "../ext-state";
 import { SiteFactory } from "../models/sites/site-factory";
 import { SitesFetchSitesAndPickSite } from "../tasks/sites-fetch-sites-and-pick-site";
 import { Logger } from "../logger";
 import { SitesConnectionsService } from "../services/sites-connections-service";
 
-export const sitesConnectToCloudSite = async (service: SitesConnectionsService) => {
+export const sitesConnectToCloudSite = async (service: SitesConnectionsService): Promise<Site | undefined> => {
   const onCancelCallbacks = [];
 
   try {
@@ -39,6 +39,8 @@ export const sitesConnectToCloudSite = async (service: SitesConnectionsService) 
     if (!activeSite) {
       await service.connectById(site.id);
     }
+
+    return site;
   } catch (e) {
     if (onCancelCallbacks.length > 0) {
       onCancelCallbacks.reverse().forEach((callback) => callback());

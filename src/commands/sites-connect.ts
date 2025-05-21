@@ -31,7 +31,9 @@ export const sitesConnect = async (
         return;
       }
 
-      const response = await DevicesFetchSiteDevicesTask.run(site);
+      const response = await vscode.window.withProgress({ location: { viewId: ViewIDs.Devices.AllOnRemote } }, () =>
+        DevicesFetchSiteDevicesTask.run(site),
+      );
 
       if (!response) {
         node.setError("Failed to fetch devices");

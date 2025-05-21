@@ -1,22 +1,44 @@
 import { SitesSelectTypeTask } from "../tasks/sites-select-type-task";
-import { SiteType } from "../models/sites/site";
+import { Site, SiteType } from "../models/sites/site";
 import { sitesConnectToCloudSite } from "./sites-connect-to-cloud-site";
 import { sitesConnectToGatewaySite } from "./sites-connect-to-gateway-site";
 import { SitesConnectionsService } from "../services/sites-connections-service";
+import { DevicesOnSiteService } from "../services/devices-on-site-service";
+import { DevicesFetchSiteDevicesTask } from "../tasks/devices-fetch-site-devices-task";
+import vscode from "vscode";
+import { ViewIDs } from "../constants/views";
 
-export const sitesConnectToNew = async (service: SitesConnectionsService) => {
+export const sitesConnectToNew = async (
+  sitesConnectionsService: SitesConnectionsService,
+  devicesOnSiteService: DevicesOnSiteService,
+) => {
   try {
     const siteType = await SitesSelectTypeTask.run();
+    let site: Site | undefined = undefined;
 
     if (siteType === SiteType.Cloud) {
-      await sitesConnectToCloudSite(service);
+      site = await sitesConnectToCloudSite(sitesConnectionsService);
     }
 
     if (siteType === SiteType.Gateway) {
-      await sitesConnectToGatewaySite(service);
+      site = await sitesConnectToGatewaySite(sitesConnectionsService);
     }
 
-    return true;
+    if (!site) {
+      return;
+    }
+
+    const response = await vscode.window.withProgress({ location: { viewId: ViewIDs.Devices.AllOnRemote } }, async () =>
+      DevicesFetchSiteDevicesTask.run(site),
+    );
+
+    if (!response) {
+      return;
+    } else {
+      await devicesOnSiteService.updateAll(response.devices);
+    }
+
+    return site;
   } catch (_) {
     /* empty */
   }

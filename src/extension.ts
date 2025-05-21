@@ -116,7 +116,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Devices.StopLogs, devicesStopLogs);
 
   registerCommand(CommandIDs.Sites.ConnectToNew, () => {
-    return sitesConnectToNew(sitesConnectionsService);
+    return sitesConnectToNew(sitesConnectionsService, devicesOnSiteService);
   });
   registerCommand(CommandIDs.Sites.ConnectToCloudSite, () => {
     return sitesConnectToCloudSite(sitesConnectionsService);
@@ -131,7 +131,7 @@ export function activate(context: vscode.ExtensionContext) {
     return sitesDisconnect(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);
   });
   registerCommand(CommandIDs.Sites.Remove, (node: CloudSiteNode | GatewayNode) => {
-    return sitesRemove(node, sitesConnectionsService);
+    return sitesRemove(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);
   });
   registerCommand(CommandIDs.Sites.RemoveAll, () => {
     return sitesRemoveAll(sitesConnectionsService);
