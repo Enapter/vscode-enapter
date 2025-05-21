@@ -28,6 +28,11 @@ export class DevicesFetchSiteDevicesTask {
         .fetchError(() => this.showUnreachableError())
         .notFound(() => this.showSiteNotFoundError())
         .json<AllLuaDevicesResponse>()
+        .then((res) => {
+          return {
+            devices: res.devices.map((d) => ({ ...d, site: this.site })),
+          } satisfies AllLuaDevicesResponse;
+        })
         .catch((e) => {
           this.handleError(e);
         });
