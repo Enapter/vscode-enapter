@@ -9,7 +9,7 @@ export class UploadBlueprintNode extends vscode.TreeItem {
   command = {
     title: "Upload Blueprint",
     command: CommandIDs.Devices.UploadBlueprint,
-    arguments: [this.device],
+    arguments: [this],
   } satisfies vscode.Command;
 
   constructor(public readonly device: Device) {
