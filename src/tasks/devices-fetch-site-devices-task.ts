@@ -29,6 +29,11 @@ export class DevicesFetchSiteDevicesTask {
         .notFound(() => this.showSiteNotFoundError())
         .json<AllLuaDevicesResponse>()
         .then((res) => {
+          if (!res || !res.devices) {
+            Logger.log("DevicesFetchSiteDevicesTask: No devices found", res);
+            return { devices: [] };
+          }
+
           return {
             devices: res.devices.map((d) => ({ ...d, site: this.site })),
           } satisfies AllLuaDevicesResponse;
