@@ -195,6 +195,12 @@
         "title": "Reveal Device Logs Panel",
         "category": "Enapter",
         "icon": "$(eye)"
+      },
+      {
+        "command": "enapter.commands.Sites.ReloadDevices",
+        "title": "Reload All Devices",
+        "category": "Enapter",
+        "icon": "$(refresh)"
       }
     ],
     "languages": [
@@ -294,6 +300,11 @@
         {
           "command": "enapter.commands.Sites.SetCloudApiToken",
           "when": "view == enapter.views.sites.all"
+        },
+        {
+          "command": "enapter.commands.Sites.ReloadDevices",
+          "when": "view == enapter.views.devices.allOnRemote && enapter.context.Sites.IsActivePresent",
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [

@@ -69,7 +69,7 @@ export class DeviceLogsChannel implements vscode.Disposable {
   }
 
   private buildWebSocketUrl(device: Device): string {
-    return `${device.site.address}/api/v3/sites/${device.site.id}/devices/${device.id}/logs`.replace(
+    return `${device.site.address}/v3/sites/${device.site.id}/devices/${device.id}/logs`.replace(
       /http(s?):\/\//,
       (match) => match.replace("http", "ws"),
     );

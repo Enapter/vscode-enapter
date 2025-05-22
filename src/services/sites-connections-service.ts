@@ -6,7 +6,9 @@ export class SitesConnectionsService {
   private readonly _onDidChangeSites = new vscode.EventEmitter<Site[]>();
   readonly onDidChangeSites = this._onDidChangeSites.event;
 
-  constructor(private readonly storage: SitesConnectionsStorage) {}
+  constructor(private readonly storage: SitesConnectionsStorage) {
+    this.setActiveSiteContext(!!this.getActive());
+  }
 
   // allSites
   // getSiteById
@@ -61,6 +63,7 @@ export class SitesConnectionsService {
     });
 
     await this.updateAll(sites);
+    this.setActiveSiteContext(true);
     this._onDidChangeSites.fire(sites);
   }
 
@@ -96,6 +99,11 @@ export class SitesConnectionsService {
     });
 
     await this.updateAll(sites);
+    this.setActiveSiteContext(false);
     this._onDidChangeSites.fire(sites);
+  }
+
+  private setActiveSiteContext(isPresent: boolean) {
+    vscode.commands.executeCommand("setContext", "enapter.context.Sites.IsActivePresent", isPresent);
   }
 }

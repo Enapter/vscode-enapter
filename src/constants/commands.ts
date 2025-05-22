@@ -24,6 +24,7 @@ export const CommandIDs = {
     SetCloudApiToken: "enapter.commands.Sites.SetCloudApiToken",
     CopyApiToken: "enapter.commands.Sites.CopyApiToken",
     EditAddress: "enapter.commands.Sites.EditAddress",
+    ReloadDevices: "enapter.commands.Sites.ReloadDevices",
   },
   Enbp: {
     Mount: "enapter.commands.Enbp.Mount",

@@ -45,6 +45,7 @@ import { GatewayNode } from "./providers/sites-connections/nodes/gateway-node";
 import { SitesConnectionsStorage } from "./storages/sites-connections-storage";
 import { SitesConnectionsService } from "./services/sites-connections-service";
 import { sitesEditAddress } from "./commands/sites-edit-address";
+import { sitesReloadDevices } from "./commands/sites-reload-devices";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -115,6 +116,9 @@ export function activate(context: vscode.ExtensionContext) {
   });
   registerCommand(CommandIDs.Devices.StreamLogs, devicesStreamLogs);
   registerCommand(CommandIDs.Devices.StopLogs, devicesStopLogs);
+  registerCommand(CommandIDs.Sites.ReloadDevices, () => {
+    return sitesReloadDevices(sitesConnectionsService, devicesOnSiteService);
+  });
 
   registerCommand(CommandIDs.Sites.ConnectToNew, () => {
     return sitesConnectToNew(sitesConnectionsService, devicesOnSiteService);
