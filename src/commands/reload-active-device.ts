@@ -30,5 +30,8 @@ export const reloadActiveDevice = async (
     return;
   }
 
-  return activeDeviceService.updateDevice(res.device);
+  return activeDeviceService.updateDevice({
+    ...active,
+    ...res.device,
+  });
 };
