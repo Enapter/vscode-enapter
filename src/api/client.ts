@@ -119,7 +119,7 @@ export class ApiClient {
 
   @loggable()
   async getDeviceById(id: string) {
-    return this.client.url(`/v3/devices/${id}`).get().json<{ device: Device }>();
+    return this.client.url(`/v3/devices/${id}?expand=connectivity`).get().json<{ device: Device }>();
   }
 
   @loggable()
