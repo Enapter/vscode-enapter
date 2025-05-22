@@ -88,7 +88,7 @@ export class ApiClient {
   }
 
   getSiteDevices(site: Site) {
-    return this.client.url(`/v3/sites/${site.id}/devices`).get();
+    return this.client.url(`/v3/sites/${site.id}/devices?expand=connectivity`).get();
   }
 
   @loggable()
