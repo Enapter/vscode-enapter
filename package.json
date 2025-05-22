@@ -127,6 +127,12 @@
         "icon": "$(copy)"
       },
       {
+        "command": "enapter.commands.Sites.EditAddress",
+        "title": "Edit",
+        "category": "Enapter",
+        "icon": "$(edit)"
+      },
+      {
         "command": "enapter.commands.Blueprints.UploadToActiveDevice",
         "title": "Upload Blueprint to Active Device",
         "category": "Enapter",
@@ -258,6 +264,10 @@
         {
           "command": "enapter.commands.Devices.Connect",
           "when": "never"
+        },
+        {
+          "command": "enapter.commands.Sites.EditAddress",
+          "when": "never"
         }
       ],
       "view/title": [
@@ -341,6 +351,11 @@
           "command": "enapter.commands.Devices.Disconnect",
           "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.ConnectedDevice",
           "group": "inline@2"
+        },
+        {
+          "command": "enapter.commands.Sites.EditAddress",
+          "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.GatewayAddressNode",
+          "group": "inline@1"
         }
       ]
     },

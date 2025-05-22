@@ -1,5 +1,6 @@
 import vscode from "vscode";
 import { z } from "zod";
+import { withApiPathSegment } from "../models/sites/gateway-site";
 
 const addressValidator = z.string().url().or(z.string().ip());
 
@@ -25,17 +26,17 @@ export class SitesAskForGatewayAddress {
   }
 
   async run() {
-    const name = await vscode.window.showInputBox({
+    const address = await vscode.window.showInputBox({
       prompt: "Enter the address of your gateway",
       placeHolder: "http://my-gateway.local",
       ignoreFocusOut: true,
       validateInput,
     });
 
-    if (!name) {
+    if (!address) {
       throw new vscode.CancellationError();
     }
 
-    return name;
+    return withApiPathSegment(address);
   }
 }

@@ -1,5 +1,21 @@
 import { BaseSite, SiteType } from "./site";
 
+export const withApiPathSegment = (path: string) => {
+  if (path.includes("stagings.enapter")) {
+    return path;
+  }
+
+  if (path.endsWith("/api")) {
+    return path;
+  }
+
+  if (path.endsWith("/")) {
+    return path + "api";
+  }
+
+  return path + "/api";
+};
+
 export class GatewaySite extends BaseSite {
   public readonly type = SiteType.Gateway;
 
@@ -9,7 +25,7 @@ export class GatewaySite extends BaseSite {
     public address: string,
     public isActive: boolean = false,
   ) {
-    super(id, name, address, isActive, SiteType.Gateway);
+    super(id, name, withApiPathSegment(address), isActive, SiteType.Gateway);
   }
 
   static deserialize(serialized: string): GatewaySite {

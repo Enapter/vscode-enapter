@@ -23,6 +23,7 @@ export const CommandIDs = {
     RemoveCloudApiToken: "enapter.commands.Sites.RemoveCloudApiToken",
     SetCloudApiToken: "enapter.commands.Sites.SetCloudApiToken",
     CopyApiToken: "enapter.commands.Sites.CopyApiToken",
+    EditAddress: "enapter.commands.Sites.EditAddress",
   },
   Enbp: {
     Mount: "enapter.commands.Enbp.Mount",

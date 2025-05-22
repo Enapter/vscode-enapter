@@ -44,6 +44,7 @@ import { CloudSiteNode } from "./providers/sites-connections/nodes/cloud-site-no
 import { GatewayNode } from "./providers/sites-connections/nodes/gateway-node";
 import { SitesConnectionsStorage } from "./storages/sites-connections-storage";
 import { SitesConnectionsService } from "./services/sites-connections-service";
+import { sitesEditAddress } from "./commands/sites-edit-address";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -139,6 +140,9 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Sites.RemoveCloudApiToken, sitesRemoveCloudApiToken);
   registerCommand(CommandIDs.Sites.SetCloudApiToken, sitesSetCloudApiToken);
   registerCommand(CommandIDs.Sites.CopyApiToken, sitesCopyApiToken);
+  registerCommand(CommandIDs.Sites.EditAddress, (node: GatewayNode) => {
+    return sitesEditAddress(node.site.id, sitesConnectionsService);
+  });
 
   registerCommand(CommandIDs.Enbp.Mount, mountEnbp);
   registerCommand(CommandIDs.Enbp.OpenTreeItem, openEnbpTreeItem);
