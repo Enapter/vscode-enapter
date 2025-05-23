@@ -6,18 +6,12 @@ export class SitesConnectionsService {
   private readonly _onDidChangeSites = new vscode.EventEmitter<Site[]>();
   readonly onDidChangeSites = this._onDidChangeSites.event;
 
+  private readonly _onDidChangeActiveSite = new vscode.EventEmitter<Site | undefined>();
+  readonly onDidChangeActiveSite = this._onDidChangeActiveSite.event;
+
   constructor(private readonly storage: SitesConnectionsStorage) {
     this.setActiveSiteContext(!!this.getActive());
   }
-
-  // allSites
-  // getSiteById
-  // storeSite
-  // removeSite
-  // activateSite
-  // removeAllSites
-  // disconnectFromActiveSite
-  // getActiveSite
 
   getAll() {
     return this.storage.getAll();
@@ -64,7 +58,7 @@ export class SitesConnectionsService {
 
     await this.updateAll(sites);
     this.setActiveSiteContext(true);
-    this._onDidChangeSites.fire(sites);
+    this._onDidChangeActiveSite.fire(site);
   }
 
   async removeById(id: string) {
@@ -77,7 +71,8 @@ export class SitesConnectionsService {
     const sites = storedSites.filter((s) => s.id !== id);
 
     await this.updateAll(sites);
-    this._onDidChangeSites.fire(sites);
+    this.setActiveSiteContext(!!this.getActive());
+    this._onDidChangeActiveSite.fire(undefined);
   }
 
   async disconnectById(id: string) {
@@ -100,7 +95,7 @@ export class SitesConnectionsService {
 
     await this.updateAll(sites);
     this.setActiveSiteContext(false);
-    this._onDidChangeSites.fire(sites);
+    this._onDidChangeActiveSite.fire(undefined);
   }
 
   private setActiveSiteContext(isPresent: boolean) {
