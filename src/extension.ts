@@ -46,6 +46,7 @@ import { SitesConnectionsStorage } from "./storages/sites-connections-storage";
 import { SitesConnectionsService } from "./services/sites-connections-service";
 import { sitesEditAddress } from "./commands/sites-edit-address";
 import { sitesReloadDevices } from "./commands/sites-reload-devices";
+import { ActiveDevicePollingService } from "./services/active-device-polling-service";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -80,6 +81,10 @@ export function activate(context: vscode.ExtensionContext) {
 
   const sitesConnectionsStorage = new SitesConnectionsStorage(context.globalState);
   const sitesConnectionsService = new SitesConnectionsService(sitesConnectionsStorage);
+
+  const activeDevicePollingService = new ActiveDevicePollingService(activeDeviceService);
+  context.subscriptions.push(activeDevicePollingService);
+  activeDevicePollingService.start();
 
   const logsChannel = new DeviceLogsChannel(activeDeviceService);
   context.subscriptions.push(logsChannel);

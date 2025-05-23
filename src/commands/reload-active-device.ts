@@ -24,7 +24,7 @@ export const reloadActiveDevice = async (
     return;
   }
 
-  const res = await api.getDeviceById(active?.id);
+  const res = await api.getDeviceById(site.id, active.id);
 
   if (!res?.device) {
     return;

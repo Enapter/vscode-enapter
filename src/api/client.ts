@@ -118,7 +118,7 @@ export class ApiClient {
   }
 
   @loggable()
-  async getDeviceById(id: string) {
+  async getDeviceById(_siteId: string, id: string) {
     return this.client.url(`/v3/devices/${id}?expand=connectivity`).get().json<{ device: Device }>();
   }
 
