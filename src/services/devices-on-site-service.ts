@@ -65,4 +65,14 @@ export class DevicesOnSiteService {
     await this.updateAll(devices);
     await this.activeDeviceService.updateDevice(undefined);
   }
+
+  merge(devicesMain: Device[], devicesToMerge: Device[]): Device[] {
+    return devicesMain.map((device) => {
+      const deviceToMerge = devicesToMerge.find((d) => d.id === device.id);
+      if (deviceToMerge) {
+        return { ...device, ...deviceToMerge };
+      }
+      return device;
+    });
+  }
 }

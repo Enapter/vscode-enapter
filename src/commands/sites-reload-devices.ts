@@ -24,21 +24,7 @@ export const sitesReloadDevices = async (
       return;
     } else {
       const devices = devicesOnSiteService.getAll();
-
-      await devicesOnSiteService.updateAll(
-        response.devices.map((d) => {
-          const device = devices.find((dev) => dev.id === d.id);
-
-          if (device) {
-            return {
-              ...device,
-              ...d,
-            };
-          }
-
-          return d;
-        }),
-      );
+      await devicesOnSiteService.updateAll(devicesOnSiteService.merge(response.devices, devices));
     }
 
     return response.devices;
