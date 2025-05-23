@@ -1,5 +1,5 @@
 import vscode from "vscode";
-import { Device } from "../../../models/device";
+import { Device, isDeviceOnline } from "../../../models/device";
 import { ExtContext } from "../../../ext-context";
 import { OfflineIcon, OnlineIcon } from "../../../ui/icons";
 import { ActiveDeviceProvider } from "../provider";
@@ -12,8 +12,8 @@ export class LogsNode extends vscode.TreeItem {
   ) {
     super("Logs");
     this.contextValue = "enapter.viewItems.ActiveDevice.LogsNode";
-    this.setDescription(this.extContext.getIsDeviceLogging());
-    this.setIcon(this.extContext.getIsDeviceLogging());
+    this.setDescription(this.isLogging);
+    this.setIcon(this.isLogging);
     this.extContext.onDidChangeDeviceLoggingState((isLogging) => this.refresh(isLogging));
   }
 
@@ -24,6 +24,11 @@ export class LogsNode extends vscode.TreeItem {
   }
 
   setDescription(isLogging: boolean) {
+    if (!this.isOnline) {
+      this.description = "(Device offline)";
+      return;
+    }
+
     if (isLogging) {
       this.description = "(Streaming)";
     } else {
@@ -37,5 +42,13 @@ export class LogsNode extends vscode.TreeItem {
     } else {
       this.iconPath = new OfflineIcon();
     }
+  }
+
+  get isLogging() {
+    return this.extContext.getIsDeviceLogging();
+  }
+
+  get isOnline() {
+    return isDeviceOnline(this.device);
   }
 }

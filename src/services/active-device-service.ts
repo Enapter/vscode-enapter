@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import { ActiveDeviceStorage } from "../storages/active-device-storage";
-import { Device } from "../models/device";
+import { Device, isDeviceOnline } from "../models/device";
 import { ContextKeys } from "../constants/context-keys";
 
 export class ActiveDeviceService {
@@ -24,5 +24,11 @@ export class ActiveDeviceService {
 
   private setDeviceContext(device: Device | undefined) {
     vscode.commands.executeCommand("setContext", ContextKeys.Devices.IsActivePresent, !!device);
+
+    vscode.commands.executeCommand(
+      "setContext",
+      ContextKeys.Devices.IsActiveOnline,
+      !!device && isDeviceOnline(device),
+    );
   }
 }

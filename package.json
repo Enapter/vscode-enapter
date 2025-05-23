@@ -58,13 +58,15 @@
         "command": "enapter.commands.Devices.StreamLogs",
         "title": "Stream Device Logs",
         "category": "Enapter",
-        "icon": "$(debug-start)"
+        "icon": "$(debug-start)",
+        "enablement": "enapter.context.Devices.IsActiveOnline"
       },
       {
         "command": "enapter.commands.Devices.StopLogs",
         "title": "Stop Device Logs",
         "category": "Enapter",
-        "icon": "$(debug-stop)"
+        "icon": "$(debug-stop)",
+        "enablement": "enapter.context.Devices.IsActiveOnline"
       },
       {
         "command": "enapter.commands.Sites.ConnectToNew",
