@@ -54,6 +54,7 @@ export class DevicesOnSitePollingService implements vscode.Disposable {
       const response = await DevicesFetchSiteDevicesTask.run(site);
 
       if (!response) {
+        await this.sitesConnectionsService.disconnectById(site.id);
         return;
       }
 

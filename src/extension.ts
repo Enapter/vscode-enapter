@@ -65,7 +65,7 @@ class Activator {
   }
 }
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   const activator = new Activator(context);
   new ExtSettings();
   const extContext = new ExtContext(context);
@@ -82,6 +82,19 @@ export function activate(context: vscode.ExtensionContext) {
 
   const sitesConnectionsStorage = new SitesConnectionsStorage(context.globalState);
   const sitesConnectionsService = new SitesConnectionsService(sitesConnectionsStorage);
+
+  try {
+    const activeSite = sitesConnectionsService.getActive();
+
+    if (activeSite) {
+      await sitesConnectionsService.disconnectById(activeSite.id);
+    }
+
+    await devicesOnSiteService.updateAll([]);
+    await activeDeviceService.updateDevice(undefined);
+  } catch (e) {
+    logger.log("Error while disconnecting from active site on extension activation", e);
+  }
 
   const activeDevicePollingService = new ActiveDevicePollingService(activeDeviceService);
   context.subscriptions.push(activeDevicePollingService);

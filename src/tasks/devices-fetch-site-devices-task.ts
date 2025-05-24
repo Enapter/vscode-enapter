@@ -3,15 +3,24 @@ import { AllLuaDevicesResponse, ApiClient } from "../api/client";
 import { Logger } from "../logger";
 import { Site } from "../models/sites/site";
 
-export class DevicesFetchSiteDevicesTask {
-  constructor(private readonly site: Site) {}
+interface Options {
+  isMuted: boolean;
+}
 
-  static async run(site: Site, token?: vscode.CancellationToken) {
+export class DevicesFetchSiteDevicesTask {
+  constructor(
+    private readonly site: Site,
+    private readonly options: Options = {
+      isMuted: false,
+    },
+  ) {}
+
+  static async run(site: Site, options?: Options, token?: vscode.CancellationToken) {
     if (token?.isCancellationRequested) {
       throw new vscode.CancellationError();
     }
 
-    return new DevicesFetchSiteDevicesTask(site).run();
+    return new DevicesFetchSiteDevicesTask(site, options).run();
   }
 
   async run(): Promise<AllLuaDevicesResponse | undefined> {
@@ -31,7 +40,7 @@ export class DevicesFetchSiteDevicesTask {
         .then((res) => {
           if (!res || !res.devices) {
             Logger.log("DevicesFetchSiteDevicesTask: No devices found", res);
-            return { devices: [] };
+            return;
           }
 
           return {
@@ -53,6 +62,7 @@ export class DevicesFetchSiteDevicesTask {
   }
 
   showUnauthorizedError() {
+    if (this.options.isMuted) return;
     vscode.window.showErrorMessage(`Unauthorized to access site "${this.site.name}". Please check your API token.`, {
       modal: true,
       detail: `Site ID: ${this.site.id}`,
@@ -60,6 +70,7 @@ export class DevicesFetchSiteDevicesTask {
   }
 
   showUnreachableError() {
+    if (this.options.isMuted) return;
     vscode.window.showErrorMessage(
       `Unable to reach site "${this.site.name}". Please check your network connection and site status.`,
       {
@@ -70,6 +81,7 @@ export class DevicesFetchSiteDevicesTask {
   }
 
   showSiteNotFoundError() {
+    if (this.options.isMuted) return;
     vscode.window.showErrorMessage(
       `Site "${this.site.name}" not found. Please check your API token and that the site exists and is reachable.`,
       {
