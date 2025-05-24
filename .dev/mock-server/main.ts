@@ -31,11 +31,11 @@ const sitesDevices = (() => {
   });
 })();
 
-app.get("/v3/site", (c) => {
+app.get("/api/v3/site", (c) => {
   return c.json({ site: sitesDevices[0] });
 });
 
-app.get("/v3/sites", (c) => {
+app.get("/api/v3/sites", (c) => {
   const query = c.req.query();
 
   const signal = c.req.signal;
@@ -59,7 +59,7 @@ app.get("/v3/sites", (c) => {
   return c.json({ sites: sitesDevices.slice(0, 2) });
 });
 
-app.get("/v3/sites/:id", (c) => {
+app.get("/api/v3/sites/:id", (c) => {
   const site = sitesDevices.find((s) => s.id === c.req.param("id"));
 
   if (!site) {
@@ -77,7 +77,7 @@ app.get("/v3/sites/:id", (c) => {
   });
 });
 
-app.get("/v3/sites/:site_id/devices", (c) => {
+app.get("/api/v3/sites/:site_id/devices", (c) => {
   const site = sitesDevices.find((s) => s.id === c.req.param("site_id"));
 
   if (!site) {
@@ -89,11 +89,11 @@ app.get("/v3/sites/:site_id/devices", (c) => {
   });
 });
 
-app.get("/v3/devices", (c) => {
+app.get("/api/v3/devices", (c) => {
   return c.json({ devices: sitesDevices.flatMap((s) => s.devices) });
 });
 
-app.get("/v3/devices/:id", (c) => {
+app.get("/api/v3/devices/:id", (c) => {
   const device = sitesDevices.flatMap((s) => s.devices).find((d) => d.id === c.req.param("id"));
   if (!device) {
     return c.text("Device not found", 404);
@@ -108,11 +108,11 @@ app.get("/v3/devices/:id", (c) => {
 
 const statuses = ["online", "offline", "unknown"];
 
-app.get("/v3/devices/:id/connectivity_status", (c) => {
+app.get("/api/v3/devices/:id/connectivity_status", (c) => {
   return c.json({ status: faker.helpers.arrayElement(statuses) });
 });
 
-app.post("/v3/blueprints/upload", async (c) => {
+app.post("/api/v3/blueprints/upload", async (c) => {
   try {
     const body = await c.req.arrayBuffer();
     const zipData = new Uint8Array(body);
@@ -137,7 +137,7 @@ app.post("/v3/blueprints/upload", async (c) => {
   }
 });
 
-app.post("/v3/devices/*/assign_blueprint", (c) => {
+app.post("/api/v3/devices/*/assign_blueprint", (c) => {
   return c.json({});
 });
 
