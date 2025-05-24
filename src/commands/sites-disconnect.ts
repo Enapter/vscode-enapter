@@ -12,5 +12,5 @@ export const sitesDisconnect = async (
 ) => {
   await sitesConnectionsService.disconnectById(node.site.id);
   await activeDeviceService.updateDevice(undefined);
-  await devicesOnSiteService.updateAll([]);
+  await devicesOnSiteService.replaceAll([]);
 };

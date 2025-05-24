@@ -459,6 +459,7 @@
   "dependencies": {
     "@microsoft/fast-react-wrapper": "^0.3.25",
     "@vscode/webview-ui-toolkit": "^1.4.0",
+    "es-toolkit": "^1.38.0",
     "js-yaml": "^4.1.0",
     "jszip": "^3.10.1",
     "reflect-metadata": "^0.2.2",

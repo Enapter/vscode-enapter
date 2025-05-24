@@ -6,6 +6,7 @@ import { DevicesFetchSiteDevicesTask } from "../tasks/devices-fetch-site-devices
 import { SitesConnectionsService } from "../services/sites-connections-service";
 import vscode from "vscode";
 import { ViewIDs } from "../constants/views";
+import { Logger } from "../logger";
 
 export const sitesConnect = async (
   node: CloudSiteNode | GatewayNode,
@@ -23,28 +24,36 @@ export const sitesConnect = async (
         return;
       }
 
-      const result = await SitesCheckConnectionTask.run(site);
+      try {
+        const result = await SitesCheckConnectionTask.run(site);
 
-      if (typeof result === "string" && result.length > 0) {
-        node.setError(result);
-        node.refresh();
-        return;
+        if (typeof result === "string" && result.length > 0) {
+          node.setError(result);
+          node.refresh();
+          return;
+        }
+
+        await sitesConnectionsService.connectById(site.id);
+
+        const response = await vscode.window.withProgress({ location: { viewId: ViewIDs.Devices.AllOnRemote } }, () =>
+          DevicesFetchSiteDevicesTask.run(site),
+        );
+
+        if (!response) {
+          node.setError("Failed to fetch devices");
+          node.refresh();
+          return;
+        } else {
+          await devicesOnSiteService.replaceAll(response.devices);
+        }
+
+        node.setError(undefined);
+        return site;
+      } catch (e) {
+        Logger.log(e);
+        await sitesConnectionsService.disconnectById(site.id);
+        await devicesOnSiteService.replaceAll([]);
       }
-
-      const response = await vscode.window.withProgress({ location: { viewId: ViewIDs.Devices.AllOnRemote } }, () =>
-        DevicesFetchSiteDevicesTask.run(site),
-      );
-
-      if (!response) {
-        node.setError("Failed to fetch devices");
-        node.refresh();
-        return;
-      } else {
-        await devicesOnSiteService.updateAll(response.devices);
-      }
-
-      node.setError(undefined);
-      return sitesConnectionsService.connectById(site.id);
     },
   );
 };

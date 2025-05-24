@@ -2,6 +2,8 @@ import vscode from "vscode";
 import { Device } from "../models/device";
 import { DevicesOnSiteStorage } from "../storages/devices-on-site-storage";
 import { ActiveDeviceService } from "./active-device-service";
+import { isEqual } from "es-toolkit";
+import { Logger } from "../logger";
 
 export class DevicesOnSiteService {
   private readonly _onDidChangeDevices: vscode.EventEmitter<Device[]> = new vscode.EventEmitter<Device[]>();
@@ -16,10 +18,30 @@ export class DevicesOnSiteService {
     return this.storage.getAll();
   }
 
-  async updateAll(devices: Device[]) {
+  async replaceAll(devices: Device[]) {
     return this.storage.updateAll(devices).then(() => {
       this._onDidChangeDevices.fire(devices);
     });
+  }
+
+  async updateAll(devices: Device[]) {
+    const all = this.getAll();
+
+    if (all.length !== devices.length) {
+      return this.replaceAll(devices);
+    }
+
+    const isAllSame = devices.every((device) => {
+      const existingDevice = all.find((d) => d.id === device.id);
+      return existingDevice && isEqual(existingDevice, device);
+    });
+
+    if (isAllSame) {
+      return;
+    }
+
+    const mergedDevices = this.merge(all, devices);
+    return this.replaceAll(mergedDevices);
   }
 
   async connectById(deviceId: string): Promise<Device | undefined> {
@@ -40,7 +62,7 @@ export class DevicesOnSiteService {
       return d;
     });
 
-    await this.updateAll(devices);
+    await this.replaceAll(devices);
     await this.activeDeviceService.updateDevice(device);
   }
 
@@ -62,7 +84,7 @@ export class DevicesOnSiteService {
       return d;
     });
 
-    await this.updateAll(devices);
+    await this.replaceAll(devices);
     await this.activeDeviceService.updateDevice(undefined);
   }
 

@@ -11,6 +11,6 @@ export const sitesRemove = async (
   activeDeviceService: ActiveDeviceService,
 ) => {
   await sitesConnectionsService.removeById(node.site.id);
-  await devicesOnSiteService.updateAll([]);
+  await devicesOnSiteService.replaceAll([]);
   await activeDeviceService.updateDevice(undefined);
 };

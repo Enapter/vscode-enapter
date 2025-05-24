@@ -90,7 +90,7 @@ export async function activate(context: vscode.ExtensionContext) {
       await sitesConnectionsService.disconnectById(activeSite.id);
     }
 
-    await devicesOnSiteService.updateAll([]);
+    await devicesOnSiteService.replaceAll([]);
     await activeDeviceService.updateDevice(undefined);
   } catch (e) {
     logger.log("Error while disconnecting from active site on extension activation", e);

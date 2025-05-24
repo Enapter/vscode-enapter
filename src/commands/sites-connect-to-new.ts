@@ -45,7 +45,7 @@ export const sitesConnectToNew = async (
     if (!response) {
       return;
     } else {
-      await devicesOnSiteService.updateAll(response.devices);
+      await devicesOnSiteService.replaceAll(response.devices);
     }
 
     return site;

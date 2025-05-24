@@ -23,8 +23,7 @@ export const sitesReloadDevices = async (
     if (!response) {
       return;
     } else {
-      const devices = devicesOnSiteService.getAll();
-      await devicesOnSiteService.updateAll(devicesOnSiteService.merge(response.devices, devices));
+      await devicesOnSiteService.updateAll(response.devices);
     }
 
     return response.devices;

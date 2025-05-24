@@ -58,8 +58,7 @@ export class DevicesOnSitePollingService implements vscode.Disposable {
         return;
       }
 
-      const devices = this.devicesOnSiteService.getAll();
-      await this.devicesOnSiteService.updateAll(this.devicesOnSiteService.merge(response.devices, devices));
+      await this.devicesOnSiteService.updateAll(response.devices);
     } catch (e: unknown) {
       Logger.log(e);
     }
