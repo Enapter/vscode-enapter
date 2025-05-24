@@ -90,7 +90,7 @@ app.get("/api/v3/sites/:site_id/devices", (c) => {
 });
 
 app.get("/api/v3/devices", (c) => {
-  return c.json({ devices: sitesDevices.flatMap((s) => s.devices) });
+  return c.json({ devices: sitesDevices.slice(0, 1).flatMap((s) => s.devices) });
 });
 
 app.get("/api/v3/devices/:id", (c) => {
