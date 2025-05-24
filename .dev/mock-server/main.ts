@@ -90,19 +90,16 @@ app.get("/api/v3/sites/:site_id/devices", (c) => {
 });
 
 app.get("/api/v3/devices", (c) => {
-  return c.json({ devices: sitesDevices.slice(0, 1).flatMap((s) => s.devices) });
+  return c.json({ devices: sitesDevices[0].devices });
 });
 
 app.get("/api/v3/devices/:id", (c) => {
-  const device = sitesDevices.flatMap((s) => s.devices).find((d) => d.id === c.req.param("id"));
+  const device = sitesDevices[0].devices.find((d) => d.id === c.req.param("id"));
   if (!device) {
     return c.text("Device not found", 404);
   }
   return c.json({
-    device: {
-      ...device,
-      site_id: faker.string.uuid(),
-    },
+    device,
   });
 });
 

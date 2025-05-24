@@ -6,8 +6,15 @@ import { ApiClient } from "../api/client";
 export class ActiveDevicePollingService implements vscode.Disposable {
   private interval: NodeJS.Timeout | undefined;
   private readonly INTERVAL_MS = 30_000;
+  private readonly disposables: vscode.Disposable[] = [];
 
-  constructor(private readonly service: ActiveDeviceService) {}
+  constructor(private readonly service: ActiveDeviceService) {
+    this.disposables.push(
+      service.onDidChangeDevice(() => {
+        this.start();
+      }),
+    );
+  }
 
   start() {
     this.stop();
@@ -53,7 +60,6 @@ export class ActiveDevicePollingService implements vscode.Disposable {
       }
 
       if (response.device.id !== device.id) {
-        Logger.log(`Device ID mismatch: ${response.device.id} !== ${device.id}`);
         return;
       }
 
@@ -65,5 +71,6 @@ export class ActiveDevicePollingService implements vscode.Disposable {
 
   dispose() {
     this.stop();
+    vscode.Disposable.from(...this.disposables).dispose();
   }
 }

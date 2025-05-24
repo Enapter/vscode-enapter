@@ -63,7 +63,7 @@ export class DevicesOnSiteService {
     });
 
     await this.replaceAll(devices);
-    await this.activeDeviceService.updateDevice(device);
+    await this.activeDeviceService.replaceDevice(device);
   }
 
   async disconnectById(deviceId: string): Promise<Device | undefined> {
@@ -85,7 +85,7 @@ export class DevicesOnSiteService {
     });
 
     await this.replaceAll(devices);
-    await this.activeDeviceService.updateDevice(undefined);
+    await this.activeDeviceService.replaceDevice(undefined);
   }
 
   merge(devicesMain: Device[], devicesToMerge: Device[]): Device[] {
