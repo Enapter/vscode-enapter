@@ -3,7 +3,7 @@
   "name": "enapter",
   "displayName": "Enapter",
   "description": "Enapter",
-  "version": "0.0.5",
+  "version": "0.0.1",
   "engines": {
     "vscode": "^1.96.0"
   },
