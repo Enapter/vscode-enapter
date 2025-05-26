@@ -12,7 +12,7 @@ export class ExtState {
       throw new Error("ExtState is already initialized");
     }
 
-    this.sitesRepository = new SiteRepository(this.globalState);
+    this.sitesRepository = new SiteRepository(this.context, this.globalState);
 
     ExtState.instance = this;
   }

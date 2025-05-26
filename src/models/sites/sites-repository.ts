@@ -1,17 +1,17 @@
 import vscode from "vscode";
 import { Site, SiteType } from "./site";
 import { SiteFactory } from "./site-factory";
-import { ExtContext } from "../../ext-context";
 
 export class SiteRepository {
-  private readonly context: vscode.ExtensionContext;
   private readonly secretsStorage: vscode.SecretStorage;
   private static SITES_STORAGE_KEY = "sites";
   private static CLOUD_API_TOKEN_STORAGE_KEY = "enapter.secrets.cloudApiToken";
   private static GATEWAY_API_TOKEN_STORAGE_KEY = "enapter.secrets.gatewaysApiTokens";
 
-  constructor(private readonly storage: vscode.Memento) {
-    this.context = ExtContext.getInstance().context;
+  constructor(
+    private readonly context: vscode.ExtensionContext,
+    private readonly storage: vscode.Memento,
+  ) {
     this.secretsStorage = this.context.secrets;
   }
 
