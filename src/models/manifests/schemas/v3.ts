@@ -18,6 +18,7 @@ export type EnumField =
   | {
       [k: string]: EnumItemField;
     };
+export type AccessLevel = "readonly" | "user" | "owner" | "installer" | "vendor" | "system";
 
 /**
  * Device Blueprint for Enapter Cloud
@@ -29,6 +30,22 @@ export interface BlueprintManifest {
   blueprint_spec: "device/3.0";
   implements?: Implements;
   implements_draft?: Implements;
+  /**
+   * Category of the device. It is used to group devices in the Cloud UI.
+   */
+  category?:
+    | "hydrogen-storage"
+    | "electrolysers"
+    | "solar-generators"
+    | "fuel-cells"
+    | "water-treatment"
+    | "battery-systems"
+    | "power-meters"
+    | "hvac"
+    | "electric-vehicles"
+    | "control"
+    | "data-providers"
+    | "sensors";
   /**
    * Display name to be shown to users in Blueprints Marketplace.
    */
@@ -101,6 +118,18 @@ export interface BlueprintManifest {
    */
   license?: string;
   /**
+   * Contains custom units which are not supported by UCUM but make sense for user.
+   */
+  units?: {
+    [k: string]: Unit;
+  };
+  /**
+   * Configuration settings for the device.
+   */
+  configuration?: {
+    [k: string]: ConfigurationBucket;
+  };
+  /**
    * This interface was referenced by `BlueprintManifest`'s JSON-Schema definition
    * via the `patternProperty` "^\.\w*$".
    */
@@ -115,6 +144,22 @@ export interface Property {
   implements?: Implements;
   aliases?: Aliases;
   /**
+   * Unit identifier, used in charts and telemetry-related UIs. Most of the commonly used units are covered in the supported units list (https://ucum.org/docs/common-units). You can still provide your own units via global units section.
+   */
+  unit?: string;
+  /**
+   * Allow to use C unit symbol as Coulomb. It's frequently missused for Celsius and this option allows to disable validation warning.
+   */
+  allow_unit_c?: boolean;
+  /**
+   * Allow to use F unit symbol as Farad. It's frequently missused for Fahrenheit and this option allows to disable validation warning.
+   */
+  allow_unit_f?: boolean;
+  /**
+   * Specifies the units to which the property value can be scaled within the UI.
+   */
+  auto_scale?: string[];
+  /**
    * Display name which will be shown to the users in the UI.
    */
   display_name: string;
@@ -123,6 +168,10 @@ export interface Property {
    */
   description?: string;
   enum?: EnumField;
+  /**
+   * User should have required access level for reading property
+   */
+  access_level?: "readonly" | "user" | "owner" | "installer" | "vendor" | "system";
   [k: string]: unknown;
 }
 /**
@@ -146,7 +195,7 @@ export interface EnumItemField {
     | "blue"
     | "blue-dark"
     | "blue-darker"
-    | "yellow-lighte"
+    | "yellow-lighter"
     | "yellow-light"
     | "yellow"
     | "yellow-dark"
@@ -171,12 +220,12 @@ export interface EnumItemField {
     | "pink"
     | "pink-dark"
     | "pink-darker"
-    | "purple-lighte"
+    | "purple-lighter"
     | "purple-light"
     | "purple"
     | "purple-dark"
     | "purple-darker"
-    | "orange-lighte"
+    | "orange-lighter"
     | "orange-light"
     | "orange"
     | "orange-dark"
@@ -201,15 +250,27 @@ export interface TelemetryAttribute {
   description?: string;
   enum?: EnumField;
   /**
-   * Unit identifier, used in charts and telemetry-related UIs. Most of the commonly used units are covered in the supported units list (link). You can still provide your own units as a string value.
+   * Unit identifier, used in charts and telemetry-related UIs. Most of the commonly used units are covered in the supported units list (https://ucum.org/docs/common-units). You can still provide your own units via global units section.
    */
   unit?: string;
+  /**
+   * Allow to use C unit symbol as Coulomb. It's frequently missused for Celsius and this option allows to disable validation warning.
+   */
+  allow_unit_c?: boolean;
+  /**
+   * Allow to use F unit symbol as Farad. It's frequently missused for Fahrenheit and this option allows to disable validation warning.
+   */
+  allow_unit_f?: boolean;
+  /**
+   * Specifies the units to which the telemetry value can be scaled within the UI.
+   */
+  auto_scale?: string[];
   /**
    * User should have required access level for reading telemetry
    */
   access_level?: "readonly" | "user" | "owner" | "installer" | "vendor" | "system";
   /**
-   * JSON schema path for attribute
+   * JSON schema or path to file with it
    */
   json_schema?: string;
   [k: string]: unknown;
@@ -219,6 +280,17 @@ export interface CommandGroup {
    * Display name which will be shown as a heading of the commands group on the commands screen.
    */
   display_name: string;
+  /**
+   * Optional command group description to show in UIs. If not provided, will be omitted.
+   */
+  description?: string;
+  ui?: {
+    /**
+     * Optional command icon, string key from [Material UI](https://static.enapter.com/rn/icons/material-community.html)
+     */
+    icon?: string;
+    [k: string]: unknown;
+  };
   [k: string]: unknown;
 }
 /**
@@ -315,9 +387,10 @@ export interface CommandArgument {
    */
   format?: string;
   /**
-   * JSON schema path for attribute
+   * JSON schema or path to file with it
    */
   json_schema?: string;
+  sensitive?: boolean;
   /**
    * Default value to be supplied to command if is not present in user input. Must be the same type as declared type of the argument
    */
@@ -333,7 +406,7 @@ export interface CommandResponse {
    */
   format?: string;
   /**
-   * JSON schema path for attribute
+   * JSON schema or path to file with it
    */
   json_schema?: string;
   [k: string]: unknown;
@@ -387,9 +460,9 @@ export interface Alert {
 export interface Runtime {
   type: "lua" | "embedded";
   /**
-   * The opts section describes options that may be needed to configure runtime.
+   * The options section describes options that may be needed to configure runtime.
    */
-  opts?: LuaOptions;
+  options?: LuaOptions;
   /**
    * Requirements describe what is needed for the blueprint to function successfully. This field provides information on where to run the blueprint.
    */
@@ -438,5 +511,77 @@ export interface Support {
    * Email address for user's support mails.
    */
   email?: string;
+  [k: string]: unknown;
+}
+/**
+ * User-defined unit
+ */
+export interface Unit {
+  /**
+   * Unit's representation in UI
+   */
+  symbol: string;
+  /**
+   * Unit's text representation
+   */
+  display_name?: string;
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema definition
+ * via the `patternProperty` "^[A-Za-z][A-Za-z0-9_]*$".
+ */
+export interface ConfigurationBucket {
+  /**
+   * Display name for the configuration bucket.
+   */
+  display_name: string;
+  /**
+   * Description of the configuration bucket.
+   */
+  description?: string;
+  access_level?: AccessLevel;
+  /**
+   * Indicates if virtual commands for read and write configuration should be used.
+   */
+  virtual_commands?: boolean;
+  ui?: {
+    /**
+     * Optional command icon, string key from [Material UI](https://static.enapter.com/rn/icons/material-community.html)
+     */
+    icon?: string;
+    [k: string]: unknown;
+  };
+  parameters: {
+    [k: string]: ConfigurationParameter;
+  };
+  [k: string]: unknown;
+}
+/**
+ * This interface was referenced by `undefined`'s JSON-Schema definition
+ * via the `patternProperty` "^[A-Za-z][A-Za-z0-9_]*$".
+ */
+export interface ConfigurationParameter {
+  /**
+   * Display name for the parameter.
+   */
+  display_name: string;
+  type: TypeField;
+  /**
+   * Default value to be supplied to command if is not present in user input. Must be the same type as declared type of the argument
+   */
+  default?: string | number | boolean;
+  /**
+   * Indicates if the parameter is required.
+   */
+  required?: boolean;
+  /**
+   * Indicates if the parameter is sensitive.
+   */
+  sensitive?: boolean;
+  /**
+   * Predefined format for string type can be used.
+   */
+  format?: string;
   [k: string]: unknown;
 }
