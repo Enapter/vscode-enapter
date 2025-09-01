@@ -1,13 +1,9 @@
-import vscode from "vscode";
 import { ManifestParser } from "./manifest-parser";
 import { BlueprintSpec, ManifestV1Schema } from "./schemas";
 import { CommModule } from "./schemas/v1";
 
 export class ManifestV1Parser implements ManifestParser<ManifestV1Schema> {
-  constructor(
-    public uri: vscode.Uri,
-    public contentJson: ManifestV1Schema,
-  ) {}
+  constructor(readonly contentJson: ManifestV1Schema) {}
 
   getDisplayName() {
     return this.contentJson.display_name;

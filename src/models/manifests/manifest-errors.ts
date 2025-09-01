@@ -19,10 +19,14 @@ class OpenManifestMessageItem implements vscode.MessageItem {
 
 export class ManifestError extends Error implements IManifestError {
   constructor(
-    private uri: vscode.Uri,
-    message: string = "Error loading manifest.",
+    message: string | undefined = "Error loading manifest.",
+    private uri?: vscode.Uri,
   ) {
-    super(`${message} ${uri.path}`);
+    let msg = message;
+    if (uri) {
+      msg += ` ${uri.path}`;
+    }
+    super(msg);
   }
 
   static isManifestError(e: unknown): e is IManifestError {
@@ -30,36 +34,40 @@ export class ManifestError extends Error implements IManifestError {
   }
 
   showErrorMessage() {
-    vscode.window.showErrorMessage(this.message, new OpenManifestMessageItem(this.uri)).then((item) => {
-      if (!item) {
-        return;
-      }
+    if (this.uri) {
+      vscode.window.showErrorMessage(this.message, new OpenManifestMessageItem(this.uri)).then((item) => {
+        if (!item) {
+          return;
+        }
 
-      item.openManifest();
-    });
+        item.openManifest();
+      });
+    } else {
+      vscode.window.showErrorMessage(this.message);
+    }
   }
 }
 
 export class InvalidBlueprintManifestError extends ManifestError {
-  constructor(uri: vscode.Uri, message: string = "Invalid blueprint manifest.") {
-    super(uri, message);
+  constructor(message: string = "Invalid blueprint manifest.", uri?: vscode.Uri) {
+    super(message, uri);
   }
 }
 
 export class InvalidBlueprintSpecError extends ManifestError {
-  constructor(uri: vscode.Uri, message: string = "Invalid blueprint spec.") {
-    super(uri, message);
+  constructor(message: string = "Invalid blueprint spec.", uri?: vscode.Uri) {
+    super(message, uri);
   }
 }
 
 export class ManifestNotLoadedError extends ManifestError {
-  constructor(uri: vscode.Uri, message: string = "Manifest not loaded.") {
-    super(uri, message);
+  constructor(message: string = "Manifest not loaded.", uri?: vscode.Uri) {
+    super(message, uri);
   }
 }
 
 export class InvalidManifestLuaPathError extends ManifestError {
-  constructor(uri: vscode.Uri, message: string = "Invalid lua path.") {
-    super(uri, message);
+  constructor(message: string = "Invalid lua path.", uri?: vscode.Uri) {
+    super(message, uri);
   }
 }

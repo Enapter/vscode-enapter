@@ -1,7 +1,7 @@
 import vscode from "vscode";
 import { LoadedManifest } from "./models/manifests/manifest";
 import JSZip from "jszip";
-import { loggable, Logger } from "./logger";
+import { ILogger, loggable, Logger } from "./logger";
 
 export class BlueprintZipper {
   private manifest: LoadedManifest;
@@ -9,7 +9,7 @@ export class BlueprintZipper {
 
   constructor(
     manifest: LoadedManifest,
-    private readonly logger = Logger.getInstance(),
+    private readonly logger: ILogger = Logger.getInstance(),
   ) {
     this.manifest = manifest;
     this.zipper = new JSZip();

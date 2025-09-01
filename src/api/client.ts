@@ -7,6 +7,7 @@ import { CancellationError, CancellationToken } from "vscode";
 import { CloudSite } from "../models/sites/cloud-site";
 import { Site, SiteType } from "../models/sites/site";
 import { ExtState } from "../ext-state";
+import { Agent, fetch } from 'undici';
 
 const logMiddleware: Middleware = () => (next) => (url, opts) => {
   const logger = Logger.getInstance();
@@ -51,7 +52,7 @@ export class ApiClient {
   constructor(
     public readonly host: string,
     public readonly token: string,
-  ) {}
+  ) { }
 
   static async forSite(site: Site): Promise<ApiClient> {
     const extState = ExtState.getInstance();
@@ -168,7 +169,16 @@ export class ApiClient {
   }
 
   private get client() {
+    Logger.log(`API Client: ${this.host}, token: ${this.token ? '***' : 'not set'}`);
     return wretch(this.host)
+      .polyfills({ fetch })
+      .options({
+        dispatcher: new Agent({
+          connect: {
+            rejectUnauthorized: false,
+          },
+        }),
+      })
       .headers({
         "X-Enapter-Auth-Token": this.token,
       })

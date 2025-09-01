@@ -4,7 +4,7 @@ import { OfflineIcon, OnlineIcon } from "../../../ui/icons";
 
 export class OnlineStatusNode extends vscode.TreeItem {
   constructor(device: Device) {
-    const isOnline = String(device.connectivity_status).toLowerCase() === "online";
+    const isOnline = String(device.connectivity?.status).toLowerCase() === "online";
     const label = isOnline ? "Online" : "Offline";
     super(label, vscode.TreeItemCollapsibleState.None);
     this.contextValue = "enapter.viewItems.PropertyNode";

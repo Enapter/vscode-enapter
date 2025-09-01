@@ -40,7 +40,7 @@ export class DeviceLogsChannel implements vscode.Disposable {
     }
   }
 
-  async connectTo(device: Device): Promise<boolean> {
+  async connect(device: Device): Promise<boolean> {
     this.disconnect();
 
     const token = await this.extState.getSiteApiToken(device.site);
@@ -80,6 +80,7 @@ export class DeviceLogsChannel implements vscode.Disposable {
     connection.onError((e) => this.handleConnectionError(e));
     connection.onMessage((data) => this.handleConnectionMessage(data));
     connection.onClose(() => this.handleConnectionClose());
+    connection.onPing(() => this.handleConnectionPing())
   }
 
   private handleConnectionOpen(device: Device): void {
@@ -94,7 +95,7 @@ export class DeviceLogsChannel implements vscode.Disposable {
     const logEntry = toDeviceLog(data);
 
     if (!logEntry) {
-      this.channel.error(`Unable to parse log entry. ${data}`);
+      this.channel.error(`Unable to parse log entry. ${(data as ArrayBuffer).toString()}`);
       return;
     }
 
@@ -108,6 +109,10 @@ export class DeviceLogsChannel implements vscode.Disposable {
       this.isLogging = false;
       this.updateLoggingState();
     }
+  }
+
+  private handleConnectionPing(): void {
+    this.channel.debug("Ping received from the server");
   }
 
   dispose(): void {

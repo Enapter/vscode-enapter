@@ -6,11 +6,13 @@ export const CommandIDs = {
   Devices: {
     Connect: "enapter.commands.Devices.Connect",
     Disconnect: "enapter.commands.Devices.Disconnect",
-    ResetActive: "enapter.commands.Devices.ResetActive",
     ReloadActive: "enapter.commands.Devices.ReloadActive",
     UploadBlueprint: "enapter.commands.Devices.UploadBlueprint",
     StreamLogs: "enapter.commands.Devices.StreamLogs",
     StopLogs: "enapter.commands.Devices.StopLogs",
+    Active: {
+      Disconnect: "enapter.commands.Devices.Active.Disconnect",
+    },
   },
   Sites: {
     ConnectToNew: "enapter.commands.Sites.ConnectToNew",

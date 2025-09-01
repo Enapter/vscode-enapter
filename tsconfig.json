@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "preserve",
+    "module": "NodeNext",
     "target": "ES2020",
     "outDir": "dist",
     "lib": ["ES2020", "WebWorker", "WebWorker.ImportScripts"],
@@ -9,7 +9,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strict": true,
-    "moduleResolution": "Bundler",
+    "moduleResolution": "NodeNext",
     /* enable all strict type-checking options */
     /* Additional Checks */
     // "noImplicitReturns": true, /* Report error when not all code paths in function return a value. */
@@ -17,5 +17,5 @@
     // "noUnusedParameters": true,  /* Report errors on unused parameters. */
     "jsx": "react"
   },
-  "exclude": ["node_modules"]
+  "exclude": ["dev/mock-server"]
 }

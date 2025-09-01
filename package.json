@@ -5,7 +5,7 @@
   "description": "Enapter",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.96.0"
+    "vscode": "^1.103.0"
   },
   "categories": [
     "Other"
@@ -171,10 +171,10 @@
         "icon": "$(refresh)"
       },
       {
-        "command": "enapter.commands.Devices.ResetActive",
-        "title": "Reset Active Device",
+        "command": "enapter.commands.Devices.Active.Disconnect",
+        "title": "Disconnect From Active Device",
         "category": "Enapter",
-        "icon": "$(close)"
+        "icon": "$(debug-disconnect)"
       },
       {
         "command": "enapter.commands.Enbp.Mount",
@@ -290,7 +290,7 @@
           "group": "navigation@2"
         },
         {
-          "command": "enapter.commands.Devices.ResetActive",
+          "command": "enapter.commands.Devices.Active.Disconnect",
           "when": "view == enapter.views.devices.active && enapter.context.Devices.IsActivePresent",
           "group": "navigation@1"
         },
@@ -420,7 +420,7 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
-    "compile": "npm run check-types && npm run lint && npm-run-all -p compile:*",
+    "compile": "npm run check-types && node esbuild.js",
     "compile:base": "node esbuild.js",
     "watch": "npm-run-all -p watch:*",
     "watch:base:esbuild": "node esbuild.js --watch",
@@ -428,41 +428,63 @@
     "package": "npm run check-types && npm run lint && npm-run-all -p package:*",
     "package:base": "node esbuild.js --production",
     "check-types": "npm-run-all -p check-types:*",
-    "check-types:base": "tsc --noEmit --project tsconfig.json",
+    "check-types:base": "tsc --noEmit --project tsconfig.json --outDir out",
     "lint": "eslint src",
-    "gen:manifests-schemas": "node manifests-schemas-to-ts.mjs"
+    "test": "vscode-test",
+    "test:coverage": "npm run test -- --coverage --coverage-reporter=lcov",
+    "test:unit:run": "vitest run",
+    "test:unit:coverage": "vitest run --coverage",
+    "gen:manifests-schemas": "node manifests-schemas-to-ts.mjs",
+    "compile-tests": "tsc -p . --outDir out",
+    "pretest": "rm -rf ./out && npm run compile-tests && npm run compile"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@eslint/js": "^9.24.0",
     "@types/assert": "^1.5.10",
+    "@types/chai": "^5.2.2",
+    "@types/debug": "^4.1.12",
     "@types/js-yaml": "^4.0.9",
-    "@types/mocha": "^10.0.9",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.1",
+    "@types/sinon": "^17.0.4",
+    "@types/sinon-chai": "^4.0.0",
     "@types/vscode": "^1.95.0",
     "@types/vscode-webview": "^1.57.5",
     "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
     "@typescript-eslint/parser": "^8.7.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
     "@vscode/test-web": "^0.0.63",
     "assert": "^2.1.0",
+    "chai": "^5.3.1",
     "esbuild": "^0.24.0",
     "eslint": "^9.13.0",
     "glob": "^11.0.0",
     "json-schema-to-typescript": "^15.0.4",
-    "mocha": "^10.7.3",
+    "mocha": "^11.7.1",
     "npm-run-all": "^4.1.5",
     "prettier": "3.4.2",
+    "sinon": "^21.0.0",
+    "sinon-chai": "^4.0.0",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.29.1"
+    "typescript-eslint": "^8.29.1",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.0.0",
     "@microsoft/fast-react-wrapper": "^0.3.25",
+    "@types/chai-as-promised": "^8.0.2",
     "@vscode/webview-ui-toolkit": "^1.4.0",
+    "axios": "^1.11.0",
+    "chai-as-promised": "^8.0.1",
     "es-toolkit": "^1.38.0",
     "js-yaml": "^4.1.0",
     "jszip": "^3.10.1",
+    "nanoid": "^5.1.5",
     "reflect-metadata": "^0.2.2",
+    "undici": "^7.15.0",
     "wretch": "^2.11.0",
     "ws": "^8.18.2",
     "zod": "^3.24.3"

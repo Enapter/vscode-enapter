@@ -1,7 +1,7 @@
-import { WebSocket } from "ws";
+import { WebSocket, RawData } from "ws";
 import { WsConnection } from "./connection";
 
-export class NodeWsConnection implements WsConnection<WebSocket.RawData> {
+export class NodeWsConnection implements WsConnection<RawData> {
   private readonly connection: WebSocket;
 
   constructor(
@@ -9,6 +9,7 @@ export class NodeWsConnection implements WsConnection<WebSocket.RawData> {
     apiToken: string,
   ) {
     this.connection = new WebSocket(url, { headers: { "X-Enapter-Auth-Token": apiToken } });
+    this.connection.on("ping", () => this.connection.pong())
   }
 
   close() {
@@ -27,7 +28,7 @@ export class NodeWsConnection implements WsConnection<WebSocket.RawData> {
     this.connection.on("error", callback);
   }
 
-  onMessage(callback: (data: WebSocket.RawData) => void) {
+  onMessage(callback: (data: RawData) => void) {
     this.connection.on("message", callback);
   }
 

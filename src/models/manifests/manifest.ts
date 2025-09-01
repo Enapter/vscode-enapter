@@ -122,7 +122,7 @@ export class Manifest implements IManifest {
     const path = this.parser.getLuaPath();
 
     if (!path) {
-      throw new InvalidManifestLuaPathError(this.uri);
+      throw new InvalidManifestLuaPathError(undefined, this.uri);
     }
 
     return path;
@@ -138,7 +138,7 @@ export class Manifest implements IManifest {
 
   private get parser(): ManifestParser {
     if (!this._parser) {
-      throw new ManifestNotLoadedError(this.uri);
+      throw new ManifestNotLoadedError(undefined, this.uri);
     }
 
     return this._parser;
@@ -151,17 +151,17 @@ export class Manifest implements IManifest {
   private getParserForContent(json: ManifestSchema): ManifestParser {
     switch (true) {
       case Manifest.isV1(json):
-        return new ManifestV1Parser(this.uri, json);
+        return new ManifestV1Parser(json);
       case Manifest.isV3(json):
-        return new ManifestV3Parser(this.uri, json);
+        return new ManifestV3Parser(json);
       default:
-        throw new InvalidBlueprintSpecError(this.uri);
+        throw new InvalidBlueprintSpecError(undefined, this.uri);
     }
   }
 
   private getContentJson(json: unknown): ManifestSchema {
     if (!Manifest.isManifest(json)) {
-      throw new InvalidBlueprintManifestError(this.uri);
+      throw new InvalidBlueprintManifestError(undefined, this.uri);
     }
 
     return json;

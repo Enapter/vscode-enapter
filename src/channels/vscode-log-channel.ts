@@ -5,6 +5,7 @@ export interface LogChannel<TLog> extends vscode.Disposable {
   log: (entry: TLog) => void;
   info: (message: string) => void;
   error: (message: string) => void;
+  debug: (message: string) => void;
   revealPanel: () => void;
   onDidChangeLogLevel: vscode.Event<vscode.LogLevel>;
 }
@@ -45,6 +46,10 @@ export class VscodeLogChannel<TLog extends LogEntry> implements LogChannel<TLog>
 
   error(message: string): void {
     this.channel.error(message);
+  }
+
+  debug(message: string): void {
+    this.channel.debug(message)
   }
 
   revealPanel() {

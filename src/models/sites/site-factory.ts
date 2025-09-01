@@ -16,10 +16,6 @@ export class SiteFactory {
     try {
       const data = JSON.parse(serialized);
 
-      if (!data.type) {
-        return undefined;
-      }
-
       switch (data.type) {
         case SiteType.Cloud:
           return CloudSite.deserialize(serialized);

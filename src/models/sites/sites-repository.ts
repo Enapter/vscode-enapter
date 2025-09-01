@@ -1,6 +1,7 @@
 import vscode from "vscode";
 import { Site, SiteType } from "./site";
 import { SiteFactory } from "./site-factory";
+import { Logger } from "../../logger";
 
 export class SiteRepository {
   private readonly secretsStorage: vscode.SecretStorage;
@@ -31,6 +32,10 @@ export class SiteRepository {
     return this.secretsStorage.store(this.getGatewayApiStorageKey(site), apiToken);
   }
 
+  async deleteGatewayApiToken(site: Site) {
+    return this.secretsStorage.delete(this.getGatewayApiStorageKey(site));
+  }
+
   async getGatewayApiToken(site: Site) {
     return this.secretsStorage.get(this.getGatewayApiStorageKey(site));
   }
@@ -38,11 +43,6 @@ export class SiteRepository {
   async isCloudApiTokenSet() {
     const token = await this.getCloudApiToken();
     return !!token;
-  }
-
-  getActiveSite() {
-    const activeSite = this.getAll().find((site) => site.isActive);
-    return activeSite ? activeSite : undefined;
   }
 
   getAll(): Site[] {
@@ -73,28 +73,6 @@ export class SiteRepository {
     await this.storage.update(SiteRepository.SITES_STORAGE_KEY, serialized);
   }
 
-  async activate(id: string | undefined): Promise<Site | undefined> {
-    const sites = this.getAll();
-    const updatedSites = sites.map((site) => (site.id === id ? site.withIsActive(true) : site.withIsActive(false)));
-
-    await this.storage.update(
-      SiteRepository.SITES_STORAGE_KEY,
-      updatedSites.map((s) => s.serialize()),
-    );
-
-    if (!id) {
-      return undefined;
-    }
-
-    const updatedSite = updatedSites.find((site) => site.id === id);
-
-    if (updatedSite) {
-      return updatedSite;
-    }
-
-    throw new Error(`Site with id ${id} not found`);
-  }
-
   async removeAll() {
     await this.storage.update(SiteRepository.SITES_STORAGE_KEY, undefined);
   }
@@ -112,6 +90,10 @@ export class SiteRepository {
   }
 
   private getGatewayApiStorageKey(site: Site) {
+    if (site.type !== SiteType.Gateway) {
+      throw new Error("Site is not a gateway");
+    }
+
     return `${SiteRepository.GATEWAY_API_TOKEN_STORAGE_KEY}.${site.id}`;
   }
 }

@@ -1,7 +1,7 @@
 import { BaseSite, SiteType } from "./site";
 
 export class CloudSite extends BaseSite {
-  public static ADDRESS = "https://api.enapter.com";
+  public static ADDRESS = "http://localhost:6942";
   public readonly type = SiteType.Cloud;
   public readonly address = CloudSite.ADDRESS;
 

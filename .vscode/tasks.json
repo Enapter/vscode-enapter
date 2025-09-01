@@ -38,6 +38,18 @@
         "group": "watch",
         "reveal": "never"
       }
+    },
+    {
+      "type": "npm",
+      "script": "pretest",
+      "group": "test",
+      "isBackground": false,
+      "problemMatcher": "$tsc-watch",
+      "label": "npm: pretest",
+      "presentation": {
+        "group": "watch",
+        "reveal": "never"
+      }
     }
   ]
 }

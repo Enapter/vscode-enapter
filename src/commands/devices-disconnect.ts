@@ -1,6 +1,6 @@
 import { DevicesOnSiteService } from "../services/devices-on-site-service";
-import { DeviceOnSiteNode } from "../providers/devices-on-site/nodes/device-on-site-node";
+import { Device } from "../models/device";
 
-export const devicesDisconnect = (node: DeviceOnSiteNode, service: DevicesOnSiteService) => {
-  return service.disconnectById(node.device.id);
+export const devicesDisconnect = (device: Device, service: DevicesOnSiteService) => {
+  return service.disconnectById(device.id);
 };

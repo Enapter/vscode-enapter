@@ -5,7 +5,6 @@ import { Logger } from "./logger";
 import { ExtContext } from "./ext-context";
 import { uploadBlueprintToActiveDevice } from "./commands/upload-blueprint-to-active-device";
 import { uploadActiveEditorManifest } from "./commands/upload-active-editor-manifest";
-import { resetActiveDevice } from "./commands/reset-active-device";
 import { reloadActiveDevice } from "./commands/reload-active-device";
 import { ExtSettings } from "./ext-settings";
 import { mountEnbp } from "./commands/mount-enbp";
@@ -126,13 +125,15 @@ export async function activate(context: vscode.ExtensionContext) {
     return devicesConnect(node, devicesOnSiteService);
   });
   registerCommand(CommandIDs.Devices.Disconnect, (node: DeviceOnSiteNode) => {
-    return devicesDisconnect(node, devicesOnSiteService);
+    return devicesDisconnect(node.device, devicesOnSiteService);
   });
   registerCommand(CommandIDs.Devices.ReloadActive, () => {
     return reloadActiveDevice(activeDeviceService, sitesConnectionsService);
   });
-  registerCommand(CommandIDs.Devices.ResetActive, () => {
-    return resetActiveDevice(activeDeviceService);
+  registerCommand(CommandIDs.Devices.Active.Disconnect, () => {
+    const device = activeDeviceService.getDevice();
+    if (!device) return;
+    return devicesDisconnect(device, devicesOnSiteService);
   });
   registerCommand(CommandIDs.Devices.UploadBlueprint, (node: DeviceOnSiteNode) => {
     return devicesUploadBlueprint(node.device, sitesConnectionsService);
@@ -190,6 +191,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
   activator.createTreeView(ViewIDs.Devices.Active, {
     treeDataProvider: new ActiveDeviceProvider(activeDeviceService),
+  });
+
+  return Promise.resolve({
+    context,
   });
 }
 

@@ -17,7 +17,9 @@ export interface Device {
   authorized_role: string;
   type: DeviceType;
   properties?: DeviceProperties;
-  connectivity_status?: string;
+  connectivity?: {
+    status: string
+  };
   site: Site;
   slug: string;
   isActive: boolean;
@@ -28,8 +30,8 @@ export const isSupportBlueprints = (device: Device) => {
 };
 
 export const sortByOnlineStatus = (device: Device) => {
-  if (device.connectivity_status) {
-    return device.connectivity_status.toLowerCase() === "online" ? -1 : 1;
+  if (device.connectivity?.status) {
+    return device.connectivity.status.toLowerCase() === "online" ? -1 : 1;
   }
 
   return 0;
@@ -44,5 +46,5 @@ export const sortByActiveDevice = (device: Device, activeDevice: Device | undefi
 };
 
 export const isDeviceOnline = (device: Device) => {
-  return String(device.connectivity_status).toLowerCase() === "online";
+  return String(device.connectivity?.status).toLowerCase() === "online";
 };
