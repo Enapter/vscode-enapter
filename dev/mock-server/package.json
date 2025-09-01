@@ -14,5 +14,8 @@
     "dev": "bun --hot run server.js",
     "start": "bun run server.js",
     "gen:fixtures": "bun run generate-fixtures.ts"
+  },
+  "dependencies": {
+    "jszip": "^3.10.1"
   }
 }
