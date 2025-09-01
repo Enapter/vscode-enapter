@@ -1,9 +1,36 @@
 import sites from "./generated/sites.json";
 import devices from "./generated/devices.json";
+import JSZip from "jszip";
 
 const server = Bun.serve({
   port: 6942,
   routes: {
+    "/api/v3/blueprints/upload": {
+      POST: async (req) => {
+        try {
+          console.log("Received upload request");
+          const body = await req.arrayBuffer();
+          const zipData = new Uint8Array(body);
+          const zip = new JSZip();
+          const content = await zip.loadAsync(zipData);
+          const now = new Date().toLocaleTimeString();
+          console.log(`\nReceived ZIP at ${now}`);
+          console.log("Received ZIP containing:");
+          for (const [filename, _] of Object.entries(content.files)) {
+            console.log(`- ${filename}`);
+          }
+          return Response.json({ blueprint: { id: crypto.randomUUID() } });
+        } catch (e) {
+          console.error(e);
+          return new Response("Invalid ZIP file", { status: 400 });
+        }
+      }
+    },
+    "/api/v3/devices/:device_id/assign_blueprint": {
+      POST: async () => {
+        return Response.json({});
+      }
+    },
     "/api/v3/site": async () => {
       return Response.json({ site: sites[0] });
     },
@@ -13,8 +40,8 @@ const server = Bun.serve({
     "/api/v3/sites/:site_id/devices": async (req) => {
       return Response.json({ devices: devices.filter((d) => d.site_id === req.params.site_id) });
     },
-    "/api/v3/devices": async (req) => {
-      return Response.json({ devices: devices.filter((d) => d.site_id === req.params.site_id) });
+    "/api/v3/devices": async () => {
+      return Response.json({ devices: devices.filter((d) => d.site_id === sites[0]!.id) });
     },
     "/api/v3/sites/:site_id/devices/:device_id": async (req) => {
       return Response.json({ device: devices.find((d) => d.id === req.params.device_id) });
@@ -32,7 +59,7 @@ const server = Bun.serve({
     open: (ws) => {
       console.log("WebSocket connection opened", ws.data);
       const now = () => new Date().toISOString();
-      const id = `site:${ws.data.site_id}::device:${ws.data.device_id}::logs`;
+      const id = `site:${(ws.data as any).site_id}::device:${(ws.data as any).device_id}::logs`;
       const message = () => ({ severity: "warning", message: now(), data: `data: ${now()}` });
       ws.send(`Connected to ID ${id}`);
       setInterval(() => ws.ping(), 5000);
