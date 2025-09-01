@@ -8,6 +8,7 @@ export interface WsConnection<TData = unknown> extends vscode.Disposable {
   onClose: (callback: () => void) => void;
   onError: (callback: (error: Error) => void) => void;
   onMessage: (callback: (data: TData) => void) => void;
+  onPing: (callback: () => void) => void;
 }
 
 export class WsConnectionFactory {

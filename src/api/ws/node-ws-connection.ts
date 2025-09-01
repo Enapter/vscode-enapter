@@ -32,6 +32,10 @@ export class NodeWsConnection implements WsConnection<RawData> {
     this.connection.on("message", callback);
   }
 
+  onPing(callback: () => void) {
+    this.connection.on("ping", callback);
+  }
+
   dispose() {
     this.close();
   }
