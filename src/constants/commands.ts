@@ -1,6 +1,5 @@
 export const CommandIDs = {
   Blueprints: {
-    UploadToActiveDevice: "enapter.commands.Blueprints.UploadToActiveDevice",
     UploadActiveEditorManifest: "enapter.commands.Blueprints.UploadActiveEditorManifest",
   },
   Devices: {
@@ -16,14 +15,11 @@ export const CommandIDs = {
   },
   Sites: {
     ConnectToNew: "enapter.commands.Sites.ConnectToNew",
-    ConnectToCloudSite: "enapter.commands.Sites.ConnectToCloudSite",
     ConnectToGatewaySite: "enapter.commands.Sites.ConnectToGatewaySite",
     Connect: "enapter.commands.Sites.Connect",
     Disconnect: "enapter.commands.Sites.Disconnect",
     Remove: "enapter.commands.Sites.Remove",
     RemoveAll: "enapter.commands.Sites.RemoveAll",
-    RemoveCloudApiToken: "enapter.commands.Sites.RemoveCloudApiToken",
-    SetCloudApiToken: "enapter.commands.Sites.SetCloudApiToken",
     CopyApiToken: "enapter.commands.Sites.CopyApiToken",
     EditAddress: "enapter.commands.Sites.EditAddress",
     ReloadDevices: "enapter.commands.Sites.ReloadDevices",

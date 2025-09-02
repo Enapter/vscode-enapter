@@ -1,6 +1,3 @@
-import { SitesSelectTypeTask } from "../tasks/sites-select-type-task";
-import { Site, SiteType } from "../models/sites/site";
-import { sitesConnectToCloudSite } from "./sites-connect-to-cloud-site";
 import { sitesConnectToGatewaySite } from "./sites-connect-to-gateway-site";
 import { SitesConnectionsService } from "../services/sites-connections-service";
 import { DevicesOnSiteService } from "../services/devices-on-site-service";
@@ -13,16 +10,7 @@ export const sitesConnectToNew = async (
   devicesOnSiteService: DevicesOnSiteService,
 ) => {
   try {
-    const siteType = await SitesSelectTypeTask.run();
-    let site: Site | undefined = undefined;
-
-    if (siteType === SiteType.Cloud) {
-      site = await sitesConnectToCloudSite(sitesConnectionsService);
-    }
-
-    if (siteType === SiteType.Gateway) {
-      site = await sitesConnectToGatewaySite(sitesConnectionsService);
-    }
+    let site = await sitesConnectToGatewaySite(sitesConnectionsService);
 
     if (!site) {
       return;

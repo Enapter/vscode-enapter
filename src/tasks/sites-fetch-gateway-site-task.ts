@@ -1,33 +1,12 @@
 import vscode from "vscode";
 import { ApiClient, SiteResponse } from "../api/client";
 import { Logger } from "../logger";
-import axios from 'axios';
-import https from 'https';
-import { request, Agent } from 'undici';
-const agent = new Agent({
-  connect: {
-    rejectUnauthorized: false
-  }
-});
-
-// axios.defaults.httpsAgent = new https.Agent({
-//   rejectUnauthorized: false
-// });
-
-const api = axios.create({
-  timeout: 5000,
-  baseURL: "http://192.168.38.38/api",
-  headers: {
-    "X-Enapter-Auth-Token": "34d41f70b4ae9392944a3a5723c92a1cacace63b4525657fd363afcad7c79ce1",
-    'X-Enapter-Allow-Http': 'true'
-  },
-})
 
 export class SitesFetchGatewaySiteTask {
   constructor(
     private readonly address: string,
     private readonly apiToken: string,
-  ) { }
+  ) {}
 
   static async run(address: string, apiToken: string, token?: vscode.CancellationToken) {
     if (token?.isCancellationRequested) {
@@ -40,22 +19,6 @@ export class SitesFetchGatewaySiteTask {
   async run(): Promise<{ site: SiteResponse } | undefined> {
     try {
       const apiClient = ApiClient.forGateway(this.address, this.apiToken);
-
-      // Logger.log("123Fetching Gateway site info...", this.address);
-
-      // try {
-      //   const { statusCode, headers, body } = await request('https://192.168.38.38/api/v3/site', {
-      //     dispatcher: agent,
-      //     headers: {
-      //       'X-Enapter-Auth-Token': '34d41f70b4ae9392944a3a5723c92a1cacace63b4525657fd363afcad7c79ce1'
-      //     }
-      //   });
-
-      //   const data = await body.text();
-      //   console.log('Response:', data);
-      // } catch (error: any) {
-      //   console.error('Request failed:', error.message);
-      // }
 
       const response = await apiClient
         .getGatewaySiteInfo()
@@ -71,7 +34,7 @@ export class SitesFetchGatewaySiteTask {
           Logger.log(e);
         });
 
-      Logger.log(response)
+      Logger.log(response);
 
       if (!response || !response.site) {
         return;

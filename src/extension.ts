@@ -3,10 +3,8 @@ import { CommandIDs } from "./constants/commands";
 import { ViewIDs } from "./constants/views";
 import { Logger } from "./logger";
 import { ExtContext } from "./ext-context";
-import { uploadBlueprintToActiveDevice } from "./commands/upload-blueprint-to-active-device";
 import { uploadActiveEditorManifest } from "./commands/upload-active-editor-manifest";
 import { reloadActiveDevice } from "./commands/reload-active-device";
-import { ExtSettings } from "./ext-settings";
 import { mountEnbp } from "./commands/mount-enbp";
 import { EnbpFileSystemProvider } from "./enbp-file-system-provider";
 import { openEnbpTreeItem } from "./commands/open-enbp-tree-item";
@@ -17,10 +15,7 @@ import { sitesDisconnect } from "./commands/sites-disconnect";
 import { sitesConnect } from "./commands/sites-connect";
 import { sitesCopyApiToken } from "./commands/sites-copy-api-token";
 import { ExtState } from "./ext-state";
-import { sitesConnectToCloudSite } from "./commands/sites-connect-to-cloud-site";
 import { sitesConnectToGatewaySite } from "./commands/sites-connect-to-gateway-site";
-import { sitesSetCloudApiToken } from "./commands/sites-set-cloud-api-token";
-import { sitesRemoveCloudApiToken } from "./commands/sites-remove-cloud-api-token";
 import { devicesUploadBlueprint } from "./commands/devices-upload-blueprint";
 import { sitesRemoveAll } from "./commands/sites-remove-all";
 import { devicesConnect } from "./commands/devices-connect";
@@ -36,10 +31,8 @@ import { SitesConnectionsProvider } from "./providers/sites-connections/provider
 import { ActiveDeviceService } from "./services/active-device-service";
 import { ActiveDeviceStorage } from "./storages/active-device-storage";
 import { DeviceOnSiteNode } from "./providers/devices-on-site/nodes/device-on-site-node";
-import { Manifest } from "./models/manifests/manifest";
 import { DevicesOnSiteStorage } from "./storages/devices-on-site-storage";
 import { DevicesOnSiteService } from "./services/devices-on-site-service";
-import { CloudSiteNode } from "./providers/sites-connections/nodes/cloud-site-node";
 import { GatewayNode } from "./providers/sites-connections/nodes/gateway-node";
 import { SitesConnectionsStorage } from "./storages/sites-connections-storage";
 import { SitesConnectionsService } from "./services/sites-connections-service";
@@ -66,7 +59,6 @@ class Activator {
 
 export async function activate(context: vscode.ExtensionContext) {
   const activator = new Activator(context);
-  new ExtSettings();
   const extContext = new ExtContext(context);
   new ExtState(extContext.context);
 
@@ -115,9 +107,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
   vscode.workspace.registerTextDocumentContentProvider("enbp-content-file", new EnbpContentFileProvider());
 
-  registerCommand(CommandIDs.Blueprints.UploadToActiveDevice, (manifest: Manifest) => {
-    return uploadBlueprintToActiveDevice(activeDeviceService, manifest);
-  });
   registerCommand(CommandIDs.Blueprints.UploadActiveEditorManifest, () => {
     return uploadActiveEditorManifest(activeDeviceService);
   });
@@ -147,26 +136,21 @@ export async function activate(context: vscode.ExtensionContext) {
   registerCommand(CommandIDs.Sites.ConnectToNew, () => {
     return sitesConnectToNew(sitesConnectionsService, devicesOnSiteService);
   });
-  registerCommand(CommandIDs.Sites.ConnectToCloudSite, () => {
-    return sitesConnectToCloudSite(sitesConnectionsService);
-  });
   registerCommand(CommandIDs.Sites.ConnectToGatewaySite, () => {
     return sitesConnectToGatewaySite(sitesConnectionsService);
   });
-  registerCommand(CommandIDs.Sites.Connect, (node: CloudSiteNode | GatewayNode) => {
+  registerCommand(CommandIDs.Sites.Connect, (node: GatewayNode) => {
     return sitesConnect(node, sitesConnectionsService, devicesOnSiteService);
   });
-  registerCommand(CommandIDs.Sites.Disconnect, (node: CloudSiteNode | GatewayNode) => {
+  registerCommand(CommandIDs.Sites.Disconnect, (node: GatewayNode) => {
     return sitesDisconnect(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);
   });
-  registerCommand(CommandIDs.Sites.Remove, (node: CloudSiteNode | GatewayNode) => {
+  registerCommand(CommandIDs.Sites.Remove, (node: GatewayNode) => {
     return sitesRemove(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);
   });
   registerCommand(CommandIDs.Sites.RemoveAll, () => {
     return sitesRemoveAll(sitesConnectionsService);
   });
-  registerCommand(CommandIDs.Sites.RemoveCloudApiToken, sitesRemoveCloudApiToken);
-  registerCommand(CommandIDs.Sites.SetCloudApiToken, sitesSetCloudApiToken);
   registerCommand(CommandIDs.Sites.CopyApiToken, sitesCopyApiToken);
   registerCommand(CommandIDs.Sites.EditAddress, (node: GatewayNode) => {
     return sitesEditAddress(node.site.id, sitesConnectionsService);

@@ -1,7 +1,6 @@
 import vscode from "vscode";
 import { Site, SiteType } from "./site";
 import { SiteFactory } from "./site-factory";
-import { Logger } from "../../logger";
 
 export class SiteRepository {
   private readonly secretsStorage: vscode.SecretStorage;

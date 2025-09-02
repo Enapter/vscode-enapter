@@ -3,7 +3,7 @@
   "name": "enapter",
   "displayName": "Enapter",
   "description": "Enapter",
-  "version": "0.0.1",
+  "version": "0.0.1-alpha.20250902.1",
   "engines": {
     "vscode": "^1.103.0"
   },
@@ -40,7 +40,7 @@
         },
         {
           "id": "enapter.views.sites.all",
-          "name": "Sites Connections",
+          "name": "Site Connections",
           "visibility": "visible",
           "initialSize": 1,
           "icon": "resources/logo-sidebar.svg"
@@ -50,7 +50,7 @@
     "viewsWelcome": [
       {
         "view": "enapter.views.sites.all",
-        "contents": "You haven't added any Enapter Cloud sites or Enapter Gateways.\n[Add new](command:enapter.commands.Sites.ConnectToNew)"
+        "contents": "You haven't added any Enapter Gateway connections.\n[Add new](command:enapter.commands.Sites.ConnectToNew)"
       }
     ],
     "commands": [
@@ -75,28 +75,10 @@
         "icon": "$(plus)"
       },
       {
-        "command": "enapter.commands.Sites.ConnectToCloudSite",
-        "title": "Connect to Enapter Cloud Site",
-        "category": "Enapter",
-        "icon": "$(plug)"
-      },
-      {
         "command": "enapter.commands.Sites.ConnectToGatewaySite",
         "title": "Connect to Enapter Gateway",
         "category": "Enapter",
         "icon": "$(plug)"
-      },
-      {
-        "command": "enapter.commands.Sites.RemoveCloudApiToken",
-        "title": "Remove Enapter Cloud API Token",
-        "category": "Enapter",
-        "icon": "$(trash)"
-      },
-      {
-        "command": "enapter.commands.Sites.SetCloudApiToken",
-        "title": "Set Enapter Cloud API Token",
-        "category": "Enapter",
-        "icon": "$(key)"
       },
       {
         "command": "enapter.commands.Sites.Connect",
@@ -112,13 +94,13 @@
       },
       {
         "command": "enapter.commands.Sites.Remove",
-        "title": "Disconnect All Sites",
+        "title": "Remove Connection",
         "category": "Enapter",
         "icon": "$(close)"
       },
       {
         "command": "enapter.commands.Sites.RemoveAll",
-        "title": "Disconnect All Sites",
+        "title": "Remove All Site Connections",
         "category": "Enapter",
         "icon": "$(close-all)"
       },
@@ -135,12 +117,6 @@
         "icon": "$(edit)"
       },
       {
-        "command": "enapter.commands.Blueprints.UploadToActiveDevice",
-        "title": "Upload Blueprint to Active Device",
-        "category": "Enapter",
-        "icon": "$(cloud-upload)"
-      },
-      {
         "command": "enapter.commands.Blueprints.UploadActiveEditorManifest",
         "title": "Upload Open Manifest to Device",
         "category": "Enapter",
@@ -148,13 +124,13 @@
       },
       {
         "command": "enapter.commands.Devices.Connect",
-        "title": "Connect to Device",
+        "title": "Connect",
         "category": "Enapter",
         "icon": "$(plug)"
       },
       {
         "command": "enapter.commands.Devices.Disconnect",
-        "title": "Disconnect Device",
+        "title": "Disconnect",
         "category": "Enapter",
         "icon": "$(debug-disconnect)"
       },
@@ -172,7 +148,7 @@
       },
       {
         "command": "enapter.commands.Devices.Active.Disconnect",
-        "title": "Disconnect From Active Device",
+        "title": "Disconnect",
         "category": "Enapter",
         "icon": "$(debug-disconnect)"
       },
@@ -280,11 +256,6 @@
       ],
       "view/title": [
         {
-          "command": "enapter.commands.Blueprints.UploadToActiveDevice",
-          "when": "view == enapter.views.devices.active  && enapter.context.Devices.IsActivePresent",
-          "group": "navigation@3"
-        },
-        {
           "command": "enapter.commands.Devices.ReloadActive",
           "when": "view == enapter.views.devices.active && enapter.context.Devices.IsActivePresent",
           "group": "navigation@2"
@@ -298,10 +269,6 @@
           "command": "enapter.commands.Sites.ConnectToNew",
           "when": "view == enapter.views.sites.all",
           "group": "navigation@1"
-        },
-        {
-          "command": "enapter.commands.Sites.SetCloudApiToken",
-          "when": "view == enapter.views.sites.all"
         },
         {
           "command": "enapter.commands.Sites.ReloadDevices",

@@ -3,7 +3,6 @@ import { Device } from "../models/device";
 import { DevicesOnSiteStorage } from "../storages/devices-on-site-storage";
 import { ActiveDeviceService } from "./active-device-service";
 import { isEqual } from "es-toolkit";
-import { Logger } from "../logger";
 
 export class DevicesOnSiteService {
   private readonly _onDidChangeDevices: vscode.EventEmitter<Device[]> = new vscode.EventEmitter<Device[]>();
