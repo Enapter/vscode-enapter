@@ -159,7 +159,6 @@ describe("Manifest", () => {
         const result = await manifest.load();
 
         expect(vscode.workspace.fs.readFile).to.have.been.calledWith(mockUri);
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
         expect(mockYamlLoad).to.have.been.called;
         expect(manifest.contentStr).to.equal("test content");
         expect(manifest.contentJson).to.deep.equal(validV1Manifest);
