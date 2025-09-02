@@ -5,7 +5,7 @@ import { ILogger, loggable, Logger } from "./logger";
 
 export class BlueprintZipper {
   private manifest: LoadedManifest;
-  private zipper: JSZip;
+  private readonly zipper: JSZip;
 
   constructor(
     manifest: LoadedManifest,
