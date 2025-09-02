@@ -14,5 +14,5 @@ for (let i = 0; i < 10; i++) {
   sites.push(generateSite());
 }
 
-Bun.write("./generated/sites.json", JSON.stringify(sites));
+await Bun.write("./generated/sites.json", JSON.stringify(sites));
 await $`bunx prettier --write ./generated/sites.json`;

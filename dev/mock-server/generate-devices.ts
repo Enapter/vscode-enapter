@@ -23,5 +23,5 @@ for (const site of sites) {
   }
 }
 
-Bun.write("./generated/devices.json", JSON.stringify(devices));
+await Bun.write("./generated/devices.json", JSON.stringify(devices));
 await $`bunx prettier --write ./generated/devices.json`;
