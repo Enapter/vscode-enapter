@@ -8,21 +8,22 @@ const server = Bun.serve({
     "/api/v3/blueprints/upload": {
       POST: async (req) => {
         try {
-          console.log("Received upload request");
+          console.group("\n/api/v3/blueprints/upload");
           const body = await req.arrayBuffer();
           const zipData = new Uint8Array(body);
           const zip = new JSZip();
           const content = await zip.loadAsync(zipData);
           const now = new Date().toLocaleTimeString();
-          console.log(`\nReceived ZIP at ${now}`);
+          console.log(`Received ZIP at ${now}`);
           console.log("Received ZIP containing:");
-          for (const [filename, _] of Object.entries(content.files)) {
-            console.log(`- ${filename}`);
-          }
+          Object.entries(content.files).forEach(([f, _]) => console.log(`- ${f}`));
           return Response.json({ blueprint: { id: crypto.randomUUID() } });
         } catch (e) {
           console.error(e);
           return new Response("Invalid ZIP file", { status: 400 });
+        } finally {
+          console.log("\n");
+          console.groupEnd();
         }
       }
     },
@@ -61,7 +62,7 @@ const server = Bun.serve({
       const now = () => new Date().toISOString();
       const id = `site:${(ws.data as any).site_id}::device:${(ws.data as any).device_id}::logs`;
       const message = () => ({ severity: "warning", message: now(), data: `data: ${now()}` });
-      ws.send(`Connected to ID ${id}`);
+      ws.send(JSON.stringify({ severity: "info", message: `Connected to ID ${id}`, data: `Connected to ID ${id}` }));
       setInterval(() => ws.ping(), 5000);
       setInterval(() => ws.send(JSON.stringify(message())), 1000);
     },
