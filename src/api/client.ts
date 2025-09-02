@@ -1,19 +1,16 @@
 import wretch, { Middleware } from "wretch";
 import AbortAddon from "wretch/addons/abort";
 import { loggable, Logger } from "../logger";
-import { ExtSettings } from "../ext-settings";
 import { Device, isSupportBlueprints, sortByOnlineStatus } from "../models/device";
 import { CancellationError, CancellationToken } from "vscode";
 import { CloudSite } from "../models/sites/cloud-site";
 import { Site, SiteType } from "../models/sites/site";
 import { ExtState } from "../ext-state";
-import { Agent, fetch } from 'undici';
+import { Agent, fetch as undiciFetch } from "undici";
 
 const logMiddleware: Middleware = () => (next) => (url, opts) => {
   const logger = Logger.getInstance();
   logger.log(opts.method, url);
-  logger.log("Headers:", opts.headers);
-  logger.log("Body:", opts.body);
   return next(url, opts);
 };
 
@@ -52,7 +49,7 @@ export class ApiClient {
   constructor(
     public readonly host: string,
     public readonly token: string,
-  ) { }
+  ) {}
 
   static async forSite(site: Site): Promise<ApiClient> {
     const extState = ExtState.getInstance();
@@ -155,23 +152,14 @@ export class ApiClient {
       .json();
   }
 
-  async getDeviceConnectivityStatus(deviceId: string) {
-    return this.client.url(`/v3/devices/${deviceId}/connectivity_status`).get().json<{ status: string }>();
-  }
-
   @loggable()
   checkConnection() {
     return this.client.url("/v3/devices").get();
   }
 
-  get isConfigured(): boolean {
-    return !!this.host && !!this.token;
-  }
-
   private get client() {
-    Logger.log(`API Client: ${this.host}, token: ${this.token ? '***' : 'not set'}`);
     return wretch(this.host)
-      .polyfills({ fetch })
+      .polyfills({ fetch: undiciFetch })
       .options({
         dispatcher: new Agent({
           connect: {
@@ -184,9 +172,5 @@ export class ApiClient {
       })
       .addon(AbortAddon())
       .middlewares([logMiddleware()]);
-  }
-
-  private get extensionSettings() {
-    return ExtSettings.getInstance();
   }
 }
