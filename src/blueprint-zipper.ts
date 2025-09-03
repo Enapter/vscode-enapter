@@ -14,8 +14,8 @@ export class BlueprintZipper {
 
   async zip() {
     const parentDirUri = vscode.Uri.joinPath(this.manifest.uri, "..");
-    const globStr = `${vscode.workspace.asRelativePath(parentDirUri)}/${this.permittedFilesGlob}`;
-    const uris = await vscode.workspace.findFiles(globStr);
+    let uris = await vscode.workspace.findFiles(this.permittedFilesGlob);
+    uris = uris.filter((uri) => uri.path.startsWith(parentDirUri.path));
 
     for (const uri of uris) {
       const content = await vscode.workspace.fs.readFile(uri);
