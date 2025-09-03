@@ -3,6 +3,7 @@ import { Logger } from "../logger";
 import { DevicesOnSiteService } from "./devices-on-site-service";
 import { SitesConnectionsService } from "./sites-connections-service";
 import { DevicesFetchSiteDevicesTask } from "../tasks/devices-fetch-site-devices-task";
+import { ActiveDeviceService } from "./active-device-service";
 
 export class DevicesOnSitePollingService implements vscode.Disposable {
   private interval: NodeJS.Timeout | undefined;
@@ -12,6 +13,7 @@ export class DevicesOnSitePollingService implements vscode.Disposable {
   constructor(
     private readonly sitesConnectionsService: SitesConnectionsService,
     private readonly devicesOnSiteService: DevicesOnSiteService,
+    private readonly activeDeviceService: ActiveDeviceService,
   ) {
     this.disposables.push(
       sitesConnectionsService.onDidChangeActiveSite(() => {
@@ -54,6 +56,8 @@ export class DevicesOnSitePollingService implements vscode.Disposable {
       const response = await DevicesFetchSiteDevicesTask.run(site);
 
       if (!response) {
+        await this.activeDeviceService.replaceDevice(undefined);
+        await this.devicesOnSiteService.replaceAll([]);
         await this.sitesConnectionsService.disconnectById(site.id);
         return;
       }

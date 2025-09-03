@@ -32,7 +32,7 @@ export const sitesConnect = async (
         if (typeof result === "string" && result.length > 0) {
           node.setError(result);
           node.refresh();
-          return;
+          throw new Error(result);
         }
 
         await sitesConnectionsService.connectById(site.id);
@@ -44,7 +44,7 @@ export const sitesConnect = async (
         if (!response) {
           node.setError("Failed to fetch devices");
           node.refresh();
-          return;
+          throw new Error("Failed to fetch devices");
         } else {
           await devicesOnSiteService.replaceAll(response.devices);
         }

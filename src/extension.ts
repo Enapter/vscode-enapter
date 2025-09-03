@@ -91,7 +91,11 @@ export async function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(activeDevicePollingService);
   activeDevicePollingService.start();
 
-  const devicesOnSitePollingService = new DevicesOnSitePollingService(sitesConnectionsService, devicesOnSiteService);
+  const devicesOnSitePollingService = new DevicesOnSitePollingService(
+    sitesConnectionsService,
+    devicesOnSiteService,
+    activeDeviceService,
+  );
   context.subscriptions.push(devicesOnSitePollingService);
   devicesOnSitePollingService.start();
 
