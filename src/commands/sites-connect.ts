@@ -6,11 +6,13 @@ import { SitesConnectionsService } from "../services/sites-connections-service";
 import vscode from "vscode";
 import { ViewIDs } from "../constants/views";
 import { Logger } from "../logger";
+import { ActiveDeviceService } from "../services/active-device-service";
 
 export const sitesConnect = async (
   node: GatewayNode,
   sitesConnectionsService: SitesConnectionsService,
   devicesOnSiteService: DevicesOnSiteService,
+  activeDeviceService: ActiveDeviceService,
 ) => {
   return vscode.window.withProgress(
     {
@@ -24,6 +26,7 @@ export const sitesConnect = async (
       }
 
       try {
+        vscode.commands.executeCommand("setContext", "enapter.context.Sites.IsConnecting", true);
         const result = await SitesCheckConnectionTask.run(site);
 
         if (typeof result === "string" && result.length > 0) {
@@ -50,8 +53,11 @@ export const sitesConnect = async (
         return site;
       } catch (e) {
         Logger.log(e);
-        await sitesConnectionsService.disconnectById(site.id);
         await devicesOnSiteService.replaceAll([]);
+        await sitesConnectionsService.disconnectById(site.id);
+      } finally {
+        vscode.commands.executeCommand("setContext", "enapter.context.Sites.IsConnecting", false);
+        await activeDeviceService.replaceDevice(undefined);
       }
     },
   );

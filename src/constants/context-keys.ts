@@ -6,5 +6,6 @@ export const ContextKeys = {
   },
   Sites: {
     IsActivePresent: "enapter.context.Sites.IsActivePresent",
+    IsConnecting: "enapter.context.Sites.IsConnecting",
   },
 };

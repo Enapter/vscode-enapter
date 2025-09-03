@@ -140,7 +140,7 @@ export async function activate(context: vscode.ExtensionContext) {
     return sitesConnectToGatewaySite(sitesConnectionsService);
   });
   registerCommand(CommandIDs.Sites.Connect, (node: GatewayNode) => {
-    return sitesConnect(node, sitesConnectionsService, devicesOnSiteService);
+    return sitesConnect(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);
   });
   registerCommand(CommandIDs.Sites.Disconnect, (node: GatewayNode) => {
     return sitesDisconnect(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);

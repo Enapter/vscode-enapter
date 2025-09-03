@@ -84,13 +84,15 @@
         "command": "enapter.commands.Sites.Connect",
         "title": "Connect",
         "category": "Enapter",
-        "icon": "$(plug)"
+        "icon": "$(plug)",
+        "enablement": "!enapter.context.Sites.IsConnecting"
       },
       {
         "command": "enapter.commands.Sites.Disconnect",
         "title": "Disconnect",
         "category": "Enapter",
-        "icon": "$(debug-disconnect)"
+        "icon": "$(debug-disconnect)",
+        "enablement": "!enapter.context.Sites.IsConnecting"
       },
       {
         "command": "enapter.commands.Sites.Remove",
