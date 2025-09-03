@@ -18,6 +18,8 @@ export class NodeWsConnection implements WsConnection<RawData> {
 
   close() {
     this.connection.close();
+    this.connection.terminate();
+    this.connection.removeAllListeners();
   }
 
   onOpen(callback: () => void) {

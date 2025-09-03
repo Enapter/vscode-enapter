@@ -26,7 +26,7 @@ export class DeviceLogsChannel implements vscode.Disposable {
     private readonly wsConnectionFactory: WsConnectionFactory = new WsConnectionFactory(),
     private readonly extState: ExtState = ExtState.getInstance(),
   ) {
-    this.activeDeviceService.onDidChangeDevice(() => this.disconnect());
+    this.activeDeviceService.onDidChangeDevice(this.disconnect.bind(this));
     DeviceLogsChannel.instance = this;
   }
 
@@ -80,7 +80,7 @@ export class DeviceLogsChannel implements vscode.Disposable {
     connection.onError((e) => this.handleConnectionError(e));
     connection.onMessage((data) => this.handleConnectionMessage(data));
     connection.onClose(() => this.handleConnectionClose());
-    connection.onPing(() => this.handleConnectionPing())
+    connection.onPing(() => this.handleConnectionPing());
   }
 
   private handleConnectionOpen(device: Device): void {
