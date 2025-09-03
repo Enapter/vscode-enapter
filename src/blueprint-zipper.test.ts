@@ -32,7 +32,7 @@ const createZipper = (manifest: LoadedManifest | undefined) => {
     throw new Error("Manifest is undefined");
   }
 
-  return new BlueprintZipper(manifest, console.log);
+  return new BlueprintZipper(manifest);
 };
 
 describe("BlueprintZipper", () => {
