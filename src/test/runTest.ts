@@ -6,7 +6,15 @@ async function main() {
   try {
     const extensionDevelopmentPath = path.resolve(__dirname, "../../");
     const extensionTestsPath = path.resolve(__dirname, "./suite/index");
-    const testWorkspace = path.resolve(__dirname, "../../testing-workspaces/v3/default");
+    let testWorkspace = path.resolve(__dirname, "../../testing-workspaces/v3/default");
+
+    await runTests({
+      extensionDevelopmentPath,
+      extensionTestsPath,
+      launchArgs: [testWorkspace],
+    });
+
+    testWorkspace = path.resolve(__dirname, "../../testing-workspaces/v3/with-lua-dir-and-rockspec");
 
     await runTests({
       extensionDevelopmentPath,

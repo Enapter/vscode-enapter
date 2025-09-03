@@ -1,0 +1,15 @@
+{
+  "BlueprintZipper": {
+    "zip": {
+      "shouldReturnArchiveWith": [
+        "manifest.yml",
+        "main.lua",
+        "name.rockspec",
+        "lua/script_1.lua",
+        "lua/script_2.lua",
+        "lua/nested-lua-dir/script_a.lua",
+        "lua/nested-lua-dir/script_b.lua"
+      ]
+    }
+  }
+}

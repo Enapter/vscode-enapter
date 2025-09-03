@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, it } from "mocha";
+import { afterEach, before, beforeEach, describe, it } from "mocha";
 import vscode from "vscode";
 import { SiteRepository } from "../sites-repository";
 import { expect } from "chai";
@@ -19,22 +19,22 @@ const ensureContext = (context: any) => {
   return context as vscode.ExtensionContext;
 };
 
+let context: vscode.ExtensionContext | undefined;
+
+before((done) => {
+  const ext = vscode.extensions.getExtension("undefined_publisher.enapter");
+  if (!ext) throw new Error("Enapter extension is not found");
+  if (!ext.isActive) throw new Error("Enapter extension is not active");
+  context = ext.exports?.context;
+  done();
+});
+
 describe("SitesRepository", async () => {
   let repo: SiteRepository = {} as SiteRepository;
 
-  beforeEach(function (done: any) {
-    vscode.extensions
-      .getExtension("undefined_publisher.enapter")
-      ?.activate()
-      .then((config) => {
-        try {
-          const context = ensureContext(config.context);
-          repo = new SiteRepository(context, context.globalState);
-          done();
-        } catch (e) {
-          done(e);
-        }
-      });
+  beforeEach(() => {
+    const ctx = ensureContext(context);
+    repo = new SiteRepository(ctx, ctx.globalState);
   });
 
   afterEach(() => {

@@ -1,0 +1,17 @@
+blueprint_spec: device/3.0
+display_name: Simple blueprint
+
+runtime:
+  type: lua
+  options:
+    file: main.lua
+
+telemetry:
+  status:
+    type: string
+    display_name: State
+    enum:
+      - ok
+
+.cloud:
+  category: testing

@@ -1,0 +1,10 @@
+{
+  "BlueprintZipper": {
+    "zip": {
+      "shouldReturnArchiveWith": [
+        "manifest.yml",
+        "main.lua"
+      ]
+    }
+  }
+}

@@ -18,9 +18,10 @@
         "${workspaceFolder}/testing-workspaces/v3/default",
         "--extensionDevelopmentPath=${workspaceFolder}",
         "--extensionTestsPath=${workspaceFolder}/out/test/suite/index",
+        "--disable-extensions"
       ],
       "preLaunchTask": "npm: pretest",
-      "outFiles": ["${workspaceFolder}/out/**/*.js"],
+      "outFiles": ["${workspaceFolder}/out/**/*.js"]
     }
   ]
 }

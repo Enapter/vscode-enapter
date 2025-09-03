@@ -1,26 +1,20 @@
-import { describe, it, beforeEach, afterEach } from "mocha";
-import { use, expect } from "chai";
+import { afterEach, beforeEach, describe, it } from "mocha";
+import { expect, use } from "chai";
 import sinonChai from "sinon-chai";
 import chaiAsPromised from "chai-as-promised";
 import { LoadedManifest, Manifest } from "./models/manifests/manifest";
 import vscode from "vscode";
-import sinon from "sinon";
-import { ILogger } from "./logger";
 import { BlueprintZipper } from "./blueprint-zipper";
 import JSZip from "jszip";
 
 use(sinonChai);
 use(chaiAsPromised);
 
-const MockLogger: ILogger = {
-  log: sinon.fake((...args: any[]) => {
-    console.log(...args);
-  }),
-  error: sinon.fake((...args: any[]) => {
-    console.log(...args);
-  }),
-  group: sinon.fake(),
-  groupEnd: sinon.fake(),
+const getExpectations = async <T = unknown>(cb: (content: any) => T) => {
+  const uri = await vscode.workspace.findFiles("test-expectations.json");
+  const content = await vscode.workspace.fs.readFile(uri[0]);
+  const json = JSON.parse(Buffer.from(content).toString("utf8"));
+  return cb(json);
 };
 
 const withWsPath = (path: string): vscode.Uri => {
@@ -38,7 +32,7 @@ const createZipper = (manifest: LoadedManifest | undefined) => {
     throw new Error("Manifest is undefined");
   }
 
-  return new BlueprintZipper(manifest, MockLogger);
+  return new BlueprintZipper(manifest, console.log);
 };
 
 describe("BlueprintZipper", () => {
@@ -64,7 +58,8 @@ describe("BlueprintZipper", () => {
     const zipper = createZipper(loadedManifest);
     const archive = await zipper.zip();
     const content = await new JSZip().loadAsync(archive);
-    expect(content.files["manifest.yml"]).to.exist;
-    expect(content.files["main.lua"]).to.exist;
+    const entries = Object.keys(content.files);
+    const expectedEntries = await getExpectations<string[]>((c: any) => c.BlueprintZipper.zip.shouldReturnArchiveWith);
+    expect(entries).to.have.members(expectedEntries);
   });
 });
