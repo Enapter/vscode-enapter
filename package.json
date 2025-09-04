@@ -1,15 +1,44 @@
 {
   "$schema": "./package-json-schema.json",
-  "name": "enapter",
-  "displayName": "Enapter",
-  "description": "Enapter",
-  "version": "0.0.1-alpha.20250902.1",
-  "engines": {
-    "vscode": "^1.103.0"
-  },
+  "name": "enapter-ems-toolkit-3.0-ide",
+  "version": "0.0.1",
+  "displayName": "Enapter EMS Toolkit 3.0 IDE",
+  "description": "Create and upload Blueprints for Enapter's Energy Management System. It provides integrated tools for authoring Blueprints, connecting to both Enapter Cloud and Enapter Gateways, and monitoring device status in real-time.",
+  "publisher": "Enapter",
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "enapter",
+    "blueprint",
+    "ems",
+    "toolkit",
+    "ems toolkit",
+    "energy",
+    "management",
+    "system",
+    "energy management system",
+    "lua",
+    "iot"
+  ],
+  "qna": "marketplace",
+  "author": {
+    "name": "Yuri Mandrikov",
+    "email": "mandrikov.dev@gmail.com"
+  },
+  "licence": "SEE LICENSE IN LICENCE",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Enapter/vscode-enapter.git"
+  },
+  "homepage": "https://github.com/Enapter/vscode-enapter/",
+  "bugs": {
+    "url": "https://github.com/Enapter/vscode-enapter/issues"
+  },
+  "icon": "images/enapter-logo.png",
+  "engines": {
+    "vscode": "^1.103.0"
+  },
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
