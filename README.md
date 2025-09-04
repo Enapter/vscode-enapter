@@ -2,7 +2,7 @@
 
 <img 
     align="center"
-    src="https://raw.githubusercontent.com/enapter/vscode-enapter/main/images/enapter-logo.png" 
+    src="https://github.com/Enapter/vscode-enapter/blob/main/images/enapter-logo.png?raw=true" 
     alt="Enapter"
     height="128"
 />
