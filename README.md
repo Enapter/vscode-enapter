@@ -1,6 +1,11 @@
 # Enapter EMS Toolkit 3.0 IDE
 
-![Enapter Logo](images/enapter-logo.png)
+<img 
+    align="center"
+    src="https://raw.githubusercontent.com/enapter/vscode-enapter/main/images/enapter-logo.png" 
+    alt="Enapter"
+    height="128"
+/>
 
 Create and upload Blueprints for Enapter's Energy Management System. It provides integrated tools for authoring Blueprints, connecting to both Enapter Cloud and Enapter Gateways, and monitoring device status in real-time.
 
