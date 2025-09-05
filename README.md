@@ -1,4 +1,4 @@
-# Enapter EMS Toolkit 3.0 IDE
+# Enapter IDE for EMS Toolkit 3.0
 
 <p align="center">
     <img 
@@ -43,8 +43,7 @@ Three specialized panels:
 ### 3. Develop Blueprints
 1. Create or open a `manifest.yml` file
 2. Edit your blueprint configuration and Lua code
-3. 
-4. Monitor device logs in real-time through the **Active Device** view
+3. Monitor device logs in real-time through the **Active Device** view
 Please refer to the [Enapter Documentation](https://developers.enapter.com/) for detailed guidance on creating Blueprints.
 
 ## Contributing
