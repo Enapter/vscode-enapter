@@ -14,3 +14,12 @@ esbuild.js
 **/*.map
 **/*.ts
 **/.vscode-test.*
+dev/**
+CLAUDE.md
+manifests-schemas-to-ts.mjs
+package-json-schema.json
+.claude/**
+.idea/**
+coverage/**
+testing-workspaces/**
+vsc-extension-quickstart.md
