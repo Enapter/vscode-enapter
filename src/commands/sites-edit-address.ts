@@ -14,7 +14,7 @@ export const sitesEditAddress = async (site_id: string, service: SitesConnection
       return;
     }
 
-    const address = await SitesAskForGatewayAddress.run();
+    const address = await SitesAskForGatewayAddress.run(site.address);
 
     if (address === "") {
       return;

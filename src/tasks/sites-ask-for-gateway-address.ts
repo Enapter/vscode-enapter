@@ -15,19 +15,20 @@ const validateInput = (value: string) => {
 };
 
 export class SitesAskForGatewayAddress {
-  constructor() {}
+  constructor(private readonly address: string = "") {}
 
-  static async run(token?: vscode.CancellationToken | undefined) {
+  static async run(address?: string, token?: vscode.CancellationToken | undefined) {
     if (token?.isCancellationRequested) {
       throw new vscode.CancellationError();
     }
 
-    return new SitesAskForGatewayAddress().run();
+    return new SitesAskForGatewayAddress(address).run();
   }
 
   async run() {
     const address = await vscode.window.showInputBox({
       prompt: "Enter the address of your gateway",
+      value: this.address,
       placeHolder: "http://my-gateway.local",
       ignoreFocusOut: true,
       validateInput,
