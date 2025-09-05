@@ -1,4 +1,4 @@
-import { WebSocket, RawData } from "ws";
+import { RawData, WebSocket } from "ws";
 import { WsConnection } from "./connection";
 
 export class NodeWsConnection implements WsConnection<RawData> {
@@ -12,8 +12,6 @@ export class NodeWsConnection implements WsConnection<RawData> {
       headers: { "X-Enapter-Auth-Token": apiToken },
       rejectUnauthorized: false,
     });
-
-    this.connection.on("ping", () => this.connection.pong());
   }
 
   close() {

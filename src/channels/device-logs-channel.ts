@@ -31,13 +31,17 @@ export class DeviceLogsChannel implements vscode.Disposable {
   }
 
   disconnect(): void {
-    this.connection?.dispose();
-    this.connection = undefined;
-
     if (this.isLogging) {
       this.isLogging = false;
       this.updateLoggingState();
     }
+
+    if (!this.connection) {
+      return;
+    }
+
+    this.connection.dispose();
+    this.connection = undefined;
   }
 
   async connect(device: Device): Promise<boolean> {
