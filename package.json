@@ -210,6 +210,12 @@
         "title": "Reload All Devices",
         "category": "Enapter",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "enapter.commands.Devices.OpenInBrowser",
+        "title": "Open in Browser",
+        "category": "Enapter",
+        "icon": "$(globe)"
       }
     ],
     "languages": [
@@ -292,9 +298,14 @@
           "group": "navigation@2"
         },
         {
-          "command": "enapter.commands.Devices.Active.Disconnect",
+          "command": "enapter.commands.Devices.OpenInBrowser",
           "when": "view == enapter.views.devices.active && enapter.context.Devices.IsActivePresent",
           "group": "navigation@1"
+        },
+        {
+          "command": "enapter.commands.Devices.Active.Disconnect",
+          "when": "view == enapter.views.devices.active && enapter.context.Devices.IsActivePresent",
+          "group": "navigation@3"
         },
         {
           "command": "enapter.commands.Sites.ConnectToNew",
@@ -346,6 +357,11 @@
         {
           "command": "enapter.commands.Devices.UploadBlueprint",
           "when": "view == enapter.views.devices.allOnRemote && (viewItem == enapter.viewItems.Device || viewItem == enapter.viewItems.ConnectedDevice)",
+          "group": "inline@2"
+        },
+        {
+          "command": "enapter.commands.Devices.OpenInBrowser",
+          "when": "view == enapter.views.devices.allOnRemote && (viewItem == enapter.viewItems.Device || viewItem == enapter.viewItems.ConnectedDevice)",
           "group": "inline@1"
         },
         {
@@ -356,7 +372,7 @@
         {
           "command": "enapter.commands.Devices.Connect",
           "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.Device",
-          "group": "inline@2"
+          "group": "inline@3"
         },
         {
           "command": "enapter.commands.Devices.Disconnect",

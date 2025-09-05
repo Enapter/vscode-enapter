@@ -9,6 +9,7 @@ export const CommandIDs = {
     UploadBlueprint: "enapter.commands.Devices.UploadBlueprint",
     StreamLogs: "enapter.commands.Devices.StreamLogs",
     StopLogs: "enapter.commands.Devices.StopLogs",
+    OpenInBrowser: "enapter.commands.Devices.OpenInBrowser",
     Active: {
       Disconnect: "enapter.commands.Devices.Active.Disconnect",
     },

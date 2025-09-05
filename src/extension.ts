@@ -40,6 +40,7 @@ import { sitesEditAddress } from "./commands/sites-edit-address";
 import { sitesReloadDevices } from "./commands/sites-reload-devices";
 import { ActiveDevicePollingService } from "./services/active-device-polling-service";
 import { DevicesOnSitePollingService } from "./services/devices-on-site-polling-service";
+import { devicesOpenInBrowser } from "./commands/devices-open-in-browser";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -133,6 +134,15 @@ export async function activate(context: vscode.ExtensionContext) {
   });
   registerCommand(CommandIDs.Devices.StreamLogs, devicesStreamLogs);
   registerCommand(CommandIDs.Devices.StopLogs, devicesStopLogs);
+  registerCommand(CommandIDs.Devices.OpenInBrowser, (node?: DeviceOnSiteNode) => {
+    const device = node?.device || activeDeviceService.getDevice();
+
+    if (!device) {
+      return;
+    }
+
+    return devicesOpenInBrowser(device);
+  });
   registerCommand(CommandIDs.Sites.ReloadDevices, () => {
     return sitesReloadDevices(sitesConnectionsService, devicesOnSiteService);
   });
