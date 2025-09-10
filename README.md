@@ -11,6 +11,17 @@
 
 Create and upload Blueprints for Enapter's Energy Management System. It provides integrated tools for authoring Blueprints, connecting to Enapter Gateways, and managing of provisioned devices.
 
+<p align="center">
+    <a 
+        href="https://v3.developers.enapter.com/" 
+        rel="noreferrer noopener" 
+        target="_blank"
+        style="font-size:24px;font-weight:bold;"
+    >
+        Documentation
+    </a>
+</p>
+
 ## Features
 
 ### Site & Device Management
@@ -30,6 +41,12 @@ Three specialized panels:
 
 ## Getting Started
 
+### Important information for macOS users
+Starting from macOS Sequoia (13.0), applications need explicit permission to access network resources. If you encounter connection issues with this plugin, please ensure that Visual Studio Code has the necessary permissions:
+1. Open **System Settings**.
+2. Navigate to **Privacy & Security** > **Local Network**.
+3. Ensure that **Visual Studio Code** is checked to allow network access.
+
 ### 1. Connect to Enapter Gateway
 1. Open the Enapter sidebar
 2. In the **Site Connections** view, click the "+" button
@@ -44,7 +61,8 @@ Three specialized panels:
 1. Create or open a `manifest.yml` file
 2. Edit your blueprint configuration and Lua code
 3. Monitor device logs in real-time through the **Active Device** view
-Please refer to the [Enapter Documentation](https://developers.enapter.com/) for detailed guidance on creating Blueprints.
+
+Please refer to the [Enapter Documentation](https://v3.developers.enapter.com/) for detailed guidance on creating Blueprints.
 
 ## Contributing
 
