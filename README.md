@@ -98,5 +98,5 @@ Licensed under the Apache License, Version 2.0. See [LICENCE](LICENCE) for detai
 ## Support
 
 - **Issues:** [GitHub Issues](https://github.com/Enapter/vscode-enapter/issues)
-- **Documentation:** [Enapter Developers](https://developers.enapter.com)
+- **Documentation:** [Enapter Developers](https://v3.developers.enapter.com/)
 - **Community:** [Enapter Discord](https://go.enapter.com/discord)
