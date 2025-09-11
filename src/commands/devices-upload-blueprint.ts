@@ -8,6 +8,23 @@ import { ApiClient } from "../api/client";
 import { ExtError } from "../ext-error";
 import { SitesConnectionsService } from "../services/sites-connections-service";
 
+export const getErrorDescription = (e: unknown) => {
+  if (!e) {
+    return;
+  }
+
+  try {
+    if (typeof e === "object" && "errors" in e && Array.isArray(e.errors)) {
+      return e.errors
+        .map((err) => err.message)
+        .filter((m) => !!m)
+        .join(" ");
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
+
 const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
   return vscode.window.withProgress(
     {
@@ -84,7 +101,9 @@ export async function devicesUploadBlueprint(device: Device, sitesConnectionsSer
       if (e instanceof ExtError) {
         vscode.window.showErrorMessage(e.message);
       } else {
-        vscode.window.showErrorMessage("Failed to upload blueprint");
+        const description = getErrorDescription(e);
+        const message = description ? `Failed to upload blueprint: ${description}` : "Failed to upload blueprint";
+        vscode.window.showErrorMessage(message);
       }
     } finally {
       logger.groupEnd();
