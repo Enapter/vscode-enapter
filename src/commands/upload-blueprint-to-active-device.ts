@@ -7,6 +7,7 @@ import { ExtState } from "../ext-state";
 import { ExtError } from "../ext-error";
 import { PickManifestTask } from "../tasks/pick-manifest-task";
 import { ActiveDeviceService } from "../services/active-device-service";
+import { getErrorDescription } from "./devices-upload-blueprint";
 
 const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
   return vscode.window.withProgress(
@@ -89,7 +90,9 @@ export async function uploadBlueprintToActiveDevice(
       if (e instanceof ExtError) {
         vscode.window.showErrorMessage(e.message);
       } else {
-        vscode.window.showErrorMessage("Failed to upload blueprint");
+        const description = getErrorDescription(e);
+        const message = description ? `Failed to upload blueprint: ${description}` : "Failed to upload blueprint";
+        vscode.window.showErrorMessage(message);
       }
     } finally {
       logger.groupEnd();
