@@ -2,11 +2,11 @@ import vscode from "vscode";
 import { Device } from "../../../models/device";
 import { UploadBlueprintNode } from "./upload-blueprint-node";
 
-export class CommandsNode extends vscode.TreeItem {
+export class ActionsNode extends vscode.TreeItem {
   public readonly value: string = "";
 
   constructor(public readonly device: Device) {
-    super("Commands", vscode.TreeItemCollapsibleState.Expanded);
+    super("Actions", vscode.TreeItemCollapsibleState.Expanded);
   }
 
   getChildren() {
