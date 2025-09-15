@@ -18,7 +18,7 @@ export interface Device {
   type: DeviceType;
   properties?: DeviceProperties;
   connectivity?: {
-    status: string
+    status: string;
   };
   site: Site;
   slug: string;
