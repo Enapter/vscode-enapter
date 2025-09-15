@@ -1,6 +1,6 @@
 import vscode from "vscode";
 import { ExtState } from "../../ext-state";
-import { CommandsNode } from "./nodes/commands-node";
+import { ActionsNode } from "./nodes/actions-node";
 import { LogsNode } from "./nodes/logs-node";
 import { PropertyNode } from "../shared-nodes/property-node";
 import { OnlineStatusNode } from "./nodes/online-status-node";
@@ -46,8 +46,9 @@ export class ActiveDeviceProvider implements vscode.TreeDataProvider<Node>, vsco
         new PropertyNode(`Name: ${device.name}`, device.name),
         new PropertyNode(`Slug: ${device.slug}`, device.slug),
         new PropertyNode(`ID: ${device.id}`, device.id),
+        new PropertyNode(`Blueprint ID: ${device.blueprint_id}`, device.blueprint_id),
         new LogsNode(this, device),
-        new CommandsNode(device),
+        new ActionsNode(device),
       ];
     }
 

@@ -121,6 +121,11 @@ export class ApiClient {
   }
 
   @loggable()
+  async deleteDeviceById(siteId: string, deviceId: string) {
+    return this.client.url(`/v3/sites/${siteId}/devices/${deviceId}`).delete().json();
+  }
+
+  @loggable()
   async uploadBlueprint(body: Uint8Array, token?: CancellationToken): Promise<{ blueprint: { id: string } }> {
     if (token?.isCancellationRequested) {
       throw new CancellationError();
@@ -134,6 +139,11 @@ export class ApiClient {
       })
       .post()
       .json<UploadBlueprintResponse>();
+  }
+
+  @loggable()
+  async downloadBlueprintAsZipByDeviceId(blueprintId: string) {
+    return this.client.url(`/v3/blueprints/${blueprintId}/zip?view=ORIGINAL`).get().blob();
   }
 
   @loggable()

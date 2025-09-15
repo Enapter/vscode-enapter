@@ -116,3 +116,15 @@ export class WarningIcon extends vscode.ThemeIcon {
     super("warning");
   }
 }
+
+export class DeleteDeviceIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("trash");
+  }
+}
+
+export class DownloadBlueprintIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("cloud-download");
+  }
+}

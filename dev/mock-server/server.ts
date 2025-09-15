@@ -25,12 +25,12 @@ const server = Bun.serve({
           console.log("\n");
           console.groupEnd();
         }
-      }
+      },
     },
     "/api/v3/devices/:device_id/assign_blueprint": {
       POST: async () => {
         return Response.json({});
-      }
+      },
     },
     "/api/v3/site": async () => {
       return Response.json({ site: sites[0] });
@@ -44,8 +44,14 @@ const server = Bun.serve({
     "/api/v3/devices": async () => {
       return Response.json({ devices: devices.filter((d) => d.site_id === sites[0]!.id) });
     },
-    "/api/v3/sites/:site_id/devices/:device_id": async (req) => {
-      return Response.json({ device: devices.find((d) => d.id === req.params.device_id) });
+    "/api/v3/sites/:site_id/devices/:device_id": {
+      GET: async (req) => {
+        return Response.json({ device: devices.find((d) => d.id === req.params.device_id) });
+      },
+      DELETE: async (req) => {
+        console.log(`Deleting device ${req.params.device_id} from site ${req.params.site_id}`);
+        return Response.json({}, { status: 200 });
+      },
     },
     "/api/v3/devices/:device_id": async (req) => {
       return Response.json({ device: devices.find((d) => d.id === req.params.device_id) });
@@ -54,7 +60,25 @@ const server = Bun.serve({
       const { site_id, device_id } = req.params;
       if (server.upgrade(req, { data: { site_id, device_id } })) return;
       return new Response("Expected WebSocket", { status: 400 });
-    }
+    },
+    "/api/v3/blueprints/:blueprint_id/zip": async (req) => {
+      const { searchParams } = new URL(req.url);
+      const view = searchParams.get("view") as "ORIGINAL" | "COMPILED" | null;
+      const zipContent = JSON.stringify(req);
+      const zipper = new JSZip();
+
+      zipper
+        .folder("blueprint")!
+        .file("content.json", zipContent)
+        .file(view || "no_view", `This is a mock ZIP file for view: ${view || "none"}`);
+
+      return new Response(await zipper.generateAsync({ type: "uint8array" }), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/zip",
+        },
+      });
+    },
   },
   websocket: {
     open: (ws) => {
@@ -76,8 +100,8 @@ const server = Bun.serve({
     pong: (ws) => {
       console.log("Pong received from client", JSON.stringify(ws.data));
     },
-    sendPings: true
-  }
+    sendPings: true,
+  },
 });
 
 console.log(`Listening on ${server.hostname}:${server.port}`);
