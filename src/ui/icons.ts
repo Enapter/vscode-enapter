@@ -122,3 +122,9 @@ export class DeleteDeviceIcon extends vscode.ThemeIcon {
     super("trash");
   }
 }
+
+export class DownloadBlueprintIcon extends vscode.ThemeIcon {
+  constructor() {
+    super("cloud-download");
+  }
+}

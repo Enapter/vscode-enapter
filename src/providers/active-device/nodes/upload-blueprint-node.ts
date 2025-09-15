@@ -1,10 +1,10 @@
 import vscode from "vscode";
-import { DirectRunCommandOnClickIcon } from "../../../ui/icons";
+import { CloudUploadIcon } from "../../../ui/icons";
 import { CommandIDs } from "../../../constants/commands";
 import { Device } from "../../../models/device";
 
 export class UploadBlueprintNode extends vscode.TreeItem {
-  iconPath = new DirectRunCommandOnClickIcon();
+  iconPath = new CloudUploadIcon();
 
   command = {
     title: "Upload Blueprint",

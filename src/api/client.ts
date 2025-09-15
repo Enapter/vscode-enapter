@@ -142,6 +142,11 @@ export class ApiClient {
   }
 
   @loggable()
+  async downloadBlueprintAsZipByDeviceId(blueprintId: string) {
+    return this.client.url(`/v3/blueprints/${blueprintId}/zip?view=ORIGINAL`).get().blob();
+  }
+
+  @loggable()
   async assignBlueprintToDevice(blueprintId: string, deviceId: string, token?: CancellationToken) {
     if (token?.isCancellationRequested) {
       throw new CancellationError();

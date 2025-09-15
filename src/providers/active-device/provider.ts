@@ -46,6 +46,7 @@ export class ActiveDeviceProvider implements vscode.TreeDataProvider<Node>, vsco
         new PropertyNode(`Name: ${device.name}`, device.name),
         new PropertyNode(`Slug: ${device.slug}`, device.slug),
         new PropertyNode(`ID: ${device.id}`, device.id),
+        new PropertyNode(`Blueprint ID: ${device.blueprint_id}`, device.blueprint_id),
         new LogsNode(this, device),
         new ActionsNode(device),
       ];

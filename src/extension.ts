@@ -43,6 +43,7 @@ import { DevicesOnSitePollingService } from "./services/devices-on-site-polling-
 import { devicesOpenInBrowser } from "./commands/devices-open-in-browser";
 import { Device } from "./models/device";
 import { devicesDelete } from "./commands/devices-delete";
+import { devicesDownloadBlueprint } from "./commands/devices-download-blueprint";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -133,6 +134,9 @@ export async function activate(context: vscode.ExtensionContext) {
   });
   registerCommand(CommandIDs.Devices.UploadBlueprint, (node: DeviceOnSiteNode) => {
     return devicesUploadBlueprint(node.device, sitesConnectionsService);
+  });
+  registerCommand(CommandIDs.Devices.DownloadBlueprint, (device: Device) => {
+    return devicesDownloadBlueprint(device, sitesConnectionsService);
   });
   registerCommand(CommandIDs.Devices.StreamLogs, devicesStreamLogs);
   registerCommand(CommandIDs.Devices.StopLogs, devicesStopLogs);
