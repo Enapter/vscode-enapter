@@ -2,6 +2,7 @@ import vscode from "vscode";
 import { Device, isDeviceOnline } from "../../../models/device";
 import { OfflineIcon, OnlineIcon } from "../../../ui/icons";
 import { PropertyNode } from "../../shared-nodes/property-node";
+import { DeleteDeviceNode } from "./delete-device-node";
 
 export class DeviceOnSiteNode extends vscode.TreeItem {
   constructor(
@@ -27,6 +28,7 @@ export class DeviceOnSiteNode extends vscode.TreeItem {
     return [
       new PropertyNode(`ID: ${this.device.id}`, this.device.id),
       new PropertyNode(`Slug: ${this.device.slug}`, this.device.slug),
+      new DeleteDeviceNode(this.device),
     ];
   }
 }

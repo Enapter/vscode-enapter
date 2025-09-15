@@ -44,8 +44,14 @@ const server = Bun.serve({
     "/api/v3/devices": async () => {
       return Response.json({ devices: devices.filter((d) => d.site_id === sites[0]!.id) });
     },
-    "/api/v3/sites/:site_id/devices/:device_id": async (req) => {
-      return Response.json({ device: devices.find((d) => d.id === req.params.device_id) });
+    "/api/v3/sites/:site_id/devices/:device_id": {
+      GET: async (req) => {
+        return Response.json({ device: devices.find((d) => d.id === req.params.device_id) });
+      },
+      DELETE: async (req) => {
+        console.log(`Deleting device ${req.params.device_id} from site ${req.params.site_id}`);
+        return Response.json({}, { status: 200 });
+      },
     },
     "/api/v3/devices/:device_id": async (req) => {
       return Response.json({ device: devices.find((d) => d.id === req.params.device_id) });

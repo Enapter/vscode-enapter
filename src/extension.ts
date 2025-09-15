@@ -41,6 +41,8 @@ import { sitesReloadDevices } from "./commands/sites-reload-devices";
 import { ActiveDevicePollingService } from "./services/active-device-polling-service";
 import { DevicesOnSitePollingService } from "./services/devices-on-site-polling-service";
 import { devicesOpenInBrowser } from "./commands/devices-open-in-browser";
+import { Device } from "./models/device";
+import { devicesDelete } from "./commands/devices-delete";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -142,6 +144,9 @@ export async function activate(context: vscode.ExtensionContext) {
     }
 
     return devicesOpenInBrowser(device);
+  });
+  registerCommand(CommandIDs.Devices.Delete, (device: Device) => {
+    return devicesDelete(device, sitesConnectionsService, activeDeviceService, devicesOnSiteService);
   });
   registerCommand(CommandIDs.Sites.ReloadDevices, () => {
     return sitesReloadDevices(sitesConnectionsService, devicesOnSiteService);

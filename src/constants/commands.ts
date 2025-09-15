@@ -13,6 +13,7 @@ export const CommandIDs = {
     Active: {
       Disconnect: "enapter.commands.Devices.Active.Disconnect",
     },
+    Delete: "enapter.commands.Devices.Delete",
   },
   Sites: {
     ConnectToNew: "enapter.commands.Sites.ConnectToNew",
