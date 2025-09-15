@@ -3,7 +3,6 @@ import { SitesConnectionsService } from "../services/sites-connections-service";
 import { ApiClient } from "../api/client";
 import vscode from "vscode";
 import JSZip from "jszip";
-import { Logger } from "../logger";
 
 export const devicesDownloadBlueprint = async (device: Device, sitesConnectionsServices: SitesConnectionsService) => {
   const activeSite = sitesConnectionsServices.getActive();

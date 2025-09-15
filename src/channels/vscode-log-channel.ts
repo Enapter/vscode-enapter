@@ -49,7 +49,7 @@ export class VscodeLogChannel<TLog extends LogEntry> implements LogChannel<TLog>
   }
 
   debug(message: string): void {
-    this.channel.debug(message)
+    this.channel.debug(message);
   }
 
   revealPanel() {

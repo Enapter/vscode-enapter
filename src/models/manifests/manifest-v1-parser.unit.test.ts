@@ -1,4 +1,4 @@
-import { suite, test, expect, vi } from "vitest";
+import { expect, suite, test, vi } from "vitest";
 import { BlueprintSpec, ManifestV1Schema } from "./schemas";
 import { ManifestV1Parser } from "./manifest-v1-parser";
 
