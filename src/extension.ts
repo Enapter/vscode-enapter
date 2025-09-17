@@ -44,6 +44,8 @@ import { devicesOpenInBrowser } from "./commands/devices-open-in-browser";
 import { Device } from "./models/device";
 import { devicesDelete } from "./commands/devices-delete";
 import { devicesDownloadBlueprint } from "./commands/devices-download-blueprint";
+import { sitesEditApiToken } from "./commands/sites-edit-api-token";
+import { ApiTokenNode } from "./providers/sites-connections/nodes/api-token-node";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -164,6 +166,9 @@ export async function activate(context: vscode.ExtensionContext) {
   });
   registerCommand(CommandIDs.Sites.Connect, (node: GatewayNode) => {
     return sitesConnect(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);
+  });
+  registerCommand(CommandIDs.Sites.EditApiToken, (node: ApiTokenNode) => {
+    return sitesEditApiToken(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);
   });
   registerCommand(CommandIDs.Sites.Disconnect, (node: GatewayNode) => {
     return sitesDisconnect(node, sitesConnectionsService, devicesOnSiteService, activeDeviceService);
