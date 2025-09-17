@@ -25,6 +25,7 @@ export const CommandIDs = {
     RemoveAll: "enapter.commands.Sites.RemoveAll",
     CopyApiToken: "enapter.commands.Sites.CopyApiToken",
     EditAddress: "enapter.commands.Sites.EditAddress",
+    EditApiToken: "enapter.commands.Sites.EditApiToken",
     ReloadDevices: "enapter.commands.Sites.ReloadDevices",
   },
   Enbp: {

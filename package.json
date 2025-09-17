@@ -142,6 +142,12 @@
         "icon": "$(copy)"
       },
       {
+        "command": "enapter.commands.Sites.EditApiToken",
+        "title": "Edit",
+        "category": "Enapter",
+        "icon": "$(edit)"
+      },
+      {
         "command": "enapter.commands.Sites.EditAddress",
         "title": "Edit",
         "category": "Enapter",
@@ -289,6 +295,10 @@
         {
           "command": "enapter.commands.Sites.EditAddress",
           "when": "never"
+        },
+        {
+          "command": "enapter.commands.Sites.EditApiToken",
+          "when": "never"
         }
       ],
       "view/title": [
@@ -351,6 +361,11 @@
         },
         {
           "command": "enapter.commands.Sites.CopyApiToken",
+          "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.ApiTokenProperty",
+          "group": "inline@2"
+        },
+        {
+          "command": "enapter.commands.Sites.EditApiToken",
           "when": "view == enapter.views.sites.all && viewItem == enapter.viewItems.ApiTokenProperty",
           "group": "inline@1"
         },

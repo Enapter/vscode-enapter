@@ -27,7 +27,7 @@ export class GatewayNode extends vscode.TreeItem {
     }
 
     children.push(new AddressNode(this.site, this.site.address));
-    children.push(new ApiTokenNode(this.site));
+    children.push(new ApiTokenNode(this, this.site));
 
     return children;
   }
