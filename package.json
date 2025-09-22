@@ -175,7 +175,8 @@
         "command": "enapter.commands.Devices.UploadBlueprint",
         "title": "Upload a Blueprint to the Device",
         "category": "Enapter",
-        "icon": "$(cloud-upload)"
+        "icon": "$(cloud-upload)",
+        "enablement": "enapter.context.Devices.IsActiveOnline"
       },
       {
         "command": "enapter.commands.Devices.ReloadActive",
