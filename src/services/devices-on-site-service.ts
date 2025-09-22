@@ -11,7 +11,13 @@ export class DevicesOnSiteService {
   constructor(
     private readonly storage: DevicesOnSiteStorage,
     private readonly activeDeviceService: ActiveDeviceService,
-  ) {}
+  ) {
+    this.activeDeviceService.onDidChangeDevice(async (device) => {
+      if (!device) {
+        await this.disconnectAll();
+      }
+    });
+  }
 
   getAll() {
     return this.storage.getAll();
@@ -65,6 +71,22 @@ export class DevicesOnSiteService {
     await this.activeDeviceService.replaceDevice(device);
   }
 
+  async disconnectAll() {
+    const storedDevices = this.getAll();
+
+    if (!storedDevices?.length || storedDevices.every((d) => !d.isActive)) {
+      return;
+    }
+
+    const devices = storedDevices.map((d) => {
+      d.isActive = false;
+      return d;
+    });
+
+    await this.replaceAll(devices);
+    await this.activeDeviceService.updateDevice(undefined);
+  }
+
   async disconnectById(deviceId: string): Promise<Device | undefined> {
     const storedDevices = this.getAll();
 
@@ -84,7 +106,7 @@ export class DevicesOnSiteService {
     });
 
     await this.replaceAll(devices);
-    await this.activeDeviceService.replaceDevice(undefined);
+    await this.activeDeviceService.updateDevice(undefined);
   }
 
   merge(devicesMain: Device[], devicesToMerge: Device[]): Device[] {
