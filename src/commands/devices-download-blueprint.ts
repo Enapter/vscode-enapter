@@ -3,7 +3,6 @@ import { SitesConnectionsService } from "../services/sites-connections-service";
 import { ApiClient } from "../api/client";
 import vscode, { ProgressLocation } from "vscode";
 import JSZip from "jszip";
-import { getFilename } from "../utils/get-filename";
 
 const withProgress = (cb: Parameters<typeof vscode.window.withProgress>[1]) => {
   return vscode.window.withProgress(
