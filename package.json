@@ -393,7 +393,7 @@
         {
           "command": "enapter.commands.Devices.Disconnect",
           "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.ConnectedDevice",
-          "group": "inline@2"
+          "group": "inline@3"
         },
         {
           "command": "enapter.commands.Sites.EditAddress",
