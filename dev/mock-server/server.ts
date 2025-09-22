@@ -1,6 +1,7 @@
 import sites from "./generated/sites.json";
 import devices from "./generated/devices.json";
 import JSZip from "jszip";
+import { faker } from "@faker-js/faker";
 
 const server = Bun.serve({
   port: 6942,
@@ -54,6 +55,7 @@ const server = Bun.serve({
       },
     },
     "/api/v3/devices/:device_id": async (req) => {
+      // return Response.json({ errors: [{ message: faker.lorem.sentences(2) }] }, { status: 404 });
       return Response.json({ device: devices.find((d) => d.id === req.params.device_id) });
     },
     "/api/v3/sites/:site_id/devices/:device_id/logs": async (req, server) => {

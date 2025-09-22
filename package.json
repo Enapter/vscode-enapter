@@ -1,7 +1,7 @@
 {
   "$schema": "./package-json-schema.json",
   "name": "enapter-ems-toolkit-ide",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "displayName": "Enapter IDE for EMS Toolkit 3.0",
   "description": "Create and upload Blueprints for Enapter's Energy Management System. It provides integrated tools for authoring Blueprints, connecting to both Enapter Cloud and Enapter Gateways, and monitoring device status in real-time.",
   "publisher": "Enapter",
@@ -175,7 +175,8 @@
         "command": "enapter.commands.Devices.UploadBlueprint",
         "title": "Upload a Blueprint to the Device",
         "category": "Enapter",
-        "icon": "$(cloud-upload)"
+        "icon": "$(cloud-upload)",
+        "enablement": "enapter.context.Devices.IsActiveOnline"
       },
       {
         "command": "enapter.commands.Devices.ReloadActive",
@@ -392,7 +393,7 @@
         {
           "command": "enapter.commands.Devices.Disconnect",
           "when": "view == enapter.views.devices.allOnRemote && viewItem == enapter.viewItems.ConnectedDevice",
-          "group": "inline@2"
+          "group": "inline@3"
         },
         {
           "command": "enapter.commands.Sites.EditAddress",

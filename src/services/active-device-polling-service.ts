@@ -65,6 +65,13 @@ export class ActiveDevicePollingService implements vscode.Disposable {
 
       await this.service.updateDevice({ ...device, ...response.device });
     } catch (e: unknown) {
+      if (e && typeof e === "object" && "status" in e && String(e.status) === "404") {
+        await this.service.replaceDevice(undefined);
+        vscode.window.showInformationMessage("The active device was not found and was disconnected.");
+      } else {
+        vscode.window.showErrorMessage("An error occurred while reloading the active device.");
+      }
+
       Logger.log(e);
     }
   }
