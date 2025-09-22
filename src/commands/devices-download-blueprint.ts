@@ -21,10 +21,24 @@ export const devicesDownloadBlueprint = async (device: Device, sitesConnectionsS
 
   const shouldUnzip = shouldUnzipResponse === "Yes";
 
+  const wsUri = vscode.workspace.workspaceFolders?.[0].uri;
+
+  const fileUri = wsUri
+    ? shouldUnzip
+      ? vscode.Uri.joinPath(wsUri, `${device.slug}-blueprint`)
+      : vscode.Uri.joinPath(wsUri, `${device.slug}-blueprint.zip`)
+    : shouldUnzip
+      ? vscode.Uri.file(`${device.slug}-blueprint`)
+      : vscode.Uri.file(`${device.slug}-blueprint.zip`);
+
   const path = await vscode.window.showInputBox({
     prompt: `Enter the path to save the blueprint${shouldUnzip ? "" : " zip file"}`,
-    value: shouldUnzip ? `${device.slug}.blueprint` : `${device.slug}.blueprint.zip`,
+    value: fileUri.fsPath,
   });
+
+  if (!path?.trim()) {
+    return;
+  }
 
   const blob = await apiClient.downloadBlueprintAsZipByDeviceId(blueprintId);
 
@@ -33,19 +47,17 @@ export const devicesDownloadBlueprint = async (device: Device, sitesConnectionsS
 
     for (const filename of Object.keys(zip.files)) {
       const file = zip.files[filename];
+      const writeUri = vscode.Uri.joinPath(vscode.Uri.file(path), filename);
 
       if (!file.dir) {
         const content = await file.async("uint8array");
-        await vscode.workspace.fs.writeFile(
-          vscode.Uri.file(`${vscode.workspace.rootPath}/${path}/${filename}`),
-          content,
-        );
+        await vscode.workspace.fs.writeFile(writeUri, content);
       } else {
-        await vscode.workspace.fs.createDirectory(vscode.Uri.file(`${vscode.workspace.rootPath}/${path}/${filename}`));
+        await vscode.workspace.fs.createDirectory(writeUri);
       }
     }
   } else {
-    await vscode.workspace.fs.writeFile(vscode.Uri.file(`${vscode.workspace.rootPath}/${path}`), await blob.bytes());
+    await vscode.workspace.fs.writeFile(vscode.Uri.file(path), await blob.bytes());
   }
 
   return blob;
