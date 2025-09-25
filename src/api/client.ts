@@ -1,4 +1,4 @@
-import wretch, { Middleware } from "wretch";
+import wretch, { Middleware, WretchError } from "wretch";
 import AbortAddon from "wretch/addons/abort";
 import { loggable, Logger } from "../logger";
 import { Device, isSupportBlueprints, sortByOnlineStatus } from "../models/device";
@@ -7,6 +7,59 @@ import { CloudSite } from "../models/sites/cloud-site";
 import { Site, SiteType } from "../models/sites/site";
 import { ExtState } from "../ext-state";
 import { Agent, fetch as undiciFetch } from "undici";
+
+function isErrorWithMessage(e: unknown): e is { message: string } {
+  return !!e && typeof e === "object" && "message" in e && typeof e.message === "string" && !!e.message;
+}
+
+function hasApiErrors(json: unknown): json is { errors: Array<unknown> } {
+  return !!json && typeof json === "object" && "errors" in json && Array.isArray(json.errors) && json.errors.length > 0;
+}
+
+class BaseApiError extends Error {
+  name = "Enapter API Error";
+
+  constructor(public readonly error: WretchError) {
+    super();
+  }
+
+  get message() {
+    return `${this.name}. ${this.getMessage()}`;
+  }
+
+  protected getMessage() {
+    const apiErrors = hasApiErrors(this.error.json) ? this.error.json.errors : null;
+
+    if (apiErrors) {
+      return apiErrors
+        .filter(isErrorWithMessage)
+        .map((e) => e.message)
+        .join(" ");
+    }
+
+    return this.getDefaultMessage();
+  }
+
+  protected getDefaultMessage() {
+    return `Something went wrong with the API request: status ${this.error.status}`;
+  }
+}
+
+class NotFoundApiError extends BaseApiError {
+  name = "Enapter API Error (Not Found)";
+}
+
+class UnauthorizedApiError extends BaseApiError {
+  name = "Enapter API Error (Unauthorized)";
+}
+
+class ForbiddenApiError extends BaseApiError {
+  name = "Enapter API Error (Forbidden)";
+}
+
+class BadRequestApiError extends BaseApiError {
+  name = "Enapter API Error (Bad Request)";
+}
 
 const logMiddleware: Middleware = () => (next) => (url, opts) => {
   const logger = Logger.getInstance();
@@ -179,6 +232,21 @@ export class ApiClient {
       })
       .headers({
         "X-Enapter-Auth-Token": this.token,
+      })
+      .catcher(404, (error) => {
+        throw new NotFoundApiError(error);
+      })
+      .catcher(401, (error) => {
+        throw new UnauthorizedApiError(error);
+      })
+      .catcher(403, (error) => {
+        throw new ForbiddenApiError(error);
+      })
+      .catcher(400, (error) => {
+        throw new BadRequestApiError(error);
+      })
+      .catcherFallback((error) => {
+        throw new BaseApiError(error);
       })
       .addon(AbortAddon())
       .middlewares([logMiddleware()]);
