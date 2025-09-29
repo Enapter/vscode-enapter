@@ -21,6 +21,12 @@ export const sitesConnectToGatewaySite = async (service: SitesConnectionsService
     }
 
     const site = SiteFactory.createGatewaySite(response.site.id, response.site.name, address);
+
+    if (service.getById(site.id)) {
+      await service.disconnectById(site.id);
+      await service.removeById(site.id);
+    }
+
     await extState.storeGatewayApiToken(site, apiToken);
     await service.add(site);
     const activeSite = service.getActive();
