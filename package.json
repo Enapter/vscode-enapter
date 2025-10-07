@@ -1,7 +1,7 @@
 {
   "$schema": "./package-json-schema.json",
   "name": "enapter-ems-toolkit-ide",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "displayName": "Enapter IDE for EMS Toolkit 3.0",
   "description": "Create and upload Blueprints for Enapter's Energy Management System. It provides integrated tools for authoring Blueprints, connecting to both Enapter Cloud and Enapter Gateways, and monitoring device status in real-time.",
   "publisher": "Enapter",
