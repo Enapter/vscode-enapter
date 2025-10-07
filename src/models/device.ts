@@ -29,12 +29,12 @@ export const isSupportBlueprints = (device: Device) => {
   return String(device.type).toLowerCase() === "lua" || String(device.type).toLowerCase() === "standalone";
 };
 
-export const sortByOnlineStatus = (device: Device) => {
-  if (device.connectivity?.status) {
-    return device.connectivity.status.toLowerCase() === "online" ? -1 : 1;
-  }
+export const sortByOnlineStatus = (d1: Device, d2: Device) => {
+  return +isDeviceOnline(d2) - +isDeviceOnline(d1);
+};
 
-  return 0;
+export const sortDevicesByName = (d1: Device, d2: Device) => {
+  return d1.name.localeCompare(d2.name);
 };
 
 export const sortByActiveDevice = (device: Device, activeDevice: Device | undefined) => {

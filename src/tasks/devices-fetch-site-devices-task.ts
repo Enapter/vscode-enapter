@@ -2,7 +2,7 @@ import vscode from "vscode";
 import { AllLuaDevicesResponse, ApiClient } from "../api/client";
 import { Logger } from "../logger";
 import { Site } from "../models/sites/site";
-import { isSupportBlueprints, sortByOnlineStatus } from "../models/device";
+import { isSupportBlueprints, sortByOnlineStatus, sortDevicesByName } from "../models/device";
 
 interface Options {
   isMuted: boolean;
@@ -47,6 +47,7 @@ export class DevicesFetchSiteDevicesTask {
           return {
             devices: res.devices
               .filter(isSupportBlueprints)
+              .sort(sortDevicesByName)
               .sort(sortByOnlineStatus)
               .map((d) => ({ ...d, site: this.site })),
           } satisfies AllLuaDevicesResponse;
