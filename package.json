@@ -475,7 +475,7 @@
     "@types/debug": "^4.1.12",
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.10.1",
+    "@types/node": "^22.12.0",
     "@types/sinon": "^17.0.4",
     "@types/sinon-chai": "^4.0.0",
     "@types/vscode": "^1.95.0",
@@ -490,7 +490,7 @@
     "chai": "^5.3.1",
     "esbuild": "^0.24.0",
     "eslint": "^9.13.0",
-    "glob": "^11.0.0",
+    "glob": "^11.1.0",
     "json-schema-to-typescript": "^15.0.4",
     "mocha": "^11.7.1",
     "npm-run-all": "^4.1.5",
@@ -506,7 +506,6 @@
     "@microsoft/fast-react-wrapper": "^0.3.25",
     "@types/chai-as-promised": "^8.0.2",
     "@vscode/webview-ui-toolkit": "^1.4.0",
-    "axios": "^1.11.0",
     "chai-as-promised": "^8.0.1",
     "es-toolkit": "^1.38.0",
     "js-yaml": "^4.1.0",
@@ -517,6 +516,14 @@
     "wretch": "^2.11.0",
     "ws": "^8.18.2",
     "zod": "^3.24.3"
+  },
+  "overrides": {
+    "playwright": "=1.58.2",
+    "playwrite-core": "=1.58.2",
+    "@playwright/browser-chromium": "=1.58.2",
+    "tar-fs": "=3.1.1",
+    "koa": "^2.15.4",
+    "glob": "^11.1.0"
   },
   "bundleDependencies": [
     "reflect-metadata"
