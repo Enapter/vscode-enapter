@@ -18,7 +18,11 @@ export const getErrorDescription = (e: unknown) => {
       return e.errors
         .map((err) => err.message)
         .filter((m) => !!m)
-        .join(" ");
+        .join("\n");
+    }
+
+    if (typeof e === "object" && "message" in e) {
+      return e.message
     }
   } catch (e) {
     console.error(e);

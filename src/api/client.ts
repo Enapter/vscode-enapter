@@ -34,7 +34,11 @@ class BaseApiError extends Error {
       return apiErrors
         .filter(isErrorWithMessage)
         .map((e) => e.message)
-        .join(" ");
+        .join("\n");
+    }
+
+    if (isErrorWithMessage(this.error)) {
+      return this.error.message;
     }
 
     return this.getDefaultMessage();
