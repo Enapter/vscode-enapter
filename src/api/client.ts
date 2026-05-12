@@ -230,7 +230,7 @@ export class ApiClient {
       .options({
         dispatcher: new Agent({
           connect: {
-            rejectUnauthorized: this.host.includes('enapter.com'),
+            rejectUnauthorized: false,
           },
         }),
       })
