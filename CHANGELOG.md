@@ -4,6 +4,9 @@ All notable changes to the "enapter-blueprints-ide" extension will be documented
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
+## [0.0.15] - 2026-05-12
 
-- Initial release
+### Fixed
+
+- Device logs now correctly extract message text and severity level from parsed log entries
+- Blueprint upload errors now show the actual error message instead of a generic failure notice
