@@ -28,10 +28,11 @@ export function toDeviceLog(data: unknown): DeviceLogEntry | undefined {
   try {
     const strData = data.toString();
     const parsed = JSON.parse(strData);
+    const log = parsed?.log || parsed;
 
     return {
-      level: severityToLevel(parsed.severity),
-      message: parsed.message,
+      level: severityToLevel(log.severity),
+      message: log.message,
       data: data,
     };
   } catch (_) {
