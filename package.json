@@ -39,7 +39,7 @@
   "engines": {
     "vscode": "^1.103.0"
   },
-  "activationEvents": [],
+  "activationEvents": ["onLanguage:lua"],
   "main": "./dist/extension.js",
   "contributes": {
     "viewsContainers": {

@@ -46,6 +46,7 @@ import { devicesDelete } from "./commands/devices-delete";
 import { devicesDownloadBlueprint } from "./commands/devices-download-blueprint";
 import { sitesEditApiToken } from "./commands/sites-edit-api-token";
 import { ApiTokenNode } from "./providers/sites-connections/nodes/api-token-node";
+import { configureLuaLibrary } from "./utils/configure-lua-library";
 
 function registerCommand(...args: Parameters<typeof vscode.commands.registerCommand>) {
   return vscode.commands.registerCommand(...args);
@@ -204,6 +205,15 @@ export async function activate(context: vscode.ExtensionContext) {
   activator.createTreeView(ViewIDs.Devices.Active, {
     treeDataProvider: new ActiveDeviceProvider(activeDeviceService),
   });
+
+  void configureLuaLibrary(context);
+
+  const manifestWatcher = vscode.workspace.createFileSystemWatcher('**/manifest.yml');
+
+  manifestWatcher.onDidChange(() => void configureLuaLibrary(context), undefined, context.subscriptions);
+  manifestWatcher.onDidCreate(() => void configureLuaLibrary(context), undefined, context.subscriptions);
+  
+  context.subscriptions.push(manifestWatcher);
 
   return Promise.resolve({
     context,
