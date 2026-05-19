@@ -34,8 +34,8 @@ export class SitesSelectTypeTask {
 
   private get quickPickItems() {
     return [
-      new SiteTypeQuickPickItem("Enapter Cloud Site", SiteType.Cloud, "Sites available on cloud.enapter.com"),
-      new SiteTypeQuickPickItem("Enapter Gateway", SiteType.Gateway),
+      new SiteTypeQuickPickItem("Enapter Cloud Site", SiteType.Cloud, "Sites available on cloud3.enapter.com"),
+      new SiteTypeQuickPickItem("Enapter Gateway", SiteType.Gateway, "Connect to a local Enapter Gateway"),
     ];
   }
 

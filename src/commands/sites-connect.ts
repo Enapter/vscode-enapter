@@ -1,4 +1,5 @@
 import { SitesCheckConnectionTask } from "../tasks/sites-check-connection-task";
+import { CloudSiteNode } from "../providers/sites-connections/nodes/cloud-site-node";
 import { GatewayNode } from "../providers/sites-connections/nodes/gateway-node";
 import { DevicesOnSiteService } from "../services/devices-on-site-service";
 import { DevicesFetchSiteDevicesTask } from "../tasks/devices-fetch-site-devices-task";
@@ -9,7 +10,7 @@ import { Logger } from "../logger";
 import { ActiveDeviceService } from "../services/active-device-service";
 
 export const sitesConnect = async (
-  node: GatewayNode,
+  node: CloudSiteNode | GatewayNode,
   sitesConnectionsService: SitesConnectionsService,
   devicesOnSiteService: DevicesOnSiteService,
   activeDeviceService: ActiveDeviceService,
