@@ -79,7 +79,7 @@
     "viewsWelcome": [
       {
         "view": "enapter.views.sites.all",
-        "contents": "You haven't added any Enapter Gateway connections.\n[Add new](command:enapter.commands.Sites.ConnectToNew)"
+        "contents": "You haven't added any Enapter Cloud sites or Enapter Gateways.\n[Add new](command:enapter.commands.Sites.ConnectToNew)"
       }
     ],
     "commands": [
@@ -104,10 +104,28 @@
         "icon": "$(plus)"
       },
       {
+        "command": "enapter.commands.Sites.ConnectToCloudSite",
+        "title": "Connect to Enapter Cloud Site",
+        "category": "Enapter",
+        "icon": "$(plug)"
+      },
+      {
         "command": "enapter.commands.Sites.ConnectToGatewaySite",
         "title": "Connect to Enapter Gateway",
         "category": "Enapter",
         "icon": "$(plug)"
+      },
+      {
+        "command": "enapter.commands.Sites.RemoveCloudApiToken",
+        "title": "Remove Enapter Cloud API Token",
+        "category": "Enapter",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "enapter.commands.Sites.SetCloudApiToken",
+        "title": "Set Enapter Cloud API Token",
+        "category": "Enapter",
+        "icon": "$(key)"
       },
       {
         "command": "enapter.commands.Sites.Connect",

@@ -1,16 +1,30 @@
+import vscode from "vscode";
+
 import { sitesConnectToGatewaySite } from "./sites-connect-to-gateway-site";
+import { sitesConnectToCloudSite } from "./sites-connect-to-cloud-site";
+
 import { SitesConnectionsService } from "../services/sites-connections-service";
 import { DevicesOnSiteService } from "../services/devices-on-site-service";
 import { DevicesFetchSiteDevicesTask } from "../tasks/devices-fetch-site-devices-task";
-import vscode from "vscode";
 import { ViewIDs } from "../constants/views";
+import { Site, SiteType } from "../models/sites/site";
+import { SitesSelectTypeTask } from "../tasks/sites-select-type-task";
 
 export const sitesConnectToNew = async (
   sitesConnectionsService: SitesConnectionsService,
   devicesOnSiteService: DevicesOnSiteService,
 ) => {
   try {
-    let site = await sitesConnectToGatewaySite(sitesConnectionsService);
+    const siteType = await SitesSelectTypeTask.run();
+    let site: Site | undefined = undefined;
+
+    if (siteType === SiteType.Cloud) {
+      site = await sitesConnectToCloudSite(sitesConnectionsService);
+    }
+
+    if (siteType === SiteType.Gateway) {
+      site = await sitesConnectToGatewaySite(sitesConnectionsService);
+    }
 
     if (!site) {
       return;

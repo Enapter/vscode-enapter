@@ -1,4 +1,5 @@
 import vscode from "vscode";
+
 import { ApiClient, SiteResponse } from "../api/client";
 import { Logger } from "../logger";
 import { ExtState } from "../ext-state";
@@ -16,7 +17,7 @@ class SiteQuickPickItem implements vscode.QuickPickItem {
 }
 
 export class SitesFetchSitesAndPickSite {
-  constructor() {}
+  constructor() { }
 
   static async run(token?: vscode.CancellationToken) {
     if (token?.isCancellationRequested) {
@@ -27,9 +28,10 @@ export class SitesFetchSitesAndPickSite {
   }
 
   async run() {
-    let abortController = new AbortController();
     const disposables: vscode.Disposable[] = [];
     const extState = ExtState.getInstance();
+  
+    let abortController = new AbortController();
     let apiToken = await extState.getCloudApiToken();
 
     if (!apiToken) {
@@ -40,8 +42,11 @@ export class SitesFetchSitesAndPickSite {
     try {
       return await new Promise<SiteResponse | undefined>((resolve) => {
         const quickPick = vscode.window.createQuickPick<SiteQuickPickItem>();
+    
         quickPick.title = "Select a site";
+        quickPick.placeholder = "Loading Sites...";
         quickPick.busy = true;
+        quickPick.enabled = false;
 
         disposables.push(
           quickPick.onDidChangeSelection((selections) => {
@@ -58,10 +63,12 @@ export class SitesFetchSitesAndPickSite {
         );
 
         const setQuickPickItems = (name: string) => {
-          quickPick.items = [];
           abortController.abort();
           abortController = new AbortController();
+
+          quickPick.items = [];
           quickPick.busy = true;
+          quickPick.placeholder = "Type to search...";
 
           ApiClient.forCloud(apiToken)
             .getAllSites(name, abortController)
@@ -77,11 +84,13 @@ export class SitesFetchSitesAndPickSite {
             })
             .finally(() => {
               quickPick.busy = false;
+              quickPick.enabled = true;
             });
         };
 
         disposables.push(quickPick.onDidChangeValue(setQuickPickItems));
         setQuickPickItems(quickPick.value);
+
         quickPick.show();
       });
     } finally {

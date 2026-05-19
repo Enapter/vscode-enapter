@@ -10,7 +10,7 @@ export class NodeWsConnection implements WsConnection<RawData> {
   ) {
     this.connection = new WebSocket(url, {
       headers: { "X-Enapter-Auth-Token": apiToken },
-      rejectUnauthorized: false,
+      rejectUnauthorized: url?.includes("enapter.com"),
     });
   }
 

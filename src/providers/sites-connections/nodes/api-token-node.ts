@@ -5,10 +5,11 @@ import { KeyIcon } from "../../../ui/icons";
 import { ExtState } from "../../../ext-state";
 import { SiteType } from "../../../models/sites/site";
 import { GatewayNode } from "./gateway-node";
+import { CloudSiteNode } from "./cloud-site-node";
 
 export class ApiTokenNode extends vscode.TreeItem {
   constructor(
-    public readonly parentNode: GatewayNode,
+    public readonly parentNode: GatewayNode | CloudSiteNode,
     private site: CloudSite | GatewaySite,
     private readonly extState: ExtState = ExtState.getInstance(),
   ) {
